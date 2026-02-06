@@ -1,51 +1,64 @@
-const sheet = document.getElementById("sheet");
-const menuBtn = document.getElementById("menuBtn");
+// Menu
+const menu = document.getElementById("menu");
+const openBtn = document.getElementById("menuOpen");
+const closeBtn = document.getElementById("menuClose");
 
-menuBtn?.addEventListener("click", () => {
-  sheet.classList.toggle("show");
+openBtn?.addEventListener("click", () => menu.classList.add("is-open"));
+closeBtn?.addEventListener("click", () => menu.classList.remove("is-open"));
+menu?.addEventListener("click", (e) => {
+  if (e.target === menu) menu.classList.remove("is-open");
 });
 
-// Close menu when clicking a link
-document.querySelectorAll(".sheet__link").forEach(a => {
-  a.addEventListener("click", () => sheet.classList.remove("show"));
+// Smooth scroll for menu links
+document.querySelectorAll('a[href^="#"]').forEach(a => {
+  a.addEventListener("click", (e) => {
+    const id = a.getAttribute("href");
+    if (!id || id.length < 2) return;
+    const el = document.querySelector(id);
+    if (!el) return;
+    e.preventDefault();
+    menu.classList.remove("is-open");
+    el.scrollIntoView({ behavior: "smooth", block: "start" });
+  });
 });
+
+// Year
+document.getElementById("year").textContent = new Date().getFullYear();
 
 // Copy contract
 const copyBtn = document.getElementById("copyBtn");
-const contractText = document.getElementById("contractText");
-
 copyBtn?.addEventListener("click", async () => {
+  const txt = document.getElementById("contractText")?.textContent?.trim() || "";
+  if (!txt) return;
   try {
-    await navigator.clipboard.writeText(contractText.textContent.trim());
-    copyBtn.textContent = "Copied!";
+    await navigator.clipboard.writeText(txt);
+    copyBtn.textContent = "Copied ✓";
     setTimeout(() => (copyBtn.textContent = "Copy"), 1200);
   } catch {
-    alert("Copy ging nicht (Browser). Markier den Text manuell.");
+    copyBtn.textContent = "Copy failed";
+    setTimeout(() => (copyBtn.textContent = "Copy"), 1200);
   }
 });
 
-// Audio toggle
-const audio = document.getElementById("bgAudio");
-const audioBtn = document.getElementById("audioBtn");
-const audioIcon = document.getElementById("audioIcon");
+// Music toggle (works once you add a real audio source in <audio>)
+const musicBtn = document.getElementById("musicBtn");
+const audio = document.getElementById("bgMusic");
 
 let playing = false;
-
-// iOS/Browser: Audio darf erst nach Klick starten
-audioBtn?.addEventListener("click", async () => {
+musicBtn?.addEventListener("click", async () => {
   if (!audio) return;
-
   try {
     if (!playing) {
       await audio.play();
       playing = true;
-      audioIcon.textContent = "🔊";
+      musicBtn.querySelector(".icon").textContent = "🔈";
     } else {
       audio.pause();
       playing = false;
-      audioIcon.textContent = "🔇";
+      musicBtn.querySelector(".icon").textContent = "🔊";
     }
-  } catch (e) {
-    alert("Audio konnte nicht gestartet werden. (Browser blockt Autoplay – Klick nochmal.)");
+  } catch {
+    // Autoplay blocked until user interacts — this click counts, but needs a real source file.
+    alert("Add an audio file in the <audio> tag (assets/theme.mp3).");
   }
 });
