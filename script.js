@@ -1,210 +1,212 @@
-(() => {
-  // ===== MENU =====
-  const menuBtn = document.getElementById("menuBtn");
-  const menu = document.getElementById("menu");
-  const overlay = document.getElementById("overlay");
+/* ====== CONFIG (easy to edit) ====== */
+const CONFIG = {
+  heroCandidates: [
+    "./hero.png",
+    "./hero.PNG",
+    "./Hero.png",
+    "./Hero.PNG"
+  ],
+  logoCandidates: [
+    "./logo.png",
+    "./logo.PNG",
+    "./Logo.png",
+    "./Logo.PNG"
+  ],
+  audioFile: "./bg.mp3",
+  tiktokHandle: "@mythosmonday",
+  tiktokUrl: "https://www.tiktok.com/@mythosmonday",
+  xUrl: "https://x.com",
+  contractText: "PASTE_CONTRACT_ADDRESS_HERE", // <-- replace later
+  gallery: [
+    // Put your images here when you have them (no debug text on page)
+    // { src: "./g1.jpg", caption: "Community moment #1" },
+    // { src: "./g2.jpg", caption: "Community moment #2" },
+  ]
+};
 
-  function openMenu() {
-    menu.style.display = "block";
-    overlay.style.display = "block";
-    menuBtn.setAttribute("aria-expanded", "true");
-    menu.setAttribute("aria-hidden", "false");
-    overlay.setAttribute("aria-hidden", "false");
-  }
-  function closeMenu() {
+/* ====== helpers ====== */
+function loadFirstWorkingImage(imgEl, candidates, onSuccess, onFail){
+  let i = 0;
+  const tryNext = () => {
+    if (i >= candidates.length) { onFail?.(); return; }
+    const testSrc = candidates[i++];
+    const probe = new Image();
+    probe.onload = () => {
+      imgEl.src = testSrc;
+      onSuccess?.(testSrc);
+    };
+    probe.onerror = () => tryNext();
+    probe.src = testSrc + (testSrc.includes("?") ? "&" : "?") + "v=" + Date.now();
+  };
+  tryNext();
+}
+
+/* ====== Menu ====== */
+const menuBtn = document.getElementById("menuBtn");
+const menu = document.getElementById("menu");
+
+menuBtn?.addEventListener("click", () => {
+  const open = menu.style.display === "flex";
+  menu.style.display = open ? "none" : "flex";
+  menuBtn.setAttribute("aria-expanded", String(!open));
+});
+
+document.addEventListener("click", (e) => {
+  if (!menu || !menuBtn) return;
+  const isInside = menu.contains(e.target) || menuBtn.contains(e.target);
+  if (!isInside) {
     menu.style.display = "none";
-    overlay.style.display = "none";
     menuBtn.setAttribute("aria-expanded", "false");
-    menu.setAttribute("aria-hidden", "true");
-    overlay.setAttribute("aria-hidden", "true");
   }
+});
 
-  menuBtn?.addEventListener("click", () => {
-    const isOpen = menu.style.display === "block";
-    isOpen ? closeMenu() : openMenu();
+/* ====== Smooth scroll ====== */
+document.querySelectorAll('a[href^="#"]').forEach(a => {
+  a.addEventListener("click", (e) => {
+    const href = a.getAttribute("href");
+    if (!href || href === "#") return;
+    const el = document.querySelector(href);
+    if (!el) return;
+    e.preventDefault();
+    el.scrollIntoView({ behavior: "smooth", block: "start" });
+    if (menu) menu.style.display = "none";
+    if (menuBtn) menuBtn.setAttribute("aria-expanded", "false");
   });
-  overlay?.addEventListener("click", closeMenu);
-  menu?.querySelectorAll("a").forEach(a => a.addEventListener("click", closeMenu));
+});
 
-  // ===== HERO IMAGE DEBUG / FALLBACK =====
-  const heroImg = document.getElementById("heroImg");
-  const imgFallback = document.getElementById("imgFallback");
-
-  function showHeroFallback(msg) {
-    if (imgFallback) {
-      imgFallback.hidden = false;
-      if (msg) console.warn(msg);
+/* ====== Logo ====== */
+const logoImg = document.getElementById("logoImg");
+const logoText = document.getElementById("logoText");
+if (logoImg) {
+  loadFirstWorkingImage(
+    logoImg,
+    CONFIG.logoCandidates,
+    () => { if (logoText) logoText.style.display = "none"; },
+    () => {
+      // If logo missing, show text instead of broken icon
+      logoImg.style.display = "none";
+      if (logoText) logoText.style.display = "inline";
     }
-  }
+  );
+}
 
-  if (heroImg) {
-    heroImg.addEventListener("error", () => {
-      showHeroFallback("Hero image failed to load. Check repo filename/path (hero.png).");
-      console.log("Tried:", heroImg.src);
-    });
-    heroImg.addEventListener("load", () => {
-      if (imgFallback) imgFallback.hidden = true;
-    });
-  }
-
-  // ===== AUDIO (TOGGLE ONLY, NO SLIDER) =====
-  const audio = document.getElementById("bgAudio");
-  const toggle = document.getElementById("soundToggle");
-  const icon = toggle?.querySelector(".soundToggle__icon");
-
-  let isPlaying = false;
-  let hasUserGesture = false;
-
-  // Browser policy: must be started by user gesture
-  async function tryPlay() {
-    if (!audio) return;
-    try {
-      audio.volume = 1;
-      await audio.play();
-      isPlaying = true;
-      updateSoundUI();
-    } catch (e) {
-      // Autoplay blocked or other error
-      console.warn("Audio play blocked until user gesture:", e);
-      isPlaying = false;
-      updateSoundUI();
+/* ====== Hero image ====== */
+const heroImg = document.getElementById("heroImg");
+if (heroImg) {
+  loadFirstWorkingImage(
+    heroImg,
+    CONFIG.heroCandidates,
+    () => heroImg.classList.add("loaded"),
+    () => {
+      // If none works, keep it invisible (no ugly debug overlay)
+      heroImg.classList.remove("loaded");
+      heroImg.style.display = "none";
     }
-  }
+  );
+}
 
-  function pauseAudio() {
-    if (!audio) return;
-    audio.pause();
-    isPlaying = false;
-    updateSoundUI();
-  }
+/* ====== Audio toggle (no slider, only on/off) ====== */
+const audioToggle = document.getElementById("audioToggle");
+const audioIcon = document.getElementById("audioIcon");
 
-  function updateSoundUI() {
-    if (!toggle || !icon) return;
-    toggle.setAttribute("aria-pressed", String(isPlaying));
-    icon.textContent = isPlaying ? "🔊" : "🔇";
-  }
+// Browsers block autoplay. So audio starts paused,
+// and only plays after a user click (this button).
+const audio = new Audio(CONFIG.audioFile);
+audio.loop = true;
+audio.preload = "auto";
 
-  // Ensure we count a real gesture
-  function markGesture() {
-    hasUserGesture = true;
-    document.removeEventListener("pointerdown", markGesture);
-    document.removeEventListener("keydown", markGesture);
-  }
-  document.addEventListener("pointerdown", markGesture, { once: true });
-  document.addEventListener("keydown", markGesture, { once: true });
+function setAudioUI(isOn){
+  if (!audioToggle) return;
+  audioToggle.classList.toggle("on", isOn);
+  // optional: tint icon slightly via class
+}
 
-  toggle?.addEventListener("click", async () => {
-    if (!audio) return;
+let audioOn = false;
+setAudioUI(false);
 
-    // If it's not playing, attempt to start. If playing, stop.
-    if (!isPlaying) {
-      // Force user gesture required path
-      if (!hasUserGesture) hasUserGesture = true;
-      await tryPlay();
+audioToggle?.addEventListener("click", async () => {
+  try {
+    if (!audioOn) {
+      await audio.play();  // requires user interaction (this click)
+      audioOn = true;
+      setAudioUI(true);
     } else {
-      pauseAudio();
+      audio.pause();
+      audioOn = false;
+      setAudioUI(false);
     }
-  });
-
-  // Keep it looped even if some browsers pause on background changes
-  audio?.addEventListener("ended", () => {
-    audio.currentTime = 0;
-    if (isPlaying) tryPlay();
-  });
-
-  updateSoundUI();
-
-  // ===== COPY CONTRACT =====
-  const copyBtn = document.getElementById("copyBtn");
-  const contractText = document.getElementById("contractText");
-  const copyHint = document.getElementById("copyHint");
-
-  copyBtn?.addEventListener("click", async () => {
-    const text = contractText?.textContent?.trim() || "";
-    if (!text || text === "PASTE_CONTRACT_ADDRESS_HERE") {
-      if (copyHint) copyHint.textContent = "Paste your contract address first.";
-      return;
-    }
-    try {
-      await navigator.clipboard.writeText(text);
-      if (copyHint) copyHint.textContent = "Copied!";
-      setTimeout(() => { if (copyHint) copyHint.textContent = ""; }, 1200);
-    } catch (e) {
-      console.warn("Clipboard failed:", e);
-      if (copyHint) copyHint.textContent = "Copy failed (browser blocked).";
-    }
-  });
-
-  // ===== GALLERY (REPLACE FILENAMES) =====
-  // Put your images in repo root (same level as index.html), e.g. g1.jpg, g2.jpg...
-  const galleryData = [
-    { src: "./g1.jpg?v=1", caption: "Gallery 1" },
-    { src: "./g2.jpg?v=1", caption: "Gallery 2" },
-    { src: "./g3.jpg?v=1", caption: "Gallery 3" },
-    { src: "./g4.jpg?v=1", caption: "Gallery 4" },
-    { src: "./g5.jpg?v=1", caption: "Gallery 5" },
-    { src: "./g6.jpg?v=1", caption: "Gallery 6" }
-  ];
-
-  const galleryImg = document.getElementById("galleryImg");
-  const galleryCaption = document.getElementById("galleryCaption");
-  const prevBtn = document.getElementById("prevBtn");
-  const nextBtn = document.getElementById("nextBtn");
-  const dotsWrap = document.getElementById("galleryDots");
-
-  let idx = 0;
-
-  function renderDots() {
-    if (!dotsWrap) return;
-    dotsWrap.innerHTML = "";
-    galleryData.forEach((_, i) => {
-      const d = document.createElement("span");
-      if (i === idx) d.classList.add("is-active");
-      dotsWrap.appendChild(d);
-    });
+  } catch (err) {
+    // If blocked for any reason, keep it off
+    audioOn = false;
+    setAudioUI(false);
+    console.warn("Audio play blocked:", err);
   }
+});
 
-  function setGallery(i) {
-    if (!galleryImg || !galleryCaption) return;
-    idx = (i + galleryData.length) % galleryData.length;
+/* ====== Join links + handle ====== */
+const ttLink = document.getElementById("ttLink");
+if (ttLink) {
+  ttLink.href = CONFIG.tiktokUrl;
+  const sub = ttLink.querySelector(".join-sub");
+  if (sub) sub.textContent = CONFIG.tiktokHandle;
+}
+const xLink = document.getElementById("xLink");
+if (xLink) xLink.href = CONFIG.xUrl;
 
-    galleryImg.src = galleryData[idx].src;
-    galleryCaption.textContent = galleryData[idx].caption;
-    renderDots();
+/* ====== Contract copy ====== */
+const contractBox = document.getElementById("contractBox");
+const copyBtn = document.getElementById("copyBtn");
+
+if (contractBox) contractBox.textContent = CONFIG.contractText;
+
+copyBtn?.addEventListener("click", async () => {
+  const txt = contractBox?.textContent?.trim() || "";
+  if (!txt) return;
+  try {
+    await navigator.clipboard.writeText(txt);
+    copyBtn.textContent = "COPIED";
+    setTimeout(() => (copyBtn.textContent = "COPY"), 900);
+  } catch {
+    // fallback
+    const ta = document.createElement("textarea");
+    ta.value = txt;
+    document.body.appendChild(ta);
+    ta.select();
+    document.execCommand("copy");
+    ta.remove();
+    copyBtn.textContent = "COPIED";
+    setTimeout(() => (copyBtn.textContent = "COPY"), 900);
   }
+});
 
-  prevBtn?.addEventListener("click", () => setGallery(idx - 1));
-  nextBtn?.addEventListener("click", () => setGallery(idx + 1));
+/* ====== Gallery (auto hides if empty) ====== */
+const gal = CONFIG.gallery;
+const galSection = document.getElementById("gallery");
+const galImg = document.getElementById("galImg");
+const galCap = document.getElementById("galCap");
+const galPrev = document.getElementById("galPrev");
+const galNext = document.getElementById("galNext");
 
-  // Swipe support
-  let startX = null;
-  galleryImg?.addEventListener("pointerdown", (e) => { startX = e.clientX; });
-  galleryImg?.addEventListener("pointerup", (e) => {
-    if (startX == null) return;
-    const dx = e.clientX - startX;
-    startX = null;
-    if (Math.abs(dx) > 40) {
-      dx > 0 ? setGallery(idx - 1) : setGallery(idx + 1);
-    }
+let galIndex = 0;
+
+function renderGallery(){
+  if (!galImg || !galCap) return;
+  const item = gal[galIndex];
+  galImg.src = item.src;
+  galCap.textContent = item.caption || "";
+}
+
+if (!gal || gal.length === 0){
+  // hide entire gallery section when you have no images yet
+  if (galSection) galSection.style.display = "none";
+} else {
+  renderGallery();
+  galPrev?.addEventListener("click", () => {
+    galIndex = (galIndex - 1 + gal.length) % gal.length;
+    renderGallery();
   });
-
-  // Init gallery (only if element exists)
-  if (galleryImg && galleryData.length) setGallery(0);
-
-  // ===== QUICK PATH CHECKS (helps with your hero.png issue) =====
-  // Open DevTools Console and you’ll see if the files are reachable.
-  const checks = [
-    { name: "hero", url: "./hero.png" },
-    { name: "logo", url: "./logo.png" },
-    { name: "bg", url: "./bg.mp3" }
-  ];
-
-  checks.forEach(async (c) => {
-    try {
-      const res = await fetch(c.url, { cache: "no-store" });
-      console.log(`[asset-check] ${c.name}:`, res.status, c.url);
-    } catch (e) {
-      console.warn(`[asset-check] ${c.name} failed:`, c.url, e);
-    }
+  galNext?.addEventListener("click", () => {
+    galIndex = (galIndex + 1) % gal.length;
+    renderGallery();
   });
-})();
+}
