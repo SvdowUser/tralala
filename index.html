@@ -1,243 +1,257 @@
-<!doctype html>
+<!DOCTYPE html>
 <html lang="en">
 <head>
-  <meta charset="utf-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1" />
-  <title>$TRALALA — The Viral Brainrot Baby</title>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>$TRALALA — The Viral Brainrot Fish</title>
   <link rel="stylesheet" href="styles.css" />
 </head>
 
 <body>
   <!-- Background layers -->
-  <div class="bg"></div>
-  <div class="stars"></div>
-  <div class="vignette"></div>
+  <div class="bg-stars"></div>
+  <div class="bg-glow"></div>
 
-  <!-- AUDIO -->
-  <audio id="bgMusic" src="assets/BG.mp3" preload="auto" loop></audio>
-  <button id="audioBtn" class="audio-btn" aria-label="Toggle sound">🔊</button>
-
-  <!-- HEADER -->
+  <!-- Header -->
   <header class="header">
-    <div class="brand">
-      <img class="brand-logo" src="assets/logo.png" alt="TRALALA logo" />
-      <span class="brand-name">$TRALALA</span>
-    </div>
+    <a class="brand" href="#top" aria-label="Home">
+      <img class="brand__logo" src="assets/logo.png" alt="TRALALA logo" />
+      <span class="brand__text">$TRALALA</span>
+    </a>
 
     <button class="menu-btn" id="menuBtn" aria-label="Open menu">
       <span></span><span></span><span></span>
     </button>
   </header>
 
-  <!-- DRAWER MENU -->
-  <div class="drawer" id="drawer" aria-hidden="true">
-    <div class="drawer-inner">
-      <button class="drawer-close" id="closeDrawer" aria-label="Close menu">✕</button>
-
-      <nav class="drawer-nav">
-        <a href="#tokenomics" class="drawer-link">Tokenomics</a>
-        <a href="#howtobuy" class="drawer-link">How to Buy</a>
-        <a href="#gallery" class="drawer-link">Gallery</a>
-        <a href="#community" class="drawer-link">Community</a>
-        <a href="#contract" class="drawer-link">Contract</a>
+  <!-- Mobile menu -->
+  <div class="menu-overlay" id="menuOverlay" aria-hidden="true">
+    <div class="menu-card">
+      <button class="menu-close" id="menuClose" aria-label="Close menu">✕</button>
+      <nav class="menu-links">
+        <a href="#tokenomics">Tokenomics</a>
+        <a href="#how">How to Buy</a>
+        <a href="#gallery">Gallery</a>
+        <a href="#community">Community</a>
       </nav>
 
-      <a class="drawer-cta" href="#howtobuy">BUY NOW</a>
+      <div class="menu-cta">
+        <a class="btn btn--primary" href="#buy">BUY NOW</a>
+      </div>
     </div>
   </div>
 
-  <!-- HERO -->
-  <main class="container">
-    <section class="hero" id="top">
-      <div class="pill glow-border">
-        <span class="dot"></span>
-        LIVE ON SOLANA
-      </div>
+  <!-- Sound toggle (fixed bottom-left) -->
+  <button class="sound-btn" id="soundBtn" aria-label="Toggle sound">
+    <span class="sound-btn__icon" id="soundIcon">🔇</span>
+  </button>
 
-      <h1 class="hero-title gradient-title">$TRALALA</h1>
-      <p class="hero-sub">
-        The cutest brainrot fish has emerged from TikTok.
-      </p>
+  <main id="top">
+    <!-- HERO -->
+    <section class="hero">
+      <div class="hero__wrap">
+        <div class="pill">
+          <span class="dot"></span>
+          <span>LIVE ON SOLANA</span>
+        </div>
 
-      <div class="hero-actions">
-        <a class="btn btn-primary" href="#howtobuy">BUY $TRALALA</a>
-        <a class="btn btn-secondary" href="#tokenomics">VIEW TOKENOMICS</a>
-      </div>
+        <h1 class="hero__title">
+          <span class="glow-text">$TRALALA</span>
+        </h1>
 
-      <div class="hero-orb">
-        <div class="orb-ring"></div>
-        <div class="orb-glow"></div>
-        <img class="hero-character float" src="assets/hero.png" alt="Tralala character" />
+        <p class="hero__sub">
+          The cutest brainrot fish has emerged from TikTok.
+        </p>
+
+        <div class="hero__cta" id="buy">
+          <a class="btn btn--primary" href="#how">BUY $TRALALA</a>
+          <a class="btn btn--secondary" href="#tokenomics">VIEW TOKENOMICS</a>
+        </div>
+
+        <!-- Hero character (transparent PNG) -->
+        <div class="hero-orb">
+          <div class="orb-ring"></div>
+          <div class="orb-beam"></div>
+
+          <img
+            class="hero-char"
+            src="assets/hero.png"
+            alt="Tralala character"
+            loading="eager"
+          />
+        </div>
       </div>
     </section>
 
     <!-- TOKENOMICS -->
     <section class="section" id="tokenomics">
-      <h2 class="section-title gradient-title">TOKENOMICS</h2>
-      <p class="section-sub">Live supply info — clean, simple, and trackable.</p>
+      <div class="section__inner">
+        <h2 class="section__title glow-text">TOKENOMICS</h2>
+        <p class="section__desc">Transparent. Simple. Built for the meme.</p>
 
-      <div class="cards">
-        <div class="card glow-panel">
-          <div class="icon-badge">📈</div>
-          <div class="card-title">Total Supply</div>
-          <div class="card-value">1,000,000,000</div>
-          <div class="card-note">One billion tokens</div>
+        <div class="cards">
+          <article class="card">
+            <div class="card__icon">📈</div>
+            <div class="card__title">Total Supply</div>
+            <div class="card__value">1,000,000,000</div>
+            <div class="card__meta">One billion TRALALA tokens</div>
+          </article>
+
+          <article class="card">
+            <div class="card__icon">🧾</div>
+            <div class="card__title">Tax</div>
+            <div class="card__value">0%</div>
+            <div class="card__meta">No buy/sell tax — pure trading</div>
+          </article>
+
+          <article class="card">
+            <div class="card__icon">🔒</div>
+            <div class="card__title">Liquidity</div>
+            <div class="card__value">Coming Soon</div>
+            <div class="card__meta">LP lock proof will be linked here</div>
+          </article>
+
+          <article class="card">
+            <div class="card__icon">⚡</div>
+            <div class="card__title">Contract</div>
+            <div class="card__value">Renounced</div>
+            <div class="card__meta">Community-first setup</div>
+          </article>
         </div>
 
-        <div class="card glow-panel">
-          <div class="icon-badge">🧾</div>
-          <div class="card-title">Tax</div>
-          <div class="card-value">0%</div>
-          <div class="card-note">No buy/sell tax</div>
-        </div>
-
-        <div class="card glow-panel">
-          <div class="icon-badge">⚡</div>
-          <div class="card-title">Status</div>
-          <div class="card-value">Live</div>
-          <div class="card-note">Community-driven</div>
-        </div>
-      </div>
-
-      <div class="wide-card glow-panel">
-        <div class="wide-top">
-          <div>
-            <div class="wide-title">Circulation</div>
-            <div class="wide-note">We’ll show real-time data as sources are added.</div>
+        <!-- Contract address -->
+        <div class="contract">
+          <div class="contract__label">CONTRACT ADDRESS</div>
+          <div class="contract__box">
+            <code id="contractText">PASTE_CONTRACT_ADDRESS_HERE</code>
+            <button class="copy-btn" id="copyBtn" aria-label="Copy contract">
+              Copy
+            </button>
           </div>
-          <a class="mini-link" href="#" onclick="return false;">View on tracker →</a>
-        </div>
-
-        <div class="bar">
-          <div class="bar-fill"></div>
-        </div>
-
-        <div class="bar-labels">
-          <span>Circulating</span>
-          <span>100%</span>
         </div>
       </div>
     </section>
 
     <!-- HOW TO BUY -->
-    <section class="section" id="howtobuy">
-      <h2 class="section-title gradient-title">HOW TO BUY</h2>
-      <p class="section-sub">Join the TRALALA army in four simple steps.</p>
+    <section class="section section--alt" id="how">
+      <div class="section__inner">
+        <h2 class="section__title glow-text">HOW TO BUY</h2>
+        <p class="section__desc">Four simple steps.</p>
 
-      <div class="steps">
-        <div class="step glow-panel">
-          <div class="step-left">
-            <div class="step-icon">👛</div>
-          </div>
-          <div class="step-mid">
-            <div class="step-title">Get a Wallet</div>
-            <div class="step-text">Install Phantom (recommended) and set it up securely.</div>
-          </div>
-          <div class="step-num">01</div>
-        </div>
+        <div class="steps">
+          <article class="step">
+            <div class="step__left">
+              <div class="step__icon">👛</div>
+              <div>
+                <div class="step__title">Get a Wallet</div>
+                <div class="step__text">Download Phantom and set it up securely.</div>
+              </div>
+            </div>
+            <div class="step__num">01</div>
+          </article>
 
-        <div class="step glow-panel">
-          <div class="step-left">
-            <div class="step-icon">◎</div>
-          </div>
-          <div class="step-mid">
-            <div class="step-title">Get SOL</div>
-            <div class="step-text">Buy SOL on an exchange and send it to your wallet.</div>
-          </div>
-          <div class="step-num">02</div>
-        </div>
+          <article class="step">
+            <div class="step__left">
+              <div class="step__icon">◎</div>
+              <div>
+                <div class="step__title">Get SOL</div>
+                <div class="step__text">Buy SOL on an exchange and send it to your wallet.</div>
+              </div>
+            </div>
+            <div class="step__num">02</div>
+          </article>
 
-        <div class="step glow-panel">
-          <div class="step-left">
-            <div class="step-icon">🔁</div>
-          </div>
-          <div class="step-mid">
-            <div class="step-title">Swap for $TRALALA</div>
-            <div class="step-text">Use Jupiter/Raydium, paste the contract address, swap.</div>
-          </div>
-          <div class="step-num">03</div>
-        </div>
+          <article class="step">
+            <div class="step__left">
+              <div class="step__icon">🔁</div>
+              <div>
+                <div class="step__title">Swap for $TRALALA</div>
+                <div class="step__text">Use Jupiter/Raydium, paste the contract, and swap.</div>
+              </div>
+            </div>
+            <div class="step__num">03</div>
+          </article>
 
-        <div class="step glow-panel">
-          <div class="step-left">
-            <div class="step-icon">🏆</div>
-          </div>
-          <div class="step-mid">
-            <div class="step-title">HODL & Win</div>
-            <div class="step-text">Hold and enjoy the meme ride. Volcanic gains optional.</div>
-          </div>
-          <div class="step-num">04</div>
+          <article class="step">
+            <div class="step__left">
+              <div class="step__icon">🏆</div>
+              <div>
+                <div class="step__title">HODL & Win</div>
+                <div class="step__text">Hold and enjoy the meme ride.</div>
+              </div>
+            </div>
+            <div class="step__num">04</div>
+          </article>
         </div>
       </div>
     </section>
 
     <!-- GALLERY -->
     <section class="section" id="gallery">
-      <h2 class="section-title gradient-title">GALLERY</h2>
-      <p class="section-sub">Swipe through the lore shots. Replace images anytime.</p>
+      <div class="section__inner">
+        <h2 class="section__title glow-text">GALLERY</h2>
+        <p class="section__desc">Swipe through the community moments.</p>
 
-      <div class="gallery glow-panel">
-        <button class="gallery-btn" id="prevImg" aria-label="Previous image">‹</button>
-        <img id="galleryImg" class="gallery-img" src="assets/gallery1.jpg" alt="Gallery image" />
-        <button class="gallery-btn" id="nextImg" aria-label="Next image">›</button>
-      </div>
+        <div class="gallery">
+          <button class="gallery__btn" id="galPrev" aria-label="Previous">‹</button>
 
-      <div class="dots" id="dots"></div>
-
-      <div class="tiktok-row">
-        <a class="btn btn-secondary" href="https://www.tiktok.com/@MythosMondays" target="_blank" rel="noreferrer">
-          View on TikTok (@MythosMondays)
-        </a>
-      </div>
-    </section>
-
-    <!-- JOIN THE ARMY -->
-    <section class="section hero-band" id="community">
-      <h2 class="section-title gradient-title">JOIN THE ARMY</h2>
-      <p class="section-sub">The TRALALA community is growing stronger. Join the squad.</p>
-
-      <div class="community-grid">
-        <a class="community-card glow-panel" href="#" target="_blank" rel="noreferrer" onclick="return false;">
-          <div class="community-icon">𝕏</div>
-          <div class="community-text">
-            <div class="community-title">Community</div>
-            <div class="community-sub">Join on X</div>
+          <div class="gallery__viewport">
+            <div class="gallery__track" id="galTrack">
+              <img src="assets/gallery1.jpg" alt="Gallery 1" />
+              <img src="assets/gallery2.jpg" alt="Gallery 2" />
+              <img src="assets/gallery3.jpg" alt="Gallery 3" />
+              <img src="assets/gallery4.jpg" alt="Gallery 4" />
+              <img src="assets/gallery5.jpg" alt="Gallery 5" />
+              <img src="assets/gallery6.jpg" alt="Gallery 6" />
+            </div>
           </div>
-        </a>
 
-        <a class="community-card glow-panel" href="https://www.tiktok.com/@MythosMondays" target="_blank" rel="noreferrer">
-          <div class="community-icon">🎵</div>
-          <div class="community-text">
-            <div class="community-title">TikTok</div>
-            <div class="community-sub">@MythosMondays</div>
-          </div>
-        </a>
-      </div>
-    </section>
-
-    <!-- CONTRACT -->
-    <section class="section" id="contract">
-      <h2 class="section-title gradient-title">CONTRACT</h2>
-      <p class="section-sub">Always verify the correct address before swapping.</p>
-
-      <div class="contract-box glow-panel">
-        <div class="contract-label">Contract Address</div>
-
-        <div class="contract-row">
-          <code id="contractText" class="contract-text">
-PASTE_CONTRACT_ADDRESS_HERE
-          </code>
-          <button id="copyBtn" class="copy-btn" aria-label="Copy contract">Copy</button>
+          <button class="gallery__btn" id="galNext" aria-label="Next">›</button>
         </div>
 
-        <div class="contract-foot" id="copyStatus"></div>
+        <div class="gallery__dots" id="galDots" aria-label="Gallery dots"></div>
+      </div>
+    </section>
+
+    <!-- COMMUNITY (separate section) -->
+    <section class="section section--deep" id="community">
+      <div class="section__inner">
+        <h2 class="section__title glow-text">JOIN THE ARMY</h2>
+        <p class="section__desc">
+          The TRALALA community is growing stronger — join the wave.
+        </p>
+
+        <div class="community-grid">
+          <a class="community-card" href="https://x.com/" target="_blank" rel="noreferrer">
+            <div class="community-card__icon">𝕏</div>
+            <div>
+              <div class="community-card__title">Community</div>
+              <div class="community-card__text">Join on X</div>
+            </div>
+          </a>
+
+          <a class="community-card" href="https://www.tiktok.com/@mythosmondays" target="_blank" rel="noreferrer">
+            <div class="community-card__icon">🎵</div>
+            <div>
+              <div class="community-card__title">TikTok</div>
+              <div class="community-card__text">@MythosMondays</div>
+            </div>
+          </a>
+        </div>
       </div>
     </section>
 
     <footer class="footer">
-      <div class="footer-note">© TRALALA — brainrot energy only.</div>
+      <div class="footer__inner">
+        <span class="footer__small">© TRALALA</span>
+      </div>
     </footer>
   </main>
+
+  <!-- Audio -->
+  <audio id="bgAudio" loop preload="auto">
+    <source src="assets/bg.mp3" type="audio/mpeg" />
+  </audio>
 
   <script src="script.js"></script>
 </body>
