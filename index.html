@@ -1,76 +1,59 @@
 <!doctype html>
-<html lang="de">
+<html lang="en">
 <head>
   <meta charset="utf-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover" />
-  <title>TRALALA</title>
-  <meta name="theme-color" content="#06142a" />
-  <link rel="stylesheet" href="styles.css" />
+  <meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover" />
+  <title>$TRALALA</title>
+  <meta name="description" content="$TRALALA — the cutest brainrot fish has emerged from TikTok." />
+  <link rel="stylesheet" href="./styles.css" />
 </head>
 
 <body>
-  <!-- Background layers -->
-  <div class="bg-layer" aria-hidden="true"></div>
-  <div class="bg-stars" aria-hidden="true"></div>
+  <!-- Background audio (will start muted; user can unmute) -->
+  <audio id="bgAudio" src="./bg.mp3" preload="auto" loop muted playsinline></audio>
 
-  <!-- Top Navigation (no hamburger) -->
   <header class="topbar">
-    <a class="brand" id="brandLink" href="#" target="_blank" rel="noopener">
-      <span class="brand-mark">$</span>
-      <span class="brand-text">TRALALA</span>
-      <!-- optional image logo (if logo.png exists) -->
-      <img class="brand-logo" id="brandLogo" src="logo.png" alt="TRALALA logo" />
-    </a>
+    <div class="topbar__inner">
+      <!-- Brand: bold, clickable to Pump.fun -->
+      <a class="brand" href="https://pump.fun/PUT_YOUR_TRALALA_URL_HERE" target="_blank" rel="noopener">
+        <span class="brand__dollar">$</span><span class="brand__name">TRALALA</span>
+      </a>
 
-    <nav class="nav">
-      <a class="nav-link" href="#tokenomics">Tokenomics</a>
-      <a class="nav-link" href="#how">How to buy</a>
-      <a class="nav-link" href="#join">Join</a>
-      <a class="nav-link" href="#gallery">Gallery</a>
-    </nav>
+      <!-- Clean nav (no pill boxes) -->
+      <nav class="nav">
+        <a class="nav__link" href="#tokenomics">Tokenomics</a>
+        <a class="nav__link" href="#how">How to buy</a>
+        <a class="nav__link" href="#join">Join</a>
+        <a class="nav__link" href="#gallery">Gallery</a>
+      </nav>
+    </div>
   </header>
 
-  <!-- Floating audio toggle -->
-  <button class="audio-toggle" id="audioToggle" type="button" aria-label="Sound umschalten" aria-pressed="false">
-    <span class="audio-icon" aria-hidden="true"></span>
-  </button>
-
-  <main class="wrap">
-
+  <main>
     <!-- HERO -->
     <section class="section hero" id="top">
-      <div class="hero-grid">
-        <div class="hero-copy">
-          <div class="pill">
-            <span class="dot"></span>
+      <div class="container hero__grid">
+        <div class="hero__left">
+          <div class="chip">
+            <span class="chip__dot"></span>
             <span>LIVE ON SOLANA</span>
           </div>
 
           <h1 class="title">$TRALALA</h1>
-          <p class="subtitle">
-            The cutest brainrot fish has emerged from TikTok.
-          </p>
+          <p class="subtitle">The cutest brainrot fish has emerged from TikTok.</p>
 
-          <div class="cta-row">
-            <a class="btn btn-primary" id="buyBtnTop" href="#" target="_blank" rel="noopener">
-              BUY $TRALALA
+          <div class="cta">
+            <a class="btn btn--primary" href="https://pump.fun/PUT_YOUR_TRALALA_URL_HERE" target="_blank" rel="noopener">
+              Buy on Pump.fun
             </a>
-            <a class="btn btn-ghost" href="#tokenomics">
-              VIEW TOKENOMICS
-            </a>
+            <a class="btn btn--ghost" href="#tokenomics">View tokenomics</a>
           </div>
         </div>
 
-        <div class="hero-art">
+        <div class="hero__right">
+          <!-- IMPORTANT: relative path -->
           <div class="orb">
-            <img
-              id="heroImg"
-              class="hero-img"
-              src="hero.png"
-              alt="Tralala character"
-              loading="eager"
-              decoding="async"
-            />
+            <img class="hero__img" src="./hero.png" alt="Tralala character" />
           </div>
         </div>
       </div>
@@ -78,160 +61,150 @@
 
     <!-- TOKENOMICS -->
     <section class="section" id="tokenomics">
-      <div class="section-head">
+      <div class="container">
         <h2 class="h2">TOKENOMICS</h2>
-        <p class="muted">Transparent. Simple. Built for the meme.</p>
-      </div>
+        <p class="lead">Transparent. Simple. Built for the meme.</p>
 
-      <div class="grid-2">
-        <div class="card">
-          <div class="card-icon">◎</div>
-          <div>
-            <div class="kicker">TOTAL SUPPLY</div>
-            <div class="big">1,000,000,000</div>
-            <div class="muted">One billion TRALALA tokens</div>
+        <div class="cards">
+          <div class="card">
+            <div class="card__k">Total supply</div>
+            <div class="card__v">1,000,000,000</div>
+            <div class="card__s">One billion TRALALA tokens</div>
+          </div>
+
+          <div class="card">
+            <div class="card__k">Tax</div>
+            <div class="card__v">0%</div>
+            <div class="card__s">No buy/sell tax — pure trading</div>
+          </div>
+
+          <div class="card">
+            <div class="card__k">Liquidity</div>
+            <div class="card__v">Coming soon</div>
+            <div class="card__s">LP lock proof will be linked here</div>
+          </div>
+
+          <div class="card">
+            <div class="card__k">Contract</div>
+            <div class="card__v">Renounced</div>
+            <div class="card__s">Community-first setup</div>
           </div>
         </div>
 
-        <div class="card">
-          <div class="card-icon">%</div>
-          <div>
-            <div class="kicker">TAX</div>
-            <div class="big">0%</div>
-            <div class="muted">No buy/sell tax — pure trading</div>
+        <div class="contract">
+          <div class="contract__label">CONTRACT ADDRESS</div>
+          <div class="contract__row">
+            <input id="contractValue" class="contract__input" type="text" value="PASTE_CONTRACT_ADDRESS_HERE" readonly />
+            <button id="copyBtn" class="btn btn--small" type="button">Copy</button>
           </div>
+          <div id="toast" class="toast" aria-live="polite"></div>
         </div>
-
-        <div class="card">
-          <div class="card-icon">🔒</div>
-          <div>
-            <div class="kicker">LIQUIDITY</div>
-            <div class="big">Coming Soon</div>
-            <div class="muted">LP lock proof will be linked here</div>
-          </div>
-        </div>
-
-        <div class="card">
-          <div class="card-icon">⚡</div>
-          <div>
-            <div class="kicker">CONTRACT</div>
-            <div class="big">Renounced</div>
-            <div class="muted">Community-first setup</div>
-          </div>
-        </div>
-      </div>
-
-      <div class="contract">
-        <div class="contract-left">
-          <div class="kicker">CONTRACT ADDRESS</div>
-          <div class="contract-pill" id="contractValue">PASTE_CONTRACT_ADDRESS_HERE</div>
-        </div>
-
-        <button class="btn btn-small" id="copyContract" type="button">
-          COPY
-        </button>
       </div>
     </section>
 
     <!-- HOW TO BUY -->
     <section class="section" id="how">
-      <div class="section-head">
+      <div class="container">
         <h2 class="h2">HOW TO BUY</h2>
-        <p class="muted">Four simple steps.</p>
-      </div>
+        <p class="lead">Four simple steps.</p>
 
-      <div class="steps">
-        <div class="step">
-          <div class="step-icon">👛</div>
-          <div class="step-body">
-            <div class="step-title">Get a Wallet</div>
-            <div class="muted">Download Phantom or Solflare and set it up securely.</div>
+        <div class="steps">
+          <div class="step">
+            <div class="step__icon">👛</div>
+            <div class="step__text">
+              <div class="step__title">Get a wallet</div>
+              <div class="step__desc">Download Phantom or Solflare and set it up securely.</div>
+            </div>
+            <div class="step__num">01</div>
           </div>
-          <div class="step-num">01</div>
-        </div>
 
-        <div class="step">
-          <div class="step-icon">◌</div>
-          <div class="step-body">
-            <div class="step-title">Get SOL</div>
-            <div class="muted">Buy SOL on an exchange and send it to your wallet.</div>
+          <div class="step">
+            <div class="step__icon">🪙</div>
+            <div class="step__text">
+              <div class="step__title">Get SOL</div>
+              <div class="step__desc">Buy SOL on an exchange and send it to your wallet.</div>
+            </div>
+            <div class="step__num">02</div>
           </div>
-          <div class="step-num">02</div>
-        </div>
 
-        <div class="step">
-          <div class="step-icon">⇄</div>
-          <div class="step-body">
-            <div class="step-title">Swap for $TRALALA</div>
-            <div class="muted">Open Pump.fun and buy using the official link.</div>
+          <div class="step">
+            <div class="step__icon">🔁</div>
+            <div class="step__text">
+              <div class="step__title">Swap for $TRALALA</div>
+              <div class="step__desc">Use Pump.fun link above (or your preferred DEX after launch).</div>
+            </div>
+            <div class="step__num">03</div>
           </div>
-          <div class="step-num">03</div>
-        </div>
 
-        <div class="step">
-          <div class="step-icon">⭐</div>
-          <div class="step-body">
-            <div class="step-title">HODL & Enjoy</div>
-            <div class="muted">Hold strong and enjoy the meme ride.</div>
+          <div class="step">
+            <div class="step__icon">⭐</div>
+            <div class="step__text">
+              <div class="step__title">HODL & enjoy</div>
+              <div class="step__desc">Hold strong and enjoy the meme ride.</div>
+            </div>
+            <div class="step__num">04</div>
           </div>
-          <div class="step-num">04</div>
         </div>
       </div>
     </section>
 
     <!-- JOIN -->
     <section class="section" id="join">
-      <div class="section-head">
+      <div class="container">
         <h2 class="h2">JOIN THE ARMY</h2>
-        <p class="muted">Join us and follow the lore.</p>
-      </div>
+        <p class="lead">Join us and follow the lore.</p>
 
-      <div class="join-grid">
-        <a class="join-card" id="xLink" href="#" target="_blank" rel="noopener">
-          <div class="join-ic">X</div>
-          <div>
-            <div class="join-title">Community</div>
-            <div class="muted">Join on X</div>
-          </div>
-        </a>
+        <div class="social">
+          <a class="social__card" href="https://x.com/" target="_blank" rel="noopener">
+            <div class="social__icon">𝕏</div>
+            <div>
+              <div class="social__title">Community</div>
+              <div class="social__desc">Join on X</div>
+            </div>
+          </a>
 
-        <a class="join-card" id="ttLink" href="#" target="_blank" rel="noopener">
-          <div class="join-ic">♪</div>
-          <div>
-            <div class="join-title">TikTok</div>
-            <div class="muted">@mythosmondayss</div>
-          </div>
-        </a>
+          <a class="social__card" href="https://www.tiktok.com/@mythosmonday" target="_blank" rel="noopener">
+            <div class="social__icon">♪</div>
+            <div>
+              <div class="social__title">TikTok</div>
+              <div class="social__desc">@mythosmonday</div>
+            </div>
+          </a>
+        </div>
       </div>
     </section>
 
-    <!-- GALLERY (auto-hidden if empty) -->
+    <!-- GALLERY -->
     <section class="section" id="gallery">
-      <div class="section-head">
+      <div class="container">
         <h2 class="h2">GALLERY</h2>
-        <p class="muted">Swipe through the community moments.</p>
-      </div>
+        <p class="lead">Swipe through the community moments.</p>
 
-      <div class="gallery">
-        <button class="gal-btn" id="galPrev" type="button" aria-label="Previous">‹</button>
+        <div class="gallery">
+          <button class="gallery__nav" id="galPrev" type="button" aria-label="Previous">‹</button>
 
-        <div class="gal-frame">
-          <img id="galImg" class="gal-img" alt="Gallery image" />
-          <div id="galCap" class="gal-cap"></div>
+          <div class="gallery__frame">
+            <img id="galImg" class="gallery__img" alt="Gallery image" />
+            <div id="galCap" class="gallery__cap"></div>
+          </div>
+
+          <button class="gallery__nav" id="galNext" type="button" aria-label="Next">›</button>
         </div>
-
-        <button class="gal-btn" id="galNext" type="button" aria-label="Next">›</button>
       </div>
     </section>
 
     <footer class="footer">
-      <div class="footer-inner">
-        <span class="muted">© <span id="year"></span> TRALALA</span>
+      <div class="container footer__inner">
+        <span>© <span id="year"></span> $TRALALA</span>
       </div>
     </footer>
-
   </main>
 
-  <script src="script.js"></script>
+  <!-- Audio toggle (bottom-left). Clean icon (no emoji). -->
+  <button id="audioToggle" class="audio" type="button" aria-label="Toggle sound">
+    <span id="audioIcon" class="audio__icon" aria-hidden="true"></span>
+  </button>
+
+  <script src="./script.js"></script>
 </body>
 </html>
