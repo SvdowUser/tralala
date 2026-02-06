@@ -1,278 +1,224 @@
-<!DOCTYPE html>
-<html lang="en">
+<!doctype html>
+<html lang="de">
 <head>
-  <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover" />
   <title>TRALALA</title>
-  <link rel="stylesheet" href="./styles.css?v=3">
+  <link rel="stylesheet" href="./styles.css" />
 </head>
 
 <body>
-  <!-- Ambient background -->
-  <div class="bg"></div>
+  <!-- Background audio (will only start after user click) -->
+  <audio id="bgAudio" src="./bg.mp3" preload="auto" loop muted playsinline></audio>
 
-  <!-- Header -->
   <header class="topbar">
-    <a class="brand" href="#top" aria-label="Go to top">
-      <img class="brand-logo" id="logoImg" src="./logo.png" alt="TRALALA logo" />
-      <span class="brand-text" id="logoText">TRALALA</span>
+    <a class="brand" href="#top" aria-label="Zur Startseite">
+      <!-- Optional: If you DON'T have logo.png, it auto-hides and shows text -->
+      <img class="brand__logo" src="./logo.png" alt="TRALALA Logo"
+           onerror="this.style.display='none'; this.nextElementSibling.style.display='inline-flex';" />
+      <span class="brand__text" style="display:none;">TRALALA</span>
     </a>
 
-    <button class="menu-btn" id="menuBtn" aria-label="Open menu" aria-expanded="false">
-      <span></span><span></span><span></span>
-    </button>
-
-    <nav class="menu" id="menu" aria-label="Main navigation">
-      <a href="#tokenomics">Tokenomics</a>
-      <a href="#how">How to Buy</a>
-      <a href="#join">Join</a>
-      <a href="#gallery">Gallery</a>
+    <nav class="nav">
+      <a class="nav__link" href="#tokenomics">Tokenomics</a>
+      <a class="nav__link" href="#how">How to buy</a>
+      <a class="nav__link" href="#community">Join</a>
+      <a class="nav__link" href="#buy">Buy</a>
     </nav>
   </header>
 
-  <!-- Audio toggle -->
-  <button class="audio-toggle" id="audioToggle" aria-label="Toggle sound" title="Sound">
-    <svg id="audioIcon" width="22" height="22" viewBox="0 0 24 24" fill="none" aria-hidden="true">
-      <path d="M11 5L6.5 9H3v6h3.5L11 19V5Z" stroke="currentColor" stroke-width="2" stroke-linejoin="round"/>
-      <path d="M15 9c1.2 1 1.2 5 0 6" stroke="currentColor" stroke-width="2" stroke-linecap="round"/>
-      <path d="M17.5 7.5c2.5 2.2 2.5 6.8 0 9" stroke="currentColor" stroke-width="2" stroke-linecap="round"/>
-    </svg>
-  </button>
+  <main id="top">
+    <!-- HERO -->
+    <section class="section hero">
+      <div class="container hero__grid">
+        <div class="hero__left">
+          <div class="badge">
+            <span class="badge__dot"></span>
+            <span>LIVE ON SOLANA</span>
+          </div>
 
-  <!-- HERO -->
-  <main id="top" class="wrap">
-    <section class="hero">
-      <div class="hero-left">
-        <div class="pill">LIVE ON SOLANA</div>
+          <h1 class="hero__title">$TRALALA</h1>
+          <p class="hero__sub">
+            The cutest brainrot fish has emerged from TikTok.
+          </p>
 
-        <h1 class="title">
-          <span class="title-glow">$TRALALA</span>
-        </h1>
-
-        <p class="subtitle">
-          The cutest brainrot fish has emerged from TikTok.
-        </p>
-
-        <div class="cta-row">
-          <a class="btn primary" href="#buy">BUY $TRALALA</a>
-          <a class="btn ghost" href="#tokenomics">VIEW TOKENOMICS</a>
+          <div class="hero__cta">
+            <a class="btn btn--primary" href="#buy">BUY $TRALALA</a>
+            <a class="btn btn--ghost" href="#tokenomics">VIEW TOKENOMICS</a>
+          </div>
         </div>
-      </div>
 
-      <div class="hero-right">
-        <div class="portal">
-          <img id="heroImg" class="hero-img" alt="Tralala character" />
+        <div class="hero__right">
+          <div class="orb">
+            <!-- Hero image (transparent PNG ok) -->
+            <img
+              class="hero__img"
+              src="./hero.png"
+              alt=""
+              loading="eager"
+              onerror="this.style.display='none';"
+            />
+          </div>
         </div>
       </div>
     </section>
 
     <!-- TOKENOMICS -->
-    <section id="tokenomics" class="section">
-      <div class="section-head">
-        <h2 class="section-title">TOKENOMICS</h2>
-        <p class="section-sub">Transparent. Simple. Built for the meme.</p>
-      </div>
+    <section id="tokenomics" class="section tokenomics">
+      <div class="container">
+        <h2 class="section__title">TOKENOMICS</h2>
+        <p class="section__sub">Transparent. Simple. Built for the meme.</p>
 
-      <div class="grid">
-        <div class="card">
-          <div class="card-top">
-            <div class="icon">
-              <svg viewBox="0 0 24 24" fill="none" aria-hidden="true">
-                <path d="M7 7h10v10H7V7Z" stroke="currentColor" stroke-width="2"/>
-                <path d="M5 9V5h4" stroke="currentColor" stroke-width="2" stroke-linecap="round"/>
-                <path d="M19 15v4h-4" stroke="currentColor" stroke-width="2" stroke-linecap="round"/>
-              </svg>
-            </div>
-            <div class="label">Total Supply</div>
+        <div class="grid cards">
+          <article class="card">
+            <div class="card__icon">◎</div>
+            <div class="card__label">Total Supply</div>
+            <div class="card__value">1,000,000,000</div>
+            <div class="card__hint">One billion TRALALA tokens</div>
+          </article>
+
+          <article class="card">
+            <div class="card__icon">%</div>
+            <div class="card__label">Tax</div>
+            <div class="card__value">0%</div>
+            <div class="card__hint">No buy/sell tax — pure trading</div>
+          </article>
+
+          <article class="card">
+            <div class="card__icon">🔒</div>
+            <div class="card__label">Liquidity</div>
+            <div class="card__value">Coming Soon</div>
+            <div class="card__hint">LP lock proof will be linked here</div>
+          </article>
+
+          <article class="card">
+            <div class="card__icon">⚡</div>
+            <div class="card__label">Contract</div>
+            <div class="card__value">Renounced</div>
+            <div class="card__hint">Community-first setup</div>
+          </article>
+        </div>
+
+        <div class="contract">
+          <div class="contract__label">CONTRACT ADDRESS</div>
+          <div class="contract__row">
+            <code id="contractValue" class="contract__code">PASTE_CONTRACT_ADDRESS_HERE</code>
+            <button id="copyContract" class="btn btn--small" type="button">COPY</button>
           </div>
-          <div class="value">1,000,000,000</div>
-          <div class="muted">One billion TRALALA tokens</div>
         </div>
-
-        <div class="card">
-          <div class="card-top">
-            <div class="icon">
-              <svg viewBox="0 0 24 24" fill="none" aria-hidden="true">
-                <path d="M12 3v18" stroke="currentColor" stroke-width="2" stroke-linecap="round"/>
-                <path d="M7 7c0-2 10-2 10 0s-10 2-10 4 10 2 10 4-10 2-10 4" stroke="currentColor" stroke-width="2" stroke-linecap="round"/>
-              </svg>
-            </div>
-            <div class="label">Tax</div>
-          </div>
-          <div class="value">0%</div>
-          <div class="muted">No buy/sell tax — pure trading</div>
-        </div>
-
-        <div class="card">
-          <div class="card-top">
-            <div class="icon">
-              <svg viewBox="0 0 24 24" fill="none" aria-hidden="true">
-                <path d="M12 2C8 7 6 10 6 13a6 6 0 0012 0c0-3-2-6-6-11Z" stroke="currentColor" stroke-width="2" stroke-linejoin="round"/>
-              </svg>
-            </div>
-            <div class="label">Liquidity</div>
-          </div>
-          <div class="value">Coming Soon</div>
-          <div class="muted">LP lock proof will be linked here</div>
-        </div>
-
-        <div class="card">
-          <div class="card-top">
-            <div class="icon">
-              <svg viewBox="0 0 24 24" fill="none" aria-hidden="true">
-                <path d="M13 2L4 14h7l-1 8 10-14h-7l0-6Z" stroke="currentColor" stroke-width="2" stroke-linejoin="round"/>
-              </svg>
-            </div>
-            <div class="label">Contract</div>
-          </div>
-          <div class="value">Renounced</div>
-          <div class="muted">Community-first setup</div>
-        </div>
-      </div>
-
-      <div class="contract">
-        <div class="contract-left">
-          <div class="contract-title">CONTRACT ADDRESS</div>
-          <div class="contract-box" id="contractBox">PASTE_CONTRACT_ADDRESS_HERE</div>
-        </div>
-        <button class="btn small" id="copyBtn">COPY</button>
       </div>
     </section>
 
     <!-- HOW TO BUY -->
-    <section id="how" class="section">
-      <div class="section-head">
-        <h2 class="section-title">HOW TO BUY</h2>
-        <p class="section-sub">Four simple steps.</p>
-      </div>
+    <section id="how" class="section how">
+      <div class="container">
+        <h2 class="section__title">HOW TO BUY</h2>
+        <p class="section__sub">Four simple steps.</p>
 
-      <div class="steps">
-        <div class="step">
-          <div class="step-ic">
-            <svg viewBox="0 0 24 24" fill="none" aria-hidden="true">
-              <path d="M7 10V8a5 5 0 0110 0v2" stroke="currentColor" stroke-width="2" stroke-linecap="round"/>
-              <path d="M6 10h12v10H6V10Z" stroke="currentColor" stroke-width="2"/>
-            </svg>
+        <div class="steps">
+          <div class="step">
+            <div class="step__icon">👛</div>
+            <div class="step__text">
+              <div class="step__title">Get a Wallet</div>
+              <div class="step__desc">Download Phantom or Solflare and set it up securely.</div>
+            </div>
+            <div class="step__num">01</div>
           </div>
-          <div class="step-text">
-            <div class="step-title">Get a Wallet</div>
-            <div class="step-sub">Download Phantom or Solflare and set it up securely.</div>
-          </div>
-          <div class="step-n">01</div>
-        </div>
 
-        <div class="step">
-          <div class="step-ic">
-            <svg viewBox="0 0 24 24" fill="none" aria-hidden="true">
-              <path d="M12 2v20" stroke="currentColor" stroke-width="2" stroke-linecap="round"/>
-              <path d="M7 7h10" stroke="currentColor" stroke-width="2" stroke-linecap="round"/>
-              <path d="M7 17h10" stroke="currentColor" stroke-width="2" stroke-linecap="round"/>
-            </svg>
+          <div class="step">
+            <div class="step__icon">◎</div>
+            <div class="step__text">
+              <div class="step__title">Get SOL</div>
+              <div class="step__desc">Buy SOL on an exchange and send it to your wallet.</div>
+            </div>
+            <div class="step__num">02</div>
           </div>
-          <div class="step-text">
-            <div class="step-title">Get SOL</div>
-            <div class="step-sub">Buy SOL on an exchange and send it to your wallet.</div>
-          </div>
-          <div class="step-n">02</div>
-        </div>
 
-        <div class="step">
-          <div class="step-ic">
-            <svg viewBox="0 0 24 24" fill="none" aria-hidden="true">
-              <path d="M7 7h10M7 12h10M7 17h10" stroke="currentColor" stroke-width="2" stroke-linecap="round"/>
-              <path d="M4 12a8 8 0 0116 0" stroke="currentColor" stroke-width="2" stroke-linecap="round"/>
-            </svg>
+          <div class="step">
+            <div class="step__icon">⇄</div>
+            <div class="step__text">
+              <div class="step__title">Swap for $TRALALA</div>
+              <div class="step__desc">Use Jupiter/Raydium, paste the contract, and swap.</div>
+            </div>
+            <div class="step__num">03</div>
           </div>
-          <div class="step-text">
-            <div class="step-title">Swap for $TRALALA</div>
-            <div class="step-sub">Use Jupiter/Raydium, paste the contract, and swap.</div>
-          </div>
-          <div class="step-n">03</div>
-        </div>
 
-        <div class="step">
-          <div class="step-ic">
-            <svg viewBox="0 0 24 24" fill="none" aria-hidden="true">
-              <path d="M12 2l3 7h7l-6 4 2 8-6-5-6 5 2-8-6-4h7l3-7Z" stroke="currentColor" stroke-width="2" stroke-linejoin="round"/>
-            </svg>
+          <div class="step">
+            <div class="step__icon">⭐</div>
+            <div class="step__text">
+              <div class="step__title">HODL & Enjoy</div>
+              <div class="step__desc">Hold strong and enjoy the meme ride.</div>
+            </div>
+            <div class="step__num">04</div>
           </div>
-          <div class="step-text">
-            <div class="step-title">HODL & Enjoy</div>
-            <div class="step-sub">Hold strong and enjoy the meme ride.</div>
-          </div>
-          <div class="step-n">04</div>
         </div>
       </div>
     </section>
 
-    <!-- JOIN -->
-    <section id="join" class="section">
-      <div class="section-head">
-        <h2 class="section-title">JOIN THE ARMY</h2>
-        <p class="section-sub">The TRALALA community is growing stronger. Join us and follow the lore.</p>
-      </div>
+    <!-- COMMUNITY -->
+    <section id="community" class="section community">
+      <div class="container">
+        <h2 class="section__title">JOIN THE ARMY</h2>
+        <p class="section__sub">Join us and follow the lore.</p>
 
-      <div class="join-grid">
-        <a class="join-card" id="xLink" href="https://x.com" target="_blank" rel="noreferrer">
-          <div class="join-ic">X</div>
-          <div class="join-txt">
-            <div class="join-title">Community</div>
-            <div class="join-sub">Join on X</div>
-          </div>
-        </a>
+        <div class="grid community__grid">
+          <a class="pill" href="https://x.com/" target="_blank" rel="noreferrer">
+            <span class="pill__icon">X</span>
+            <span class="pill__text">
+              <span class="pill__title">Community</span>
+              <span class="pill__sub">Join on X</span>
+            </span>
+          </a>
 
-        <a class="join-card" id="ttLink" href="https://www.tiktok.com/@mythosmonday" target="_blank" rel="noreferrer">
-          <div class="join-ic">
-            <svg viewBox="0 0 24 24" fill="none" aria-hidden="true">
-              <path d="M14 3v11.5a3.5 3.5 0 11-3-3.45" stroke="currentColor" stroke-width="2" stroke-linecap="round"/>
-              <path d="M14 5c1 3 3 4 6 4" stroke="currentColor" stroke-width="2" stroke-linecap="round"/>
-            </svg>
-          </div>
-          <div class="join-txt">
-            <div class="join-title">TikTok</div>
-            <div class="join-sub">@mythosmonday</div>
-          </div>
-        </a>
-      </div>
-    </section>
-
-    <!-- GALLERY -->
-    <section id="gallery" class="section">
-      <div class="section-head">
-        <h2 class="section-title">GALLERY</h2>
-        <p class="section-sub">Swipe through the community moments.</p>
-      </div>
-
-      <div class="gallery">
-        <button class="gal-btn" id="galPrev" aria-label="Previous">‹</button>
-
-        <div class="gal-frame">
-          <img id="galImg" alt="Gallery image"/>
-          <div class="gal-cap" id="galCap"></div>
+          <a class="pill" href="https://www.tiktok.com/@mythosmondays" target="_blank" rel="noreferrer">
+            <span class="pill__icon">♪</span>
+            <span class="pill__text">
+              <span class="pill__title">TikTok</span>
+              <span class="pill__sub">@mythosmondays</span>
+            </span>
+          </a>
         </div>
-
-        <button class="gal-btn" id="galNext" aria-label="Next">›</button>
       </div>
     </section>
 
-    <!-- BUY -->
+    <!-- GALLERY (auto-hides if empty in script.js) -->
+    <section id="gallery" class="section gallery">
+      <div class="container">
+        <h2 class="section__title">GALLERY</h2>
+        <p class="section__sub">Swipe through the community moments.</p>
+
+        <div class="gallery__frame">
+          <button class="gallery__btn" id="galPrev" type="button" aria-label="Vorheriges Bild">‹</button>
+          <div class="gallery__viewport">
+            <img id="galImg" alt="" />
+            <div id="galCap" class="gallery__cap"></div>
+          </div>
+          <button class="gallery__btn" id="galNext" type="button" aria-label="Nächstes Bild">›</button>
+        </div>
+      </div>
+    </section>
+
+    <!-- BUY NOW -->
     <section id="buy" class="section buy">
-      <div class="section-head">
-        <h2 class="section-title">BUY NOW</h2>
-        <p class="section-sub">Connect your wallet and trade safely. Always verify the contract address.</p>
-      </div>
+      <div class="container buy__row">
+        <div>
+          <h2 class="section__title">BUY NOW</h2>
+          <p class="section__sub">Connect your wallet and trade safely. Always verify the contract address.</p>
+        </div>
 
-      <div class="buy-row">
-        <a class="btn primary" href="#tokenomics">SEE TOKENOMICS</a>
-        <a class="btn ghost" href="#how">HOW TO BUY</a>
+        <div class="buy__cta">
+          <a class="btn btn--ghost" href="#tokenomics">SEE TOKENOMICS</a>
+          <a class="btn btn--primary" href="#how">HOW TO BUY</a>
+        </div>
       </div>
     </section>
-
-    <footer class="footer">
-      <div class="muted small-note">© TRALALA — community driven.</div>
-    </footer>
   </main>
 
-  <script src="./script.js?v=3"></script>
+  <!-- Audio toggle (no emoji, just clean icon) -->
+  <button id="audioToggle" class="audioToggle" type="button" aria-label="Audio umschalten">
+    <span class="audioToggle__icon" id="audioIcon" aria-hidden="true"></span>
+  </button>
+
+  <script src="./script.js"></script>
 </body>
 </html>
