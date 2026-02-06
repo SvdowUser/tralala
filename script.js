@@ -1,142 +1,166 @@
-// --------------------
-// Drawer Menu
-// --------------------
-const drawer = document.getElementById("drawer");
-const menuBtn = document.getElementById("menuBtn");
-const closeDrawer = document.getElementById("closeDrawer");
+// ========= Helpers =========
+const $ = (q) => document.querySelector(q);
+const $$ = (q) => document.querySelectorAll(q);
 
-function openDrawer(){
-  drawer.classList.add("open");
-  drawer.setAttribute("aria-hidden", "false");
+// ========= Menu =========
+const menuBtn = $("#menuBtn");
+const menuOverlay = $("#menuOverlay");
+const menuClose = $("#menuClose");
+
+function openMenu(){
+  menuOverlay.classList.add("open");
+  menuOverlay.setAttribute("aria-hidden", "false");
 }
-function shutDrawer(){
-  drawer.classList.remove("open");
-  drawer.setAttribute("aria-hidden", "true");
+function closeMenu(){
+  menuOverlay.classList.remove("open");
+  menuOverlay.setAttribute("aria-hidden", "true");
+}
+menuBtn?.addEventListener("click", openMenu);
+menuClose?.addEventListener("click", closeMenu);
+menuOverlay?.addEventListener("click", (e) => {
+  if (e.target === menuOverlay) closeMenu();
+});
+$$(".menu-links a").forEach(a => a.addEventListener("click", closeMenu));
+
+// ========= Audio (IMPORTANT: autoplay blocked; start on first user gesture) =========
+const audio = $("#bgAudio");
+const soundBtn = $("#soundBtn");
+const soundIcon = $("#soundIcon");
+
+let audioEnabled = false;   // user wants sound
+let audioStarted = false;   // audio actually started once
+
+function setIcon(){
+  soundIcon.textContent = audioEnabled ? "🔊" : "🔇";
 }
 
-menuBtn?.addEventListener("click", openDrawer);
-closeDrawer?.addEventListener("click", shutDrawer);
-drawer?.addEventListener("click", (e) => {
-  if (e.target === drawer) shutDrawer();
-});
-document.querySelectorAll(".drawer-link").forEach(a => {
-  a.addEventListener("click", () => shutDrawer());
-});
+// Try to start audio (must be called after user interaction)
+async function tryStartAudio(){
+  if (!audio) return;
+  if (audioStarted) return;
 
-// --------------------
-// Audio (autoplay safe)
-// --------------------
-const audio = document.getElementById("bgMusic");
-const audioBtn = document.getElementById("audioBtn");
-
-let started = false;
-
-async function startAudio(){
-  if (!audio || started) return;
-  started = true;
-  audio.volume = 0.35;
-  audio.muted = false;
-
-  try{
+  try {
+    audio.volume = 0.85; // you can change
     await audio.play();
-    if (audioBtn) audioBtn.textContent = "🔊";
-  }catch(err){
-    // blocked: user must click button once
-    started = false;
+    audioStarted = true;
+  } catch (err) {
+    // If browser still blocks, user can press sound button again.
   }
 }
 
-// Start audio on first user interaction (mobile-friendly)
-window.addEventListener("pointerdown", startAudio, { once: true });
+// Toggle sound (AN/AUS only)
+async function toggleSound(){
+  audioEnabled = !audioEnabled;
+  setIcon();
 
-audioBtn?.addEventListener("click", async () => {
-  if (!started) await startAudio();
   if (!audio) return;
-  audio.muted = !audio.muted;
-  audioBtn.textContent = audio.muted ? "🔇" : "🔊";
+
+  if (audioEnabled) {
+    // Start audio if not started yet
+    await tryStartAudio();
+    audio.muted = false;
+  } else {
+    audio.muted = true;
+  }
+}
+
+// Button click
+soundBtn?.addEventListener("click", async () => {
+  await toggleSound();
 });
 
-// --------------------
-// Contract copy
-// --------------------
-const copyBtn = document.getElementById("copyBtn");
-const contractText = document.getElementById("contractText");
-const copyStatus = document.getElementById("copyStatus");
+// Start audio ON FIRST user click anywhere (only if they enabled sound once)
+// If you want "first click starts sound immediately", set audioEnabled=true by default.
+// But you asked for a toggle, so we keep it OFF by default.
+document.addEventListener("click", async () => {
+  // If user already turned it on but audio didn't start yet, try again.
+  if (audioEnabled && !audioStarted) await tryStartAudio();
+}, { once: false });
+
+// Default state: muted/off
+if (audio) audio.muted = true;
+setIcon();
+
+// ========= Copy Contract =========
+const copyBtn = $("#copyBtn");
+const contractText = $("#contractText");
 
 copyBtn?.addEventListener("click", async () => {
-  try{
-    const text = contractText?.innerText?.trim() || "";
-    await navigator.clipboard.writeText(text);
-    if (copyStatus) copyStatus.textContent = "Copied!";
-    setTimeout(() => { if (copyStatus) copyStatus.textContent = ""; }, 1400);
-  }catch(e){
-    if (copyStatus) copyStatus.textContent = "Copy failed — long-press to copy.";
+  try {
+    const txt = contractText?.textContent?.trim() || "";
+    await navigator.clipboard.writeText(txt);
+    copyBtn.textContent = "Copied!";
+    setTimeout(() => (copyBtn.textContent = "Copy"), 1200);
+  } catch {
+    copyBtn.textContent = "Copy failed";
+    setTimeout(() => (copyBtn.textContent = "Copy"), 1200);
   }
 });
 
-// --------------------
-// Gallery slider
-// Replace/extend file names here
-// --------------------
-const galleryFiles = [
-  "assets/gallery1.jpg",
-  "assets/gallery2.jpg",
-  "assets/gallery3.jpg",
-  "assets/gallery4.jpg",
-  "assets/gallery5.jpg",
-  "assets/gallery6.jpg"
-];
+// ========= Gallery slider =========
+const track = $("#galTrack");
+const prev = $("#galPrev");
+const next = $("#galNext");
+const dotsWrap = $("#galDots");
 
-const galleryImg = document.getElementById("galleryImg");
-const prevImg = document.getElementById("prevImg");
-const nextImg = document.getElementById("nextImg");
-const dotsWrap = document.getElementById("dots");
-
-let idx = 0;
-
-function renderDots(){
-  if (!dotsWrap) return;
-  dotsWrap.innerHTML = "";
-  galleryFiles.forEach((_, i) => {
-    const d = document.createElement("div");
-    d.className = "dotty" + (i === idx ? " active" : "");
-    d.addEventListener("click", () => {
-      idx = i;
-      updateGallery();
-    });
-    dotsWrap.appendChild(d);
-  });
-}
+let index = 0;
+let total = 0;
 
 function updateGallery(){
-  if (!galleryImg) return;
-  galleryImg.src = galleryFiles[idx];
-  renderDots();
+  if (!track) return;
+  track.style.transform = `translateX(${-index * 100}%)`;
+
+  if (dotsWrap) {
+    $$(".dotbtn").forEach((d, i) => d.classList.toggle("active", i === index));
+  }
 }
 
-prevImg?.addEventListener("click", () => {
-  idx = (idx - 1 + galleryFiles.length) % galleryFiles.length;
+function buildDots(){
+  if (!track || !dotsWrap) return;
+  const imgs = track.querySelectorAll("img");
+  total = imgs.length;
+  dotsWrap.innerHTML = "";
+
+  for (let i = 0; i < total; i++){
+    const b = document.createElement("button");
+    b.className = "dotbtn" + (i === 0 ? " active" : "");
+    b.setAttribute("aria-label", `Go to slide ${i + 1}`);
+    b.addEventListener("click", () => {
+      index = i;
+      updateGallery();
+    });
+    dotsWrap.appendChild(b);
+  }
+}
+
+prev?.addEventListener("click", () => {
+  index = (index - 1 + total) % total;
   updateGallery();
 });
-
-nextImg?.addEventListener("click", () => {
-  idx = (idx + 1) % galleryFiles.length;
+next?.addEventListener("click", () => {
+  index = (index + 1) % total;
   updateGallery();
 });
 
 // Swipe on mobile
 let startX = 0;
-galleryImg?.addEventListener("touchstart", (e) => {
+let dx = 0;
+track?.addEventListener("touchstart", (e) => {
   startX = e.touches[0].clientX;
+  dx = 0;
 }, { passive: true });
 
-galleryImg?.addEventListener("touchend", (e) => {
-  const endX = e.changedTouches[0].clientX;
-  const diff = endX - startX;
-  if (Math.abs(diff) > 40){
-    if (diff > 0) prevImg?.click();
-    else nextImg?.click();
+track?.addEventListener("touchmove", (e) => {
+  dx = e.touches[0].clientX - startX;
+}, { passive: true });
+
+track?.addEventListener("touchend", () => {
+  if (Math.abs(dx) > 50) {
+    if (dx < 0) index = (index + 1) % total;
+    else index = (index - 1 + total) % total;
+    updateGallery();
   }
-}, { passive: true });
+});
 
+buildDots();
 updateGallery();
