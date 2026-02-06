@@ -6,121 +6,150 @@
   <title>TRALALA — The Viral Baby Shark</title>
   <meta name="description" content="TRALALA — born from brainrot, raised by the feed." />
 
-  <!-- Social preview -->
-  <meta property="og:title" content="TRALALA" />
-  <meta property="og:description" content="Born from brainrot. Raised by the feed." />
-  <meta property="og:image" content="assets/og.jpg" />
-  <meta name="theme-color" content="#ffffff" />
-
   <link rel="stylesheet" href="styles.css" />
 </head>
-
 <body>
-  <header class="wrap topbar">
+
+  <!-- Ambient Audio -->
+  <audio id="bgAudio" src="assets/bg.mp3" preload="auto" loop></audio>
+
+  <header class="topbar">
     <div class="brand">
-      <img src="assets/logo.png" alt="TRALALA logo" class="brand__logo" />
+      <img class="brand__logo" src="assets/logo.png" alt="TRALALA logo">
       <div class="brand__text">
         <div class="brand__name">TRALALA</div>
         <div class="brand__tag">The Viral Baby Shark</div>
       </div>
     </div>
 
-    <nav class="nav">
-      <a class="btn btn--ghost" href="#gallery">Gallery</a>
-      <a class="btn btn--ghost" href="#buy">How to Buy</a>
-      <a class="btn btn--solid" href="#links">Community</a>
-    </nav>
+    <div class="topbar__right">
+      <button class="iconbtn" id="audioBtn" aria-label="Sound">
+        <span id="audioIcon">🔇</span>
+      </button>
+
+      <button class="iconbtn" id="menuBtn" aria-label="Menu">☰</button>
+    </div>
   </header>
 
-  <main>
+  <!-- Mobile Menu -->
+  <div class="sheet" id="sheet" aria-hidden="true">
+    <a href="#buy" class="sheet__link">Buy</a>
+    <a href="#tokenomics" class="sheet__link">Tokenomics</a>
+    <a href="#gallery" class="sheet__link">Gallery</a>
+    <a href="#community" class="sheet__link">Community</a>
+    <a href="#contract" class="sheet__link">Contract</a>
+  </div>
+
+  <main class="wrap">
     <!-- HERO -->
-    <section class="wrap hero">
-      <div class="hero__left">
-        <h1>They say <span class="muted">tralala</span>.</h1>
-        <p class="lead">
-          Born from brainrot. Raised by the feed.
-          One main character — many viral forms.
-        </p>
+    <section class="hero">
+      <div class="hero__center">
 
-        <div class="cta">
-          <a class="btn btn--solid" href="#">Buy (soon)</a>
-          <a class="btn btn--ghost" href="#">Chart</a>
+        <div class="portal">
+          <div class="portal__ring"></div>
+          <div class="portal__glow"></div>
+
+          <!-- Character -->
+          <img class="character" src="assets/hero.png" alt="TRALALA character">
         </div>
 
-        <div class="meta">
-          <div><span class="label">Ticker:</span> $TRALA (suggested)</div>
-          <div><span class="label">Contract:</span> coming soon</div>
+        <h1 class="title">TRALALA</h1>
+        <p class="subtitle">They say tralala. Born from brainrot. Raised by the feed.</p>
+
+        <div class="actions" id="buy">
+          <a class="btn btn--primary" href="#" rel="nofollow">BUY NOW</a>
+          <a class="btn btn--ghost" href="#" rel="nofollow">VIEW CHART</a>
+        </div>
+
+        <div class="pillrow">
+          <div class="pill">Ticker: <b>$TRALA</b></div>
+          <div class="pill">Chain: <b>—</b></div>
+          <div class="pill">Tax: <b>0%</b></div>
         </div>
       </div>
+    </section>
 
-      <div class="hero__right">
-        <img src="assets/hero.jpg" alt="TRALALA hero" class="hero__img" />
+    <!-- TOKENOMICS -->
+    <section class="section" id="tokenomics">
+      <div class="section__head">
+        <h2>TOKENOMICS</h2>
+        <p>Clean. Simple. No roman.</p>
       </div>
+
+      <div class="cards">
+        <div class="card">
+          <div class="card__icon">📦</div>
+          <div class="card__title">Total Supply</div>
+          <div class="card__big">1,000,000,000</div>
+          <div class="card__text">Placeholder — setze hier deinen echten Supply.</div>
+        </div>
+
+        <div class="card">
+          <div class="card__icon">🧾</div>
+          <div class="card__title">Tax</div>
+          <div class="card__big">0%</div>
+          <div class="card__text">No buy/sell tax (falls das dein Plan ist).</div>
+        </div>
+
+        <div class="card">
+          <div class="card__icon">🔒</div>
+          <div class="card__title">LP / Lock</div>
+          <div class="card__big">TBD</div>
+          <div class="card__text">Trag später „Locked / Renounced“ ein, wenn es stimmt.</div>
+        </div>
+      </div>
+    </section>
+
+    <!-- CONTRACT -->
+    <section class="section" id="contract">
+      <div class="section__head">
+        <h2>CONTRACT ADDRESS</h2>
+        <p>Immer doppelt prüfen.</p>
+      </div>
+
+      <div class="contract">
+        <code id="contractText">COMING_SOON</code>
+        <button class="copybtn" id="copyBtn">Copy</button>
+      </div>
+      <div class="hint">Wenn du die Adresse hast, ersetze <b>COMING_SOON</b> im Code.</div>
     </section>
 
     <!-- GALLERY -->
-    <section id="gallery" class="wrap section">
+    <section class="section" id="gallery">
       <div class="section__head">
-        <h2>Viral Gallery</h2>
-        <p class="muted">Deine realistischen Varianten + der OG mit den blauen Schuhen.</p>
+        <h2>VIRAL GALLERY</h2>
+        <p>Deine realistischen Varianten + OG.</p>
       </div>
 
       <div class="grid">
-        <img src="assets/gallery/01.jpg" alt="TRALALA 01" />
-        <img src="assets/gallery/02.jpg" alt="TRALALA 02" />
-        <img src="assets/gallery/03.jpg" alt="TRALALA 03" />
-        <img src="assets/gallery/04.jpg" alt="TRALALA 04" />
-        <img src="assets/gallery/05.jpg" alt="TRALALA 05" />
-        <img src="assets/gallery/06.jpg" alt="TRALALA 06" />
+        <div class="ph">Drop image 01</div>
+        <div class="ph">Drop image 02</div>
+        <div class="ph">Drop image 03</div>
+        <div class="ph">Drop image 04</div>
+        <div class="ph">Drop image 05</div>
+        <div class="ph">Drop image 06</div>
       </div>
     </section>
 
-    <!-- HOW TO BUY -->
-    <section id="buy" class="wrap section">
+    <!-- COMMUNITY -->
+    <section class="section" id="community">
       <div class="section__head">
-        <h2>How to Buy</h2>
-        <p class="muted">Kurz & clean. Keine Romane.</p>
+        <h2>JOIN THE OCEAN</h2>
+        <p>Links erst setzen, wenn du sie wirklich hast (damit keiner faked).</p>
       </div>
 
-      <div class="steps">
-        <div class="card">
-          <div class="step">1</div>
-          <div class="card__title">Get a wallet</div>
-          <div class="card__text">Install a wallet and fund it.</div>
-        </div>
-        <div class="card">
-          <div class="step">2</div>
-          <div class="card__title">Swap</div>
-          <div class="card__text">Swap when contract is live.</div>
-        </div>
-        <div class="card">
-          <div class="step">3</div>
-          <div class="card__title">Join</div>
-          <div class="card__text">Community, memes, drops.</div>
-        </div>
+      <div class="actions">
+        <a class="btn btn--ghost" href="#" rel="nofollow">X / Twitter</a>
+        <a class="btn btn--ghost" href="#" rel="nofollow">Telegram</a>
+        <a class="btn btn--ghost" href="#" rel="nofollow">TikTok</a>
       </div>
     </section>
 
-    <!-- LINKS -->
-    <section id="links" class="wrap section">
-      <div class="section__head">
-        <h2>Links</h2>
-        <p class="muted">Erst echte Links eintragen, damit keiner faked.</p>
-      </div>
-
-      <div class="links">
-        <a class="btn btn--ghost" href="#">TikTok</a>
-        <a class="btn btn--ghost" href="#">X (Twitter)</a>
-        <a class="btn btn--ghost" href="#">Telegram</a>
-        <a class="btn btn--ghost" href="#">Dex / Chart</a>
-      </div>
-    </section>
-
-    <footer class="wrap footer">
-      <div class="muted small">
-        Disclaimer: For entertainment only. No financial advice. Crypto is risky — you can lose everything.
-      </div>
+    <footer class="footer">
+      <div>For entertainment only. No financial advice. Crypto is risky.</div>
     </footer>
   </main>
+
+  <script src="script.js"></script>
 </body>
 </html>
