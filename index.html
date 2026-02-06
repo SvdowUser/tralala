@@ -2,151 +2,239 @@
 <html lang="de">
 <head>
   <meta charset="utf-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <meta name="viewport" content="width=device-width,initial-scale=1" />
   <title>TRALALA — The Viral Baby Shark</title>
-  <meta name="description" content="TRALALA — born from brainrot, raised by the feed." />
-
+  <meta name="description" content="TRALALA — born from brainrot. Clean, simple, blue." />
   <link rel="stylesheet" href="styles.css" />
 </head>
+
 <body>
-
-  <!-- Ambient Audio -->
-  <audio id="bgAudio" src="assets/bg.mp3" preload="auto" loop></audio>
-
+  <!-- Top bar -->
   <header class="topbar">
     <div class="brand">
-      <img class="brand__logo" src="assets/logo.png" alt="TRALALA logo">
+      <div class="brand__logo" aria-hidden="true">🐟</div>
       <div class="brand__text">
-        <div class="brand__name">TRALALA</div>
-        <div class="brand__tag">The Viral Baby Shark</div>
+        <div class="brand__name">$TRALALA</div>
+        <div class="brand__tag">LIVE ON SOLANA (placeholder)</div>
       </div>
     </div>
 
-    <div class="topbar__right">
-      <button class="iconbtn" id="audioBtn" aria-label="Sound">
-        <span id="audioIcon">🔇</span>
-      </button>
+    <button class="icon-btn" id="musicBtn" aria-label="Music toggle" title="Music">
+      <span class="icon">🔊</span>
+    </button>
 
-      <button class="iconbtn" id="menuBtn" aria-label="Menu">☰</button>
-    </div>
+    <button class="icon-btn burger" id="menuOpen" aria-label="Open menu">
+      <span></span><span></span><span></span>
+    </button>
   </header>
 
-  <!-- Mobile Menu -->
-  <div class="sheet" id="sheet" aria-hidden="true">
-    <a href="#buy" class="sheet__link">Buy</a>
-    <a href="#tokenomics" class="sheet__link">Tokenomics</a>
-    <a href="#gallery" class="sheet__link">Gallery</a>
-    <a href="#community" class="sheet__link">Community</a>
-    <a href="#contract" class="sheet__link">Contract</a>
+  <!-- Menu overlay -->
+  <div class="menu" id="menu">
+    <div class="menu__sheet">
+      <button class="menu__close" id="menuClose" aria-label="Close menu">✕</button>
+
+      <nav class="menu__nav">
+        <a href="#tokenomics" class="menu__link">Tokenomics</a>
+        <a href="#how" class="menu__link">How to Buy</a>
+        <a href="#community" class="menu__link">Community</a>
+        <a href="#gallery" class="menu__link">Gallery</a>
+        <a href="#contract" class="menu__link">Contract</a>
+      </nav>
+
+      <a class="menu__cta" href="#buy">BUY NOW</a>
+    </div>
+  </div>
+
+  <!-- Background FX -->
+  <div class="bg">
+    <div class="bg__vignette"></div>
+    <div class="bg__stars"></div>
+    <div class="bg__nebula"></div>
   </div>
 
   <main class="wrap">
     <!-- HERO -->
-    <section class="hero">
-      <div class="hero__center">
+    <section class="hero" id="buy">
+      <div class="hero__pill">
+        <span class="dot"></span>
+        LIVE ON SOLANA <span class="dim">(placeholder)</span>
+      </div>
 
-        <div class="portal">
-          <div class="portal__ring"></div>
-          <div class="portal__glow"></div>
+      <h1 class="hero__title">
+        <span class="hero__titleGlow">$TRALALA</span>
+      </h1>
 
-          <!-- Character -->
-          <img class="character" src="assets/hero.png" alt="TRALALA character">
-        </div>
+      <p class="hero__sub">
+        The viral baby shark has emerged from the feed. Clean brainrot. Blue glow.
+      </p>
 
-        <h1 class="title">TRALALA</h1>
-        <p class="subtitle">They say tralala. Born from brainrot. Raised by the feed.</p>
+      <div class="hero__buttons">
+        <a class="btn btn--primary" href="#how">BUY $TRALALA</a>
+        <a class="btn btn--secondary" href="#chart">VIEW CHART</a>
+      </div>
 
-        <div class="actions" id="buy">
-          <a class="btn btn--primary" href="#" rel="nofollow">BUY NOW</a>
-          <a class="btn btn--ghost" href="#" rel="nofollow">VIEW CHART</a>
-        </div>
+      <!-- Portal -->
+      <div class="portal">
+        <div class="portal__beam"></div>
+        <div class="portal__ring"></div>
+        <div class="portal__ring portal__ring--inner"></div>
 
-        <div class="pillrow">
-          <div class="pill">Ticker: <b>$TRALA</b></div>
-          <div class="pill">Chain: <b>—</b></div>
-          <div class="pill">Tax: <b>0%</b></div>
+        <!-- Character placeholder (replace later with an <img>) -->
+        <div class="portal__float">
+          <div class="character" id="character">
+            <div class="character__label">YOUR SHARK IMAGE HERE</div>
+            <div class="character__hint">Replace this box with &lt;img src="assets/shark.png"&gt;</div>
+          </div>
         </div>
       </div>
+
+      <!-- audio element (optional) -->
+      <audio id="bgMusic" loop preload="none">
+        <!-- OPTIONAL: put your audio file into repo and set src below
+             Example: <source src="assets/theme.mp3" type="audio/mpeg" />
+        -->
+      </audio>
     </section>
 
     <!-- TOKENOMICS -->
     <section class="section" id="tokenomics">
       <div class="section__head">
-        <h2>TOKENOMICS</h2>
-        <p>Clean. Simple. No roman.</p>
-      </div>
-
-      <div class="cards">
-        <div class="card">
-          <div class="card__icon">📦</div>
-          <div class="card__title">Total Supply</div>
-          <div class="card__big">1,000,000,000</div>
-          <div class="card__text">Placeholder — setze hier deinen echten Supply.</div>
-        </div>
-
-        <div class="card">
-          <div class="card__icon">🧾</div>
-          <div class="card__title">Tax</div>
-          <div class="card__big">0%</div>
-          <div class="card__text">No buy/sell tax (falls das dein Plan ist).</div>
-        </div>
-
-        <div class="card">
-          <div class="card__icon">🔒</div>
-          <div class="card__title">LP / Lock</div>
-          <div class="card__big">TBD</div>
-          <div class="card__text">Trag später „Locked / Renounced“ ein, wenn es stimmt.</div>
-        </div>
-      </div>
-    </section>
-
-    <!-- CONTRACT -->
-    <section class="section" id="contract">
-      <div class="section__head">
-        <h2>CONTRACT ADDRESS</h2>
-        <p>Immer doppelt prüfen.</p>
-      </div>
-
-      <div class="contract">
-        <code id="contractText">COMING_SOON</code>
-        <button class="copybtn" id="copyBtn">Copy</button>
-      </div>
-      <div class="hint">Wenn du die Adresse hast, ersetze <b>COMING_SOON</b> im Code.</div>
-    </section>
-
-    <!-- GALLERY -->
-    <section class="section" id="gallery">
-      <div class="section__head">
-        <h2>VIRAL GALLERY</h2>
-        <p>Deine realistischen Varianten + OG.</p>
+        <h2 class="section__title">TOKENOMICS</h2>
+        <p class="section__desc">Clean. Simple. No roman. <span class="dim">(placeholders)</span></p>
       </div>
 
       <div class="grid">
-        <div class="ph">Drop image 01</div>
-        <div class="ph">Drop image 02</div>
-        <div class="ph">Drop image 03</div>
-        <div class="ph">Drop image 04</div>
-        <div class="ph">Drop image 05</div>
-        <div class="ph">Drop image 06</div>
+        <article class="card">
+          <div class="card__icon">📈</div>
+          <div class="card__title">Total Supply</div>
+          <div class="card__value">1,000,000,000</div>
+          <div class="card__text">One billion TRALALA tokens (placeholder).</div>
+        </article>
+
+        <article class="card">
+          <div class="card__icon">🧾</div>
+          <div class="card__title">Tax</div>
+          <div class="card__value">0%</div>
+          <div class="card__text">No buy/sell tax (if that’s your plan).</div>
+        </article>
+
+        <article class="card">
+          <div class="card__icon">🔒</div>
+          <div class="card__title">Contract</div>
+          <div class="card__value">Renounced</div>
+          <div class="card__text">Fully community owned (placeholder).</div>
+        </article>
+      </div>
+    </section>
+
+    <!-- HOW TO BUY -->
+    <section class="section" id="how">
+      <div class="section__head">
+        <h2 class="section__title">HOW TO BUY</h2>
+        <p class="section__desc">In four simple steps.</p>
+      </div>
+
+      <div class="steps">
+        <article class="step">
+          <div class="step__top">
+            <div class="step__icon">👛</div>
+            <div class="step__num">01</div>
+          </div>
+          <div class="step__title">Get a Wallet</div>
+          <div class="step__text">Download Phantom / Solflare and set it up.</div>
+        </article>
+
+        <article class="step">
+          <div class="step__top">
+            <div class="step__icon">◎</div>
+            <div class="step__num">02</div>
+          </div>
+          <div class="step__title">Get SOL</div>
+          <div class="step__text">Buy SOL and send it to your wallet.</div>
+        </article>
+
+        <article class="step">
+          <div class="step__top">
+            <div class="step__icon">🔁</div>
+            <div class="step__num">03</div>
+          </div>
+          <div class="step__title">Swap for $TRALALA</div>
+          <div class="step__text">Use Raydium/Jupiter, paste the contract and swap.</div>
+        </article>
+
+        <article class="step">
+          <div class="step__top">
+            <div class="step__icon">🏆</div>
+            <div class="step__num">04</div>
+          </div>
+          <div class="step__title">HODL</div>
+          <div class="step__text">Join the blue army. Don’t get rugged (be smart).</div>
+        </article>
       </div>
     </section>
 
     <!-- COMMUNITY -->
     <section class="section" id="community">
       <div class="section__head">
-        <h2>JOIN THE OCEAN</h2>
-        <p>Links erst setzen, wenn du sie wirklich hast (damit keiner faked).</p>
+        <h2 class="section__title">JOIN THE POD</h2>
+        <p class="section__desc">Community links (placeholders).</p>
       </div>
 
-      <div class="actions">
-        <a class="btn btn--ghost" href="#" rel="nofollow">X / Twitter</a>
-        <a class="btn btn--ghost" href="#" rel="nofollow">Telegram</a>
-        <a class="btn btn--ghost" href="#" rel="nofollow">TikTok</a>
+      <div class="community">
+        <a class="community__card" href="#" aria-label="X / Twitter link placeholder">
+          <div class="community__icon">𝕏</div>
+          <div>
+            <div class="community__title">Community</div>
+            <div class="community__text">Join on X</div>
+          </div>
+        </a>
+
+        <a class="community__card" href="#" aria-label="Telegram link placeholder">
+          <div class="community__icon">✈️</div>
+          <div>
+            <div class="community__title">Telegram</div>
+            <div class="community__text">Join the chat</div>
+          </div>
+        </a>
+      </div>
+    </section>
+
+    <!-- GALLERY (placeholders only) -->
+    <section class="section" id="gallery">
+      <div class="section__head">
+        <h2 class="section__title">VIRAL GALLERY</h2>
+        <p class="section__desc">Later you can drop your viral renders here.</p>
+      </div>
+
+      <div class="gallery">
+        <div class="thumb">TRALALA 01</div>
+        <div class="thumb">TRALALA 02</div>
+        <div class="thumb">TRALALA 03</div>
+        <div class="thumb">TRALALA 04</div>
+        <div class="thumb">TRALALA 05</div>
+        <div class="thumb">TRALALA 06</div>
+      </div>
+    </section>
+
+    <!-- CONTRACT -->
+    <section class="section" id="contract">
+      <div class="section__head">
+        <h2 class="section__title">CONTRACT ADDRESS</h2>
+        <p class="section__desc">Always verify the contract address. <span class="dim">(placeholder)</span></p>
+      </div>
+
+      <div class="contract">
+        <code class="contract__code" id="contractText">PASTE_CONTRACT_ADDRESS_HERE</code>
+        <button class="btn btn--small" id="copyBtn">Copy</button>
+      </div>
+
+      <div class="footerNote dim" id="chart">
+        Chart link placeholder: set your DEX link later.
       </div>
     </section>
 
     <footer class="footer">
-      <div>For entertainment only. No financial advice. Crypto is risky.</div>
+      <div class="dim">© <span id="year"></span> TRALALA — fan meme project (placeholder).</div>
     </footer>
   </main>
 
