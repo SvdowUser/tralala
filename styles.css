@@ -520,3 +520,16 @@ body{
   .cards{grid-template-columns:1fr;}
   .gallery{grid-template-columns: 44px 1fr 44px;}
 }
+
+/* Background/overlay darf NIE Klicks blocken */
+.bg, .bg-layer, .background, .noise, .grain, .glow, .radial, .overlay,
+.hero-bg, .page-bg, .stars, .fx-layer {
+  pointer-events: none !important;
+}
+
+/* Content muss über dem Background liegen */
+main, header, nav, section, .container, .content, .page, .wrap {
+  position: relative;
+  z-index: 2;
+}
+
