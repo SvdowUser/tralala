@@ -1,14 +1,15 @@
-// ======= CONFIG (EDIT THESE) =======
-const PUMP_FUN_URL = "https://pump.fun/PASTE_TOKEN_URL_HERE"; // <-- set your real Pump.fun URL
-const CONTRACT_ADDRESS = "PASTE_CONTRACT_ADDRESS_HERE";       // <-- set real CA
-// Gallery (upload these files into /assets/gallery/)
-const GALLERY = [
-  { src: "./assets/gallery/g1.jpg", cap: "Image 1" },
-  { src: "./assets/gallery/g2.jpg", cap: "Image 2" },
-  { src: "./assets/gallery/g3.jpg", cap: "Image 3" },
-  { src: "./assets/gallery/g4.jpg", cap: "Image 4" },
-  { src: "./assets/gallery/g5.jpg", cap: "Image 5" },
-  { src: "./assets/gallery/g6.jpg", cap: "Image 6" },
+// HERO:
+const heroImg = document.getElementById("heroImg");
+if (heroImg) heroImg.src = "assets/hero.png";   // <— OHNE führenden Slash
+
+// GALLERY (6 Bilder):
+const galleryImages = [
+  { src: "assets/gallery/1.jpg", cap: "Image 1" },
+  { src: "assets/gallery/2.jpg", cap: "Image 2" },
+  { src: "assets/gallery/3.jpg", cap: "Image 3" },
+  { src: "assets/gallery/4.jpg", cap: "Image 4" },
+  { src: "assets/gallery/5.jpg", cap: "Image 5" },
+  { src: "assets/gallery/6.jpg", cap: "Image 6" },
 ];
 
 // ======= NAV / MENU =======
