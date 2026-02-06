@@ -2,239 +2,243 @@
 <html lang="en">
 <head>
   <meta charset="utf-8" />
-  <meta name="viewport" content="width=device-width,initial-scale=1" />
-  <title>TRALALA — The Viral Baby</title>
-  <link rel="stylesheet" href="./styles.css" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>$TRALALA — The Viral Brainrot Baby</title>
+  <link rel="stylesheet" href="styles.css" />
 </head>
 
 <body>
-  <!-- Header -->
-  <header class="topbar">
+  <!-- Background layers -->
+  <div class="bg"></div>
+  <div class="stars"></div>
+  <div class="vignette"></div>
+
+  <!-- AUDIO -->
+  <audio id="bgMusic" src="assets/BG.mp3" preload="auto" loop></audio>
+  <button id="audioBtn" class="audio-btn" aria-label="Toggle sound">🔊</button>
+
+  <!-- HEADER -->
+  <header class="header">
     <div class="brand">
-      <div class="brand-badge">
-        <!-- kleines Icon links oben (kannst du später ersetzen) -->
-        <img src="./assets/character.png" alt="logo" class="brand-logo" />
-      </div>
-      <div class="brand-name">
-        <span class="brand-dollar">$</span><span class="brand-text">TRALALA</span>
-      </div>
+      <img class="brand-logo" src="assets/logo.png" alt="TRALALA logo" />
+      <span class="brand-name">$TRALALA</span>
     </div>
 
-    <button class="menu-btn" id="openMenu" aria-label="Open menu">
+    <button class="menu-btn" id="menuBtn" aria-label="Open menu">
       <span></span><span></span><span></span>
     </button>
   </header>
 
-  <!-- Slide Menu (Overlay) -->
-  <div class="menu-overlay" id="menuOverlay" aria-hidden="true">
-    <div class="menu-panel">
-      <button class="menu-close" id="closeMenu" aria-label="Close menu">✕</button>
+  <!-- DRAWER MENU -->
+  <div class="drawer" id="drawer" aria-hidden="true">
+    <div class="drawer-inner">
+      <button class="drawer-close" id="closeDrawer" aria-label="Close menu">✕</button>
 
-      <nav class="menu-nav">
-        <a href="#tokenomics" class="menu-link">Tokenomics</a>
-        <a href="#howtobuy" class="menu-link">How to Buy</a>
-        <a href="#community" class="menu-link">Community</a>
-        <a href="#gallery" class="menu-link">Gallery</a>
+      <nav class="drawer-nav">
+        <a href="#tokenomics" class="drawer-link">Tokenomics</a>
+        <a href="#howtobuy" class="drawer-link">How to Buy</a>
+        <a href="#gallery" class="drawer-link">Gallery</a>
+        <a href="#community" class="drawer-link">Community</a>
+        <a href="#contract" class="drawer-link">Contract</a>
       </nav>
 
-      <div class="menu-cta">
-        <a class="btn btn-orange" href="#howtobuy">BUY NOW</a>
-      </div>
+      <a class="drawer-cta" href="#howtobuy">BUY NOW</a>
     </div>
   </div>
 
-  <!-- Floating Speaker (sticky bottom-left) -->
-  <button class="speaker" id="speakerBtn" aria-label="Toggle music">
-    <svg viewBox="0 0 24 24" aria-hidden="true">
-      <path d="M3 10v4h4l5 4V6L7 10H3zm13.5 2a3.5 3.5 0 0 0-2-3.16v6.32A3.5 3.5 0 0 0 16.5 12zm0-8a11.5 11.5 0 0 1 0 16l1.4 1.4a13.5 13.5 0 0 0 0-18.8L16.5 4z"/>
-    </svg>
-  </button>
+  <!-- HERO -->
+  <main class="container">
+    <section class="hero" id="top">
+      <div class="pill glow-border">
+        <span class="dot"></span>
+        LIVE ON SOLANA
+      </div>
 
-  <!-- Volume (optional small) -->
-  <div class="volume-wrap" id="volumeWrap" aria-hidden="true">
-    <input id="volume" type="range" min="0" max="1" step="0.01" value="0.6" />
-  </div>
+      <h1 class="hero-title gradient-title">$TRALALA</h1>
+      <p class="hero-sub">
+        The cutest brainrot fish has emerged from TikTok.
+      </p>
 
-  <!-- Audio -->
-  <audio id="bgAudio" src="./assets/bg.mp3" loop preload="auto"></audio>
+      <div class="hero-actions">
+        <a class="btn btn-primary" href="#howtobuy">BUY $TRALALA</a>
+        <a class="btn btn-secondary" href="#tokenomics">VIEW TOKENOMICS</a>
+      </div>
 
-  <!-- Hero -->
-  <main class="page">
-    <section class="hero">
-      <div class="hero-bg" aria-hidden="true"></div>
-
-      <div class="hero-inner">
-        <div class="pill neon-pill">
-          <span class="dot"></span>
-          <span>LIVE ON SOLANA</span>
-        </div>
-
-        <h1 class="title neon-title">
-          <span class="grad-orange">$</span><span class="grad-mix">TRALALA</span>
-        </h1>
-
-        <p class="subtitle neon-subtitle">
-          The cutest brainrot fish has emerged from TikTok.<br />
-          <span class="accent">Fire</span> and <span class="accent2">Ice</span> collide.
-        </p>
-
-        <div class="cta-row">
-          <a class="btn btn-orange" href="#howtobuy">BUY $TRALALA</a>
-          <a class="btn btn-blue" href="#tokenomics">VIEW TOKENOMICS</a>
-        </div>
-
-        <!-- Character Orb -->
-        <div class="orb-wrap">
-          <div class="orb">
-            <div class="orb-glow"></div>
-            <div class="beam"></div>
-
-            <img class="character" src="./assets/character.png" alt="Tralala character" />
-          </div>
-        </div>
+      <div class="hero-orb">
+        <div class="orb-ring"></div>
+        <div class="orb-glow"></div>
+        <img class="hero-character float" src="assets/hero.png" alt="Tralala character" />
       </div>
     </section>
 
-    <!-- Tokenomics -->
+    <!-- TOKENOMICS -->
     <section class="section" id="tokenomics">
-      <h2 class="section-title neon-h2">TOKENOMICS</h2>
-      <p class="section-sub neon-muted">
-        Transparent. Simple. Built for the meme.
-      </p>
+      <h2 class="section-title gradient-title">TOKENOMICS</h2>
+      <p class="section-sub">Live supply info — clean, simple, and trackable.</p>
 
       <div class="cards">
-        <article class="card">
-          <div class="icon orange">
-            <span>↗</span>
-          </div>
-          <h3 class="card-title neon-h3">Total Supply</h3>
-          <div class="card-value neon-number">1,000,000,000</div>
-          <div class="card-foot neon-muted">One billion TRALALA tokens</div>
-        </article>
+        <div class="card glow-panel">
+          <div class="icon-badge">📈</div>
+          <div class="card-title">Total Supply</div>
+          <div class="card-value">1,000,000,000</div>
+          <div class="card-note">One billion tokens</div>
+        </div>
 
-        <article class="card">
-          <div class="icon orange">
-            <span>0%</span>
-          </div>
-          <h3 class="card-title neon-h3">Tax</h3>
-          <div class="card-value neon-number">0%</div>
-          <div class="card-foot neon-muted">No buy/sell tax — pure trading</div>
-        </article>
+        <div class="card glow-panel">
+          <div class="icon-badge">🧾</div>
+          <div class="card-title">Tax</div>
+          <div class="card-value">0%</div>
+          <div class="card-note">No buy/sell tax</div>
+        </div>
 
-        <article class="card">
-          <div class="icon blue">
-            <span>⚡</span>
-          </div>
-          <h3 class="card-title neon-h3">Contract</h3>
-          <div class="card-value neon-small">Community Owned</div>
-          <div class="card-foot neon-muted">LP lock / proofs: <em>coming soon</em></div>
-        </article>
+        <div class="card glow-panel">
+          <div class="icon-badge">⚡</div>
+          <div class="card-title">Status</div>
+          <div class="card-value">Live</div>
+          <div class="card-note">Community-driven</div>
+        </div>
       </div>
 
-      <!-- Contract Address -->
-      <div class="contract">
-        <div class="contract-label neon-h3">CONTRACT ADDRESS</div>
-        <div class="contract-box">
-          <code id="contractText">PASTE_CONTRACT_ADDRESS_HERE</code>
-          <button class="copy-btn" id="copyBtn" aria-label="Copy contract">
-            Copy
-          </button>
+      <div class="wide-card glow-panel">
+        <div class="wide-top">
+          <div>
+            <div class="wide-title">Circulation</div>
+            <div class="wide-note">We’ll show real-time data as sources are added.</div>
+          </div>
+          <a class="mini-link" href="#" onclick="return false;">View on tracker →</a>
         </div>
-        <div class="contract-hint neon-muted">
-          Always verify the correct address before buying.
+
+        <div class="bar">
+          <div class="bar-fill"></div>
+        </div>
+
+        <div class="bar-labels">
+          <span>Circulating</span>
+          <span>100%</span>
         </div>
       </div>
     </section>
 
-    <!-- How to buy -->
+    <!-- HOW TO BUY -->
     <section class="section" id="howtobuy">
-      <h2 class="section-title neon-h2">HOW TO BUY</h2>
-      <p class="section-sub neon-muted">
-        Four simple steps.
-      </p>
+      <h2 class="section-title gradient-title">HOW TO BUY</h2>
+      <p class="section-sub">Join the TRALALA army in four simple steps.</p>
 
       <div class="steps">
-        <article class="step">
-          <div class="step-top">
-            <div class="step-icon orange">01</div>
-            <h3 class="step-title neon-h3">Get a Wallet</h3>
+        <div class="step glow-panel">
+          <div class="step-left">
+            <div class="step-icon">👛</div>
           </div>
-          <p class="step-text neon-muted">Download Phantom (or your preferred Solana wallet) and set it up securely.</p>
-        </article>
-
-        <article class="step">
-          <div class="step-top">
-            <div class="step-icon orange">02</div>
-            <h3 class="step-title neon-h3">Get SOL</h3>
+          <div class="step-mid">
+            <div class="step-title">Get a Wallet</div>
+            <div class="step-text">Install Phantom (recommended) and set it up securely.</div>
           </div>
-          <p class="step-text neon-muted">Buy SOL on an exchange and send it to your wallet.</p>
-        </article>
-
-        <article class="step">
-          <div class="step-top">
-            <div class="step-icon orange">03</div>
-            <h3 class="step-title neon-h3">Swap for $TRALALA</h3>
-          </div>
-          <p class="step-text neon-muted">Use Raydium or Jupiter, paste the contract address, and swap.</p>
-        </article>
-
-        <article class="step">
-          <div class="step-top">
-            <div class="step-icon orange">04</div>
-            <h3 class="step-title neon-h3">HODL & Vibe</h3>
-          </div>
-          <p class="step-text neon-muted">Join the community and enjoy the meme ride.</p>
-        </article>
-      </div>
-    </section>
-
-    <!-- Community -->
-    <section class="section" id="community">
-      <h2 class="section-title neon-h2">JOIN THE ARMY</h2>
-      <p class="section-sub neon-muted">
-        The TRALALA community is growing stronger. Join us.
-      </p>
-
-      <div class="community-card">
-        <div class="community-left">
-          <div class="icon orange">♪</div>
-          <div>
-            <div class="neon-h3">TikTok</div>
-            <div class="neon-muted">Watch the original meme</div>
-          </div>
+          <div class="step-num">01</div>
         </div>
-        <a class="btn btn-blue" href="PASTE_YOUR_TIKTOK_LINK_HERE" target="_blank" rel="noreferrer">OPEN</a>
+
+        <div class="step glow-panel">
+          <div class="step-left">
+            <div class="step-icon">◎</div>
+          </div>
+          <div class="step-mid">
+            <div class="step-title">Get SOL</div>
+            <div class="step-text">Buy SOL on an exchange and send it to your wallet.</div>
+          </div>
+          <div class="step-num">02</div>
+        </div>
+
+        <div class="step glow-panel">
+          <div class="step-left">
+            <div class="step-icon">🔁</div>
+          </div>
+          <div class="step-mid">
+            <div class="step-title">Swap for $TRALALA</div>
+            <div class="step-text">Use Jupiter/Raydium, paste the contract address, swap.</div>
+          </div>
+          <div class="step-num">03</div>
+        </div>
+
+        <div class="step glow-panel">
+          <div class="step-left">
+            <div class="step-icon">🏆</div>
+          </div>
+          <div class="step-mid">
+            <div class="step-title">HODL & Win</div>
+            <div class="step-text">Hold and enjoy the meme ride. Volcanic gains optional.</div>
+          </div>
+          <div class="step-num">04</div>
+        </div>
       </div>
     </section>
 
-    <!-- Gallery -->
+    <!-- GALLERY -->
     <section class="section" id="gallery">
-      <h2 class="section-title neon-h2">GALLERY</h2>
-      <p class="section-sub neon-muted">Swipe through the vibes.</p>
+      <h2 class="section-title gradient-title">GALLERY</h2>
+      <p class="section-sub">Swipe through the lore shots. Replace images anytime.</p>
 
-      <div class="slider" aria-label="Image gallery">
-        <button class="slider-btn" id="prev" aria-label="Previous">‹</button>
+      <div class="gallery glow-panel">
+        <button class="gallery-btn" id="prevImg" aria-label="Previous image">‹</button>
+        <img id="galleryImg" class="gallery-img" src="assets/gallery1.jpg" alt="Gallery image" />
+        <button class="gallery-btn" id="nextImg" aria-label="Next image">›</button>
+      </div>
 
-        <div class="slider-window">
-          <div class="slider-track" id="track">
-            <img src="./assets/gallery-1.jpg" alt="Gallery 1" />
-            <img src="./assets/gallery-2.jpg" alt="Gallery 2" />
-            <img src="./assets/gallery-3.jpg" alt="Gallery 3" />
-            <img src="./assets/gallery-4.jpg" alt="Gallery 4" />
-            <img src="./assets/gallery-5.jpg" alt="Gallery 5" />
-            <img src="./assets/gallery-6.jpg" alt="Gallery 6" />
-          </div>
-        </div>
+      <div class="dots" id="dots"></div>
 
-        <button class="slider-btn" id="next" aria-label="Next">›</button>
+      <div class="tiktok-row">
+        <a class="btn btn-secondary" href="https://www.tiktok.com/@MythosMondays" target="_blank" rel="noreferrer">
+          View on TikTok (@MythosMondays)
+        </a>
       </div>
     </section>
 
-    <footer class="footer neon-muted">
-      © <span id="year"></span> TRALALA — built for the meme.
+    <!-- JOIN THE ARMY -->
+    <section class="section hero-band" id="community">
+      <h2 class="section-title gradient-title">JOIN THE ARMY</h2>
+      <p class="section-sub">The TRALALA community is growing stronger. Join the squad.</p>
+
+      <div class="community-grid">
+        <a class="community-card glow-panel" href="#" target="_blank" rel="noreferrer" onclick="return false;">
+          <div class="community-icon">𝕏</div>
+          <div class="community-text">
+            <div class="community-title">Community</div>
+            <div class="community-sub">Join on X</div>
+          </div>
+        </a>
+
+        <a class="community-card glow-panel" href="https://www.tiktok.com/@MythosMondays" target="_blank" rel="noreferrer">
+          <div class="community-icon">🎵</div>
+          <div class="community-text">
+            <div class="community-title">TikTok</div>
+            <div class="community-sub">@MythosMondays</div>
+          </div>
+        </a>
+      </div>
+    </section>
+
+    <!-- CONTRACT -->
+    <section class="section" id="contract">
+      <h2 class="section-title gradient-title">CONTRACT</h2>
+      <p class="section-sub">Always verify the correct address before swapping.</p>
+
+      <div class="contract-box glow-panel">
+        <div class="contract-label">Contract Address</div>
+
+        <div class="contract-row">
+          <code id="contractText" class="contract-text">
+PASTE_CONTRACT_ADDRESS_HERE
+          </code>
+          <button id="copyBtn" class="copy-btn" aria-label="Copy contract">Copy</button>
+        </div>
+
+        <div class="contract-foot" id="copyStatus"></div>
+      </div>
+    </section>
+
+    <footer class="footer">
+      <div class="footer-note">© TRALALA — brainrot energy only.</div>
     </footer>
   </main>
 
-  <script src="./script.js"></script>
+  <script src="script.js"></script>
 </body>
 </html>
