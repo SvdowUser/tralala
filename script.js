@@ -1,119 +1,223 @@
-// ---------- Smooth scroll ----------
-document.querySelectorAll('a[href^="#"]').forEach(a => {
-  a.addEventListener("click", (e) => {
-    const id = a.getAttribute("href");
-    if (!id || id === "#") return;
-    const el = document.querySelector(id);
-    if (!el) return;
-    e.preventDefault();
-    el.scrollIntoView({ behavior: "smooth", block: "start" });
-  });
-});
+/* =========================
+   CONFIG (EDIT THESE)
+========================= */
+const CONFIG = {
+  // Pump.fun link (set your exact coin URL here)
+  pumpfunUrl: "https://pump.fun/",
 
-// ---------- Contract copy ----------
-const copyBtn = document.getElementById("copyContract");
-const contractValue = document.getElementById("contractValue");
+  // Contract address to show + copy
+  contractAddress: "PASTE_CONTRACT_ADDRESS_HERE",
 
-if (copyBtn && contractValue) {
-  copyBtn.addEventListener("click", async () => {
-    try {
-      await navigator.clipboard.writeText(contractValue.textContent.trim());
-      copyBtn.textContent = "COPIED";
-      setTimeout(() => (copyBtn.textContent = "COPY"), 1200);
-    } catch {
-      // Fallback
-      const range = document.createRange();
-      range.selectNodeContents(contractValue);
-      const sel = window.getSelection();
-      sel.removeAllRanges();
-      sel.addRange(range);
-      document.execCommand("copy");
-      sel.removeAllRanges();
-      copyBtn.textContent = "COPIED";
-      setTimeout(() => (copyBtn.textContent = "COPY"), 1200);
+  // Social links
+  xUrl: "https://x.com/",
+  tiktokUrl: "https://www.tiktok.com/@mythosmondayss",
+
+  // Audio
+  audioFile: "bg.mp3",
+  startMuted: true,
+
+  // Gallery (leave empty [] to hide section)
+  galleryImages: [
+    // Example:
+    // { src: "g1.jpg", caption: "Community moment #1" },
+  ],
+};
+
+/* =========================
+   Helpers
+========================= */
+function qs(sel){ return document.querySelector(sel); }
+
+async function copyText(text){
+  try{
+    await navigator.clipboard.writeText(text);
+    return true;
+  }catch(e){
+    // Fallback for older browsers
+    try{
+      const ta = document.createElement("textarea");
+      ta.value = text;
+      ta.style.position = "fixed";
+      ta.style.left = "-9999px";
+      document.body.appendChild(ta);
+      ta.focus();
+      ta.select();
+      const ok = document.execCommand("copy");
+      document.body.removeChild(ta);
+      return ok;
+    }catch(err){
+      return false;
     }
-  });
+  }
 }
 
-// ---------- Audio toggle (no slider, user-gesture required) ----------
-const audio = document.getElementById("bgAudio");
-const audioToggle = document.getElementById("audioToggle");
+/* =========================
+   Hero image: cache-bust + fallback filenames
+========================= */
+function setupHeroImage(){
+  const img = qs("#heroImg");
+  if(!img) return;
 
-function setAudioUI() {
-  if (!audioToggle || !audio) return;
-  const muted = audio.muted || audio.paused;
-  audioToggle.classList.toggle("isMuted", muted);
+  const candidates = ["hero.png", "hero.PNG", "Hero.png", "Hero.PNG"];
+  let idx = 0;
+
+  const tryLoad = () => {
+    const src = candidates[idx] + "?v=" + Date.now();
+    img.src = src;
+  };
+
+  img.onerror = () => {
+    idx++;
+    if(idx < candidates.length) tryLoad();
+    // if all fail, do nothing (keeps broken icon)
+  };
+
+  // Start with cache-busted current src
+  tryLoad();
 }
-setAudioUI();
 
-if (audioToggle && audio) {
-  audioToggle.addEventListener("click", async () => {
-    try {
-      // First click: ensure it starts playing (browsers block autoplay without click)
-      if (audio.paused) {
-        audio.muted = false;
+/* =========================
+   Brand logo fallback
+   - If logo.png loads, show it
+   - If not, keep text-only
+========================= */
+function setupBrandLogo(){
+  const logo = qs("#brandLogo");
+  if(!logo) return;
+
+  logo.onload = () => { logo.style.display = "block"; };
+  logo.onerror = () => { logo.style.display = "none"; };
+  // cache-bust logo too
+  logo.src = "logo.png?v=" + Date.now();
+}
+
+/* =========================
+   Audio: toggle only (start muted)
+========================= */
+function setupAudio(){
+  const btn = qs("#audioToggle");
+  if(!btn) return;
+
+  const audio = new Audio(CONFIG.audioFile);
+  audio.loop = true;
+  audio.volume = 0.35;
+
+  let muted = !!CONFIG.startMuted;
+  audio.muted = muted;
+
+  const paint = () => {
+    btn.dataset.muted = muted ? "true" : "false";
+    btn.setAttribute("aria-pressed", muted ? "false" : "true");
+  };
+  paint();
+
+  // Attempt to start playback (will be blocked on iOS until user taps – that's OK)
+  audio.play().catch(()=>{ /* ignore */ });
+
+  btn.addEventListener("click", async () => {
+    muted = !muted;
+    audio.muted = muted;
+    paint();
+
+    // If user unmutes, ensure audio is actually playing
+    if(!muted){
+      try{
         await audio.play();
-      } else {
-        // Toggle mute
-        audio.muted = !audio.muted;
-        if (!audio.muted) await audio.play();
+      }catch(e){
+        // If still blocked, re-mute to avoid confusion
+        muted = true;
+        audio.muted = true;
+        paint();
       }
-    } catch (err) {
-      // If play is blocked, keep it muted/paused and let user click again
-      console.warn("Audio play blocked:", err);
-      audio.muted = true;
     }
-    setAudioUI();
   });
 }
 
-// ---------- Gallery (optional) ----------
-const galleryImages = [
-  // Add your files here if you want gallery:
-  // { src: "./g1.png", cap: "Gallery 1" },
-  // { src: "./g2.png", cap: "Gallery 2" },
-];
+/* =========================
+   Wire links + contract + copy
+========================= */
+function setupLinksAndContract(){
+  const brandLink = qs("#brandLink");
+  const buyBtnTop = qs("#buyBtnTop");
+  const contractValue = qs("#contractValue");
+  const copyBtn = qs("#copyContract");
+  const xLink = qs("#xLink");
+  const ttLink = qs("#ttLink");
 
-const galSection = document.getElementById("gallery");
-const galImg = document.getElementById("galImg");
-const galCap = document.getElementById("galCap");
-const galPrev = document.getElementById("galPrev");
-const galNext = document.getElementById("galNext");
+  if(brandLink) brandLink.href = CONFIG.pumpfunUrl;
+  if(buyBtnTop) buyBtnTop.href = CONFIG.pumpfunUrl;
 
-let galIndex = 0;
+  if(xLink) xLink.href = CONFIG.xUrl;
+  if(ttLink) ttLink.href = CONFIG.tiktokUrl;
 
-function renderGallery() {
-  if (!galSection) return;
+  if(contractValue) contractValue.textContent = CONFIG.contractAddress;
 
-  if (!galleryImages.length) {
-    galSection.style.display = "none";
+  if(copyBtn){
+    copyBtn.addEventListener("click", async () => {
+      const text = (CONFIG.contractAddress || "").trim();
+      if(!text || text === "PASTE_CONTRACT_ADDRESS_HERE") return;
+
+      const ok = await copyText(text);
+      copyBtn.textContent = ok ? "COPIED" : "FAILED";
+      setTimeout(()=> copyBtn.textContent = "COPY", 1100);
+    });
+  }
+}
+
+/* =========================
+   Gallery (auto hide if empty)
+========================= */
+function setupGallery(){
+  const sec = qs("#gallery");
+  const img = qs("#galImg");
+  const cap = qs("#galCap");
+  const prev = qs("#galPrev");
+  const next = qs("#galNext");
+
+  const items = CONFIG.galleryImages || [];
+  if(!sec) return;
+
+  if(items.length === 0){
+    sec.style.display = "none";
     return;
   }
 
-  const item = galleryImages[galIndex];
-  galImg.style.display = "none";
-  galCap.textContent = item.cap || "";
-
-  galImg.onload = () => {
-    galImg.style.display = "block";
-  };
-  galImg.onerror = () => {
-    galImg.style.display = "none";
-    galCap.textContent = item.cap ? item.cap + " (image missing)" : "Image missing";
+  let i = 0;
+  const render = () => {
+    const it = items[i];
+    img.style.display = "block";
+    img.src = it.src + "?v=" + Date.now();
+    cap.textContent = it.caption || "";
   };
 
-  galImg.src = item.src;
+  prev.addEventListener("click", () => {
+    i = (i - 1 + items.length) % items.length;
+    render();
+  });
+  next.addEventListener("click", () => {
+    i = (i + 1) % items.length;
+    render();
+  });
+
+  render();
 }
 
-if (galPrev) galPrev.addEventListener("click", () => {
-  if (!galleryImages.length) return;
-  galIndex = (galIndex - 1 + galleryImages.length) % galleryImages.length;
-  renderGallery();
-});
-if (galNext) galNext.addEventListener("click", () => {
-  if (!galleryImages.length) return;
-  galIndex = (galIndex + 1) % galleryImages.length;
-  renderGallery();
-});
+/* =========================
+   Year
+========================= */
+function setupYear(){
+  const y = qs("#year");
+  if(y) y.textContent = new Date().getFullYear();
+}
 
-renderGallery();
+/* =========================
+   Init
+========================= */
+document.addEventListener("DOMContentLoaded", () => {
+  setupBrandLogo();
+  setupHeroImage();
+  setupAudio();
+  setupLinksAndContract();
+  setupGallery();
+  setupYear();
+});
