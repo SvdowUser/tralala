@@ -1,64 +1,74 @@
-// Menu
-const menu = document.getElementById("menu");
-const openBtn = document.getElementById("menuOpen");
-const closeBtn = document.getElementById("menuClose");
+// ====== helpers ======
+const $ = (id) => document.getElementById(id);
 
-openBtn?.addEventListener("click", () => menu.classList.add("is-open"));
-closeBtn?.addEventListener("click", () => menu.classList.remove("is-open"));
-menu?.addEventListener("click", (e) => {
-  if (e.target === menu) menu.classList.remove("is-open");
+// Year
+$("year").textContent = new Date().getFullYear();
+
+// Mobile drawer
+const drawer = $("drawer");
+const menuBtn = $("menuBtn");
+const drawerClose = $("drawerClose");
+
+function openDrawer() {
+  drawer.classList.add("open");
+  drawer.setAttribute("aria-hidden", "false");
+}
+function closeDrawer() {
+  drawer.classList.remove("open");
+  drawer.setAttribute("aria-hidden", "true");
+}
+
+menuBtn.addEventListener("click", openDrawer);
+drawerClose.addEventListener("click", closeDrawer);
+drawer.addEventListener("click", (e) => {
+  if (e.target === drawer) closeDrawer();
+});
+document.querySelectorAll(".drawerLink").forEach(a => {
+  a.addEventListener("click", closeDrawer);
 });
 
-// Smooth scroll for menu links
+// Smooth scroll (optional nice feel)
 document.querySelectorAll('a[href^="#"]').forEach(a => {
   a.addEventListener("click", (e) => {
-    const id = a.getAttribute("href");
-    if (!id || id.length < 2) return;
-    const el = document.querySelector(id);
-    if (!el) return;
+    const target = document.querySelector(a.getAttribute("href"));
+    if (!target) return;
     e.preventDefault();
-    menu.classList.remove("is-open");
-    el.scrollIntoView({ behavior: "smooth", block: "start" });
+    target.scrollIntoView({ behavior: "smooth", block: "start" });
   });
 });
 
-// Year
-document.getElementById("year").textContent = new Date().getFullYear();
-
 // Copy contract
-const copyBtn = document.getElementById("copyBtn");
-copyBtn?.addEventListener("click", async () => {
-  const txt = document.getElementById("contractText")?.textContent?.trim() || "";
-  if (!txt) return;
+$("copyBtn").addEventListener("click", async () => {
+  const text = $("contractText").textContent.trim();
   try {
-    await navigator.clipboard.writeText(txt);
-    copyBtn.textContent = "Copied ✓";
-    setTimeout(() => (copyBtn.textContent = "Copy"), 1200);
+    await navigator.clipboard.writeText(text);
+    $("copyBtn").textContent = "Copied!";
+    setTimeout(() => ($("copyBtn").textContent = "Copy"), 1200);
   } catch {
-    copyBtn.textContent = "Copy failed";
-    setTimeout(() => (copyBtn.textContent = "Copy"), 1200);
+    $("copyBtn").textContent = "Copy failed";
+    setTimeout(() => ($("copyBtn").textContent = "Copy"), 1200);
   }
 });
 
-// Music toggle (works once you add a real audio source in <audio>)
-const musicBtn = document.getElementById("musicBtn");
-const audio = document.getElementById("bgMusic");
-
+// Music toggle (placeholder)
+const music = $("bgMusic");
+const musicBtn = $("musicBtn");
 let playing = false;
-musicBtn?.addEventListener("click", async () => {
-  if (!audio) return;
+
+musicBtn.addEventListener("click", async () => {
   try {
     if (!playing) {
-      await audio.play();
+      await music.play();
       playing = true;
       musicBtn.querySelector(".icon").textContent = "🔈";
     } else {
-      audio.pause();
+      music.pause();
       playing = false;
       musicBtn.querySelector(".icon").textContent = "🔊";
     }
   } catch {
-    // Autoplay blocked until user interacts — this click counts, but needs a real source file.
-    alert("Add an audio file in the <audio> tag (assets/theme.mp3).");
+    // Autoplay block is common on mobile. User must tap (they did), but file may not exist yet.
+    musicBtn.querySelector(".icon").textContent = "❌";
+    setTimeout(() => (musicBtn.querySelector(".icon").textContent = "🔊"), 900);
   }
 });
