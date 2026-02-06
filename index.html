@@ -1,119 +1,237 @@
-// ---------- Smooth scroll ----------
-document.querySelectorAll('a[href^="#"]').forEach(a => {
-  a.addEventListener("click", (e) => {
-    const id = a.getAttribute("href");
-    if (!id || id === "#") return;
-    const el = document.querySelector(id);
-    if (!el) return;
-    e.preventDefault();
-    el.scrollIntoView({ behavior: "smooth", block: "start" });
-  });
-});
+<!doctype html>
+<html lang="de">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover" />
+  <title>TRALALA</title>
+  <meta name="theme-color" content="#06142a" />
+  <link rel="stylesheet" href="styles.css" />
+</head>
 
-// ---------- Contract copy ----------
-const copyBtn = document.getElementById("copyContract");
-const contractValue = document.getElementById("contractValue");
+<body>
+  <!-- Background layers -->
+  <div class="bg-layer" aria-hidden="true"></div>
+  <div class="bg-stars" aria-hidden="true"></div>
 
-if (copyBtn && contractValue) {
-  copyBtn.addEventListener("click", async () => {
-    try {
-      await navigator.clipboard.writeText(contractValue.textContent.trim());
-      copyBtn.textContent = "COPIED";
-      setTimeout(() => (copyBtn.textContent = "COPY"), 1200);
-    } catch {
-      // Fallback
-      const range = document.createRange();
-      range.selectNodeContents(contractValue);
-      const sel = window.getSelection();
-      sel.removeAllRanges();
-      sel.addRange(range);
-      document.execCommand("copy");
-      sel.removeAllRanges();
-      copyBtn.textContent = "COPIED";
-      setTimeout(() => (copyBtn.textContent = "COPY"), 1200);
-    }
-  });
-}
+  <!-- Top Navigation (no hamburger) -->
+  <header class="topbar">
+    <a class="brand" id="brandLink" href="#" target="_blank" rel="noopener">
+      <span class="brand-mark">$</span>
+      <span class="brand-text">TRALALA</span>
+      <!-- optional image logo (if logo.png exists) -->
+      <img class="brand-logo" id="brandLogo" src="logo.png" alt="TRALALA logo" />
+    </a>
 
-// ---------- Audio toggle (no slider, user-gesture required) ----------
-const audio = document.getElementById("bgAudio");
-const audioToggle = document.getElementById("audioToggle");
+    <nav class="nav">
+      <a class="nav-link" href="#tokenomics">Tokenomics</a>
+      <a class="nav-link" href="#how">How to buy</a>
+      <a class="nav-link" href="#join">Join</a>
+      <a class="nav-link" href="#gallery">Gallery</a>
+    </nav>
+  </header>
 
-function setAudioUI() {
-  if (!audioToggle || !audio) return;
-  const muted = audio.muted || audio.paused;
-  audioToggle.classList.toggle("isMuted", muted);
-}
-setAudioUI();
+  <!-- Floating audio toggle -->
+  <button class="audio-toggle" id="audioToggle" type="button" aria-label="Sound umschalten" aria-pressed="false">
+    <span class="audio-icon" aria-hidden="true"></span>
+  </button>
 
-if (audioToggle && audio) {
-  audioToggle.addEventListener("click", async () => {
-    try {
-      // First click: ensure it starts playing (browsers block autoplay without click)
-      if (audio.paused) {
-        audio.muted = false;
-        await audio.play();
-      } else {
-        // Toggle mute
-        audio.muted = !audio.muted;
-        if (!audio.muted) await audio.play();
-      }
-    } catch (err) {
-      // If play is blocked, keep it muted/paused and let user click again
-      console.warn("Audio play blocked:", err);
-      audio.muted = true;
-    }
-    setAudioUI();
-  });
-}
+  <main class="wrap">
 
-// ---------- Gallery (optional) ----------
-const galleryImages = [
-  // Add your files here if you want gallery:
-  // { src: "./g1.png", cap: "Gallery 1" },
-  // { src: "./g2.png", cap: "Gallery 2" },
-];
+    <!-- HERO -->
+    <section class="section hero" id="top">
+      <div class="hero-grid">
+        <div class="hero-copy">
+          <div class="pill">
+            <span class="dot"></span>
+            <span>LIVE ON SOLANA</span>
+          </div>
 
-const galSection = document.getElementById("gallery");
-const galImg = document.getElementById("galImg");
-const galCap = document.getElementById("galCap");
-const galPrev = document.getElementById("galPrev");
-const galNext = document.getElementById("galNext");
+          <h1 class="title">$TRALALA</h1>
+          <p class="subtitle">
+            The cutest brainrot fish has emerged from TikTok.
+          </p>
 
-let galIndex = 0;
+          <div class="cta-row">
+            <a class="btn btn-primary" id="buyBtnTop" href="#" target="_blank" rel="noopener">
+              BUY $TRALALA
+            </a>
+            <a class="btn btn-ghost" href="#tokenomics">
+              VIEW TOKENOMICS
+            </a>
+          </div>
+        </div>
 
-function renderGallery() {
-  if (!galSection) return;
+        <div class="hero-art">
+          <div class="orb">
+            <img
+              id="heroImg"
+              class="hero-img"
+              src="hero.png"
+              alt="Tralala character"
+              loading="eager"
+              decoding="async"
+            />
+          </div>
+        </div>
+      </div>
+    </section>
 
-  if (!galleryImages.length) {
-    galSection.style.display = "none";
-    return;
-  }
+    <!-- TOKENOMICS -->
+    <section class="section" id="tokenomics">
+      <div class="section-head">
+        <h2 class="h2">TOKENOMICS</h2>
+        <p class="muted">Transparent. Simple. Built for the meme.</p>
+      </div>
 
-  const item = galleryImages[galIndex];
-  galImg.style.display = "none";
-  galCap.textContent = item.cap || "";
+      <div class="grid-2">
+        <div class="card">
+          <div class="card-icon">◎</div>
+          <div>
+            <div class="kicker">TOTAL SUPPLY</div>
+            <div class="big">1,000,000,000</div>
+            <div class="muted">One billion TRALALA tokens</div>
+          </div>
+        </div>
 
-  galImg.onload = () => {
-    galImg.style.display = "block";
-  };
-  galImg.onerror = () => {
-    galImg.style.display = "none";
-    galCap.textContent = item.cap ? item.cap + " (image missing)" : "Image missing";
-  };
+        <div class="card">
+          <div class="card-icon">%</div>
+          <div>
+            <div class="kicker">TAX</div>
+            <div class="big">0%</div>
+            <div class="muted">No buy/sell tax — pure trading</div>
+          </div>
+        </div>
 
-  galImg.src = item.src;
-}
+        <div class="card">
+          <div class="card-icon">🔒</div>
+          <div>
+            <div class="kicker">LIQUIDITY</div>
+            <div class="big">Coming Soon</div>
+            <div class="muted">LP lock proof will be linked here</div>
+          </div>
+        </div>
 
-if (galPrev) galPrev.addEventListener("click", () => {
-  if (!galleryImages.length) return;
-  galIndex = (galIndex - 1 + galleryImages.length) % galleryImages.length;
-  renderGallery();
-});
-if (galNext) galNext.addEventListener("click", () => {
-  if (!galleryImages.length) return;
-  galIndex = (galIndex + 1) % galleryImages.length;
-  renderGallery();
-});
+        <div class="card">
+          <div class="card-icon">⚡</div>
+          <div>
+            <div class="kicker">CONTRACT</div>
+            <div class="big">Renounced</div>
+            <div class="muted">Community-first setup</div>
+          </div>
+        </div>
+      </div>
 
-renderGallery();
+      <div class="contract">
+        <div class="contract-left">
+          <div class="kicker">CONTRACT ADDRESS</div>
+          <div class="contract-pill" id="contractValue">PASTE_CONTRACT_ADDRESS_HERE</div>
+        </div>
+
+        <button class="btn btn-small" id="copyContract" type="button">
+          COPY
+        </button>
+      </div>
+    </section>
+
+    <!-- HOW TO BUY -->
+    <section class="section" id="how">
+      <div class="section-head">
+        <h2 class="h2">HOW TO BUY</h2>
+        <p class="muted">Four simple steps.</p>
+      </div>
+
+      <div class="steps">
+        <div class="step">
+          <div class="step-icon">👛</div>
+          <div class="step-body">
+            <div class="step-title">Get a Wallet</div>
+            <div class="muted">Download Phantom or Solflare and set it up securely.</div>
+          </div>
+          <div class="step-num">01</div>
+        </div>
+
+        <div class="step">
+          <div class="step-icon">◌</div>
+          <div class="step-body">
+            <div class="step-title">Get SOL</div>
+            <div class="muted">Buy SOL on an exchange and send it to your wallet.</div>
+          </div>
+          <div class="step-num">02</div>
+        </div>
+
+        <div class="step">
+          <div class="step-icon">⇄</div>
+          <div class="step-body">
+            <div class="step-title">Swap for $TRALALA</div>
+            <div class="muted">Open Pump.fun and buy using the official link.</div>
+          </div>
+          <div class="step-num">03</div>
+        </div>
+
+        <div class="step">
+          <div class="step-icon">⭐</div>
+          <div class="step-body">
+            <div class="step-title">HODL & Enjoy</div>
+            <div class="muted">Hold strong and enjoy the meme ride.</div>
+          </div>
+          <div class="step-num">04</div>
+        </div>
+      </div>
+    </section>
+
+    <!-- JOIN -->
+    <section class="section" id="join">
+      <div class="section-head">
+        <h2 class="h2">JOIN THE ARMY</h2>
+        <p class="muted">Join us and follow the lore.</p>
+      </div>
+
+      <div class="join-grid">
+        <a class="join-card" id="xLink" href="#" target="_blank" rel="noopener">
+          <div class="join-ic">X</div>
+          <div>
+            <div class="join-title">Community</div>
+            <div class="muted">Join on X</div>
+          </div>
+        </a>
+
+        <a class="join-card" id="ttLink" href="#" target="_blank" rel="noopener">
+          <div class="join-ic">♪</div>
+          <div>
+            <div class="join-title">TikTok</div>
+            <div class="muted">@mythosmondayss</div>
+          </div>
+        </a>
+      </div>
+    </section>
+
+    <!-- GALLERY (auto-hidden if empty) -->
+    <section class="section" id="gallery">
+      <div class="section-head">
+        <h2 class="h2">GALLERY</h2>
+        <p class="muted">Swipe through the community moments.</p>
+      </div>
+
+      <div class="gallery">
+        <button class="gal-btn" id="galPrev" type="button" aria-label="Previous">‹</button>
+
+        <div class="gal-frame">
+          <img id="galImg" class="gal-img" alt="Gallery image" />
+          <div id="galCap" class="gal-cap"></div>
+        </div>
+
+        <button class="gal-btn" id="galNext" type="button" aria-label="Next">›</button>
+      </div>
+    </section>
+
+    <footer class="footer">
+      <div class="footer-inner">
+        <span class="muted">© <span id="year"></span> TRALALA</span>
+      </div>
+    </footer>
+
+  </main>
+
+  <script src="script.js"></script>
+</body>
+</html>
