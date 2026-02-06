@@ -1,224 +1,119 @@
-<!doctype html>
-<html lang="de">
-<head>
-  <meta charset="utf-8" />
-  <meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover" />
-  <title>TRALALA</title>
-  <link rel="stylesheet" href="./styles.css" />
-</head>
+// ---------- Smooth scroll ----------
+document.querySelectorAll('a[href^="#"]').forEach(a => {
+  a.addEventListener("click", (e) => {
+    const id = a.getAttribute("href");
+    if (!id || id === "#") return;
+    const el = document.querySelector(id);
+    if (!el) return;
+    e.preventDefault();
+    el.scrollIntoView({ behavior: "smooth", block: "start" });
+  });
+});
 
-<body>
-  <!-- Background audio (will only start after user click) -->
-  <audio id="bgAudio" src="./bg.mp3" preload="auto" loop muted playsinline></audio>
+// ---------- Contract copy ----------
+const copyBtn = document.getElementById("copyContract");
+const contractValue = document.getElementById("contractValue");
 
-  <header class="topbar">
-    <a class="brand" href="#top" aria-label="Zur Startseite">
-      <!-- Optional: If you DON'T have logo.png, it auto-hides and shows text -->
-      <img class="brand__logo" src="./logo.png" alt="TRALALA Logo"
-           onerror="this.style.display='none'; this.nextElementSibling.style.display='inline-flex';" />
-      <span class="brand__text" style="display:none;">TRALALA</span>
-    </a>
+if (copyBtn && contractValue) {
+  copyBtn.addEventListener("click", async () => {
+    try {
+      await navigator.clipboard.writeText(contractValue.textContent.trim());
+      copyBtn.textContent = "COPIED";
+      setTimeout(() => (copyBtn.textContent = "COPY"), 1200);
+    } catch {
+      // Fallback
+      const range = document.createRange();
+      range.selectNodeContents(contractValue);
+      const sel = window.getSelection();
+      sel.removeAllRanges();
+      sel.addRange(range);
+      document.execCommand("copy");
+      sel.removeAllRanges();
+      copyBtn.textContent = "COPIED";
+      setTimeout(() => (copyBtn.textContent = "COPY"), 1200);
+    }
+  });
+}
 
-    <nav class="nav">
-      <a class="nav__link" href="#tokenomics">Tokenomics</a>
-      <a class="nav__link" href="#how">How to buy</a>
-      <a class="nav__link" href="#community">Join</a>
-      <a class="nav__link" href="#buy">Buy</a>
-    </nav>
-  </header>
+// ---------- Audio toggle (no slider, user-gesture required) ----------
+const audio = document.getElementById("bgAudio");
+const audioToggle = document.getElementById("audioToggle");
 
-  <main id="top">
-    <!-- HERO -->
-    <section class="section hero">
-      <div class="container hero__grid">
-        <div class="hero__left">
-          <div class="badge">
-            <span class="badge__dot"></span>
-            <span>LIVE ON SOLANA</span>
-          </div>
+function setAudioUI() {
+  if (!audioToggle || !audio) return;
+  const muted = audio.muted || audio.paused;
+  audioToggle.classList.toggle("isMuted", muted);
+}
+setAudioUI();
 
-          <h1 class="hero__title">$TRALALA</h1>
-          <p class="hero__sub">
-            The cutest brainrot fish has emerged from TikTok.
-          </p>
+if (audioToggle && audio) {
+  audioToggle.addEventListener("click", async () => {
+    try {
+      // First click: ensure it starts playing (browsers block autoplay without click)
+      if (audio.paused) {
+        audio.muted = false;
+        await audio.play();
+      } else {
+        // Toggle mute
+        audio.muted = !audio.muted;
+        if (!audio.muted) await audio.play();
+      }
+    } catch (err) {
+      // If play is blocked, keep it muted/paused and let user click again
+      console.warn("Audio play blocked:", err);
+      audio.muted = true;
+    }
+    setAudioUI();
+  });
+}
 
-          <div class="hero__cta">
-            <a class="btn btn--primary" href="#buy">BUY $TRALALA</a>
-            <a class="btn btn--ghost" href="#tokenomics">VIEW TOKENOMICS</a>
-          </div>
-        </div>
+// ---------- Gallery (optional) ----------
+const galleryImages = [
+  // Add your files here if you want gallery:
+  // { src: "./g1.png", cap: "Gallery 1" },
+  // { src: "./g2.png", cap: "Gallery 2" },
+];
 
-        <div class="hero__right">
-          <div class="orb">
-            <!-- Hero image (transparent PNG ok) -->
-            <img
-              class="hero__img"
-              src="./hero.png"
-              alt=""
-              loading="eager"
-              onerror="this.style.display='none';"
-            />
-          </div>
-        </div>
-      </div>
-    </section>
+const galSection = document.getElementById("gallery");
+const galImg = document.getElementById("galImg");
+const galCap = document.getElementById("galCap");
+const galPrev = document.getElementById("galPrev");
+const galNext = document.getElementById("galNext");
 
-    <!-- TOKENOMICS -->
-    <section id="tokenomics" class="section tokenomics">
-      <div class="container">
-        <h2 class="section__title">TOKENOMICS</h2>
-        <p class="section__sub">Transparent. Simple. Built for the meme.</p>
+let galIndex = 0;
 
-        <div class="grid cards">
-          <article class="card">
-            <div class="card__icon">◎</div>
-            <div class="card__label">Total Supply</div>
-            <div class="card__value">1,000,000,000</div>
-            <div class="card__hint">One billion TRALALA tokens</div>
-          </article>
+function renderGallery() {
+  if (!galSection) return;
 
-          <article class="card">
-            <div class="card__icon">%</div>
-            <div class="card__label">Tax</div>
-            <div class="card__value">0%</div>
-            <div class="card__hint">No buy/sell tax — pure trading</div>
-          </article>
+  if (!galleryImages.length) {
+    galSection.style.display = "none";
+    return;
+  }
 
-          <article class="card">
-            <div class="card__icon">🔒</div>
-            <div class="card__label">Liquidity</div>
-            <div class="card__value">Coming Soon</div>
-            <div class="card__hint">LP lock proof will be linked here</div>
-          </article>
+  const item = galleryImages[galIndex];
+  galImg.style.display = "none";
+  galCap.textContent = item.cap || "";
 
-          <article class="card">
-            <div class="card__icon">⚡</div>
-            <div class="card__label">Contract</div>
-            <div class="card__value">Renounced</div>
-            <div class="card__hint">Community-first setup</div>
-          </article>
-        </div>
+  galImg.onload = () => {
+    galImg.style.display = "block";
+  };
+  galImg.onerror = () => {
+    galImg.style.display = "none";
+    galCap.textContent = item.cap ? item.cap + " (image missing)" : "Image missing";
+  };
 
-        <div class="contract">
-          <div class="contract__label">CONTRACT ADDRESS</div>
-          <div class="contract__row">
-            <code id="contractValue" class="contract__code">PASTE_CONTRACT_ADDRESS_HERE</code>
-            <button id="copyContract" class="btn btn--small" type="button">COPY</button>
-          </div>
-        </div>
-      </div>
-    </section>
+  galImg.src = item.src;
+}
 
-    <!-- HOW TO BUY -->
-    <section id="how" class="section how">
-      <div class="container">
-        <h2 class="section__title">HOW TO BUY</h2>
-        <p class="section__sub">Four simple steps.</p>
+if (galPrev) galPrev.addEventListener("click", () => {
+  if (!galleryImages.length) return;
+  galIndex = (galIndex - 1 + galleryImages.length) % galleryImages.length;
+  renderGallery();
+});
+if (galNext) galNext.addEventListener("click", () => {
+  if (!galleryImages.length) return;
+  galIndex = (galIndex + 1) % galleryImages.length;
+  renderGallery();
+});
 
-        <div class="steps">
-          <div class="step">
-            <div class="step__icon">👛</div>
-            <div class="step__text">
-              <div class="step__title">Get a Wallet</div>
-              <div class="step__desc">Download Phantom or Solflare and set it up securely.</div>
-            </div>
-            <div class="step__num">01</div>
-          </div>
-
-          <div class="step">
-            <div class="step__icon">◎</div>
-            <div class="step__text">
-              <div class="step__title">Get SOL</div>
-              <div class="step__desc">Buy SOL on an exchange and send it to your wallet.</div>
-            </div>
-            <div class="step__num">02</div>
-          </div>
-
-          <div class="step">
-            <div class="step__icon">⇄</div>
-            <div class="step__text">
-              <div class="step__title">Swap for $TRALALA</div>
-              <div class="step__desc">Use Jupiter/Raydium, paste the contract, and swap.</div>
-            </div>
-            <div class="step__num">03</div>
-          </div>
-
-          <div class="step">
-            <div class="step__icon">⭐</div>
-            <div class="step__text">
-              <div class="step__title">HODL & Enjoy</div>
-              <div class="step__desc">Hold strong and enjoy the meme ride.</div>
-            </div>
-            <div class="step__num">04</div>
-          </div>
-        </div>
-      </div>
-    </section>
-
-    <!-- COMMUNITY -->
-    <section id="community" class="section community">
-      <div class="container">
-        <h2 class="section__title">JOIN THE ARMY</h2>
-        <p class="section__sub">Join us and follow the lore.</p>
-
-        <div class="grid community__grid">
-          <a class="pill" href="https://x.com/" target="_blank" rel="noreferrer">
-            <span class="pill__icon">X</span>
-            <span class="pill__text">
-              <span class="pill__title">Community</span>
-              <span class="pill__sub">Join on X</span>
-            </span>
-          </a>
-
-          <a class="pill" href="https://www.tiktok.com/@mythosmondays" target="_blank" rel="noreferrer">
-            <span class="pill__icon">♪</span>
-            <span class="pill__text">
-              <span class="pill__title">TikTok</span>
-              <span class="pill__sub">@mythosmondays</span>
-            </span>
-          </a>
-        </div>
-      </div>
-    </section>
-
-    <!-- GALLERY (auto-hides if empty in script.js) -->
-    <section id="gallery" class="section gallery">
-      <div class="container">
-        <h2 class="section__title">GALLERY</h2>
-        <p class="section__sub">Swipe through the community moments.</p>
-
-        <div class="gallery__frame">
-          <button class="gallery__btn" id="galPrev" type="button" aria-label="Vorheriges Bild">‹</button>
-          <div class="gallery__viewport">
-            <img id="galImg" alt="" />
-            <div id="galCap" class="gallery__cap"></div>
-          </div>
-          <button class="gallery__btn" id="galNext" type="button" aria-label="Nächstes Bild">›</button>
-        </div>
-      </div>
-    </section>
-
-    <!-- BUY NOW -->
-    <section id="buy" class="section buy">
-      <div class="container buy__row">
-        <div>
-          <h2 class="section__title">BUY NOW</h2>
-          <p class="section__sub">Connect your wallet and trade safely. Always verify the contract address.</p>
-        </div>
-
-        <div class="buy__cta">
-          <a class="btn btn--ghost" href="#tokenomics">SEE TOKENOMICS</a>
-          <a class="btn btn--primary" href="#how">HOW TO BUY</a>
-        </div>
-      </div>
-    </section>
-  </main>
-
-  <!-- Audio toggle (no emoji, just clean icon) -->
-  <button id="audioToggle" class="audioToggle" type="button" aria-label="Audio umschalten">
-    <span class="audioToggle__icon" id="audioIcon" aria-hidden="true"></span>
-  </button>
-
-  <script src="./script.js"></script>
-</body>
-</html>
+renderGallery();
