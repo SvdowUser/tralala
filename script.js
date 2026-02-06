@@ -1,223 +1,152 @@
-/* =========================
-   CONFIG (EDIT THESE)
-========================= */
-const CONFIG = {
-  // Pump.fun link (set your exact coin URL here)
-  pumpfunUrl: "https://pump.fun/",
+// Smooth scroll
+document.querySelectorAll('a[href^="#"]').forEach(a => {
+  a.addEventListener("click", (e) => {
+    const id = a.getAttribute("href");
+    if (!id || id === "#") return;
+    const el = document.querySelector(id);
+    if (!el) return;
+    e.preventDefault();
+    el.scrollIntoView({ behavior: "smooth", block: "start" });
+  });
+});
 
-  // Contract address to show + copy
-  contractAddress: "PASTE_CONTRACT_ADDRESS_HERE",
+// Footer year
+document.getElementById("year").textContent = new Date().getFullYear();
 
-  // Social links
-  xUrl: "https://x.com/",
-  tiktokUrl: "https://www.tiktok.com/@mythosmondayss",
+// ---------- Copy contract ----------
+const contractInput = document.getElementById("contractValue");
+const copyBtn = document.getElementById("copyBtn");
+const toast = document.getElementById("toast");
 
-  // Audio
-  audioFile: "bg.mp3",
-  startMuted: true,
-
-  // Gallery (leave empty [] to hide section)
-  galleryImages: [
-    // Example:
-    // { src: "g1.jpg", caption: "Community moment #1" },
-  ],
-};
-
-/* =========================
-   Helpers
-========================= */
-function qs(sel){ return document.querySelector(sel); }
-
-async function copyText(text){
-  try{
+async function copyText(text) {
+  // Clipboard API works only in secure context + user gesture on many browsers (esp. iOS). 
+  try {
     await navigator.clipboard.writeText(text);
     return true;
-  }catch(e){
-    // Fallback for older browsers
-    try{
+  } catch (e) {
+    // Fallback (older browsers)
+    try {
       const ta = document.createElement("textarea");
       ta.value = text;
       ta.style.position = "fixed";
-      ta.style.left = "-9999px";
+      ta.style.top = "-1000px";
       document.body.appendChild(ta);
       ta.focus();
       ta.select();
       const ok = document.execCommand("copy");
       document.body.removeChild(ta);
       return ok;
-    }catch(err){
+    } catch {
       return false;
     }
   }
 }
 
-/* =========================
-   Hero image: cache-bust + fallback filenames
-========================= */
-function setupHeroImage(){
-  const img = qs("#heroImg");
-  if(!img) return;
-
-  const candidates = ["hero.png", "hero.PNG", "Hero.png", "Hero.PNG"];
-  let idx = 0;
-
-  const tryLoad = () => {
-    const src = candidates[idx] + "?v=" + Date.now();
-    img.src = src;
-  };
-
-  img.onerror = () => {
-    idx++;
-    if(idx < candidates.length) tryLoad();
-    // if all fail, do nothing (keeps broken icon)
-  };
-
-  // Start with cache-busted current src
-  tryLoad();
-}
-
-/* =========================
-   Brand logo fallback
-   - If logo.png loads, show it
-   - If not, keep text-only
-========================= */
-function setupBrandLogo(){
-  const logo = qs("#brandLogo");
-  if(!logo) return;
-
-  logo.onload = () => { logo.style.display = "block"; };
-  logo.onerror = () => { logo.style.display = "none"; };
-  // cache-bust logo too
-  logo.src = "logo.png?v=" + Date.now();
-}
-
-/* =========================
-   Audio: toggle only (start muted)
-========================= */
-function setupAudio(){
-  const btn = qs("#audioToggle");
-  if(!btn) return;
-
-  const audio = new Audio(CONFIG.audioFile);
-  audio.loop = true;
-  audio.volume = 0.35;
-
-  let muted = !!CONFIG.startMuted;
-  audio.muted = muted;
-
-  const paint = () => {
-    btn.dataset.muted = muted ? "true" : "false";
-    btn.setAttribute("aria-pressed", muted ? "false" : "true");
-  };
-  paint();
-
-  // Attempt to start playback (will be blocked on iOS until user taps – that's OK)
-  audio.play().catch(()=>{ /* ignore */ });
-
-  btn.addEventListener("click", async () => {
-    muted = !muted;
-    audio.muted = muted;
-    paint();
-
-    // If user unmutes, ensure audio is actually playing
-    if(!muted){
-      try{
-        await audio.play();
-      }catch(e){
-        // If still blocked, re-mute to avoid confusion
-        muted = true;
-        audio.muted = true;
-        paint();
-      }
-    }
-  });
-}
-
-/* =========================
-   Wire links + contract + copy
-========================= */
-function setupLinksAndContract(){
-  const brandLink = qs("#brandLink");
-  const buyBtnTop = qs("#buyBtnTop");
-  const contractValue = qs("#contractValue");
-  const copyBtn = qs("#copyContract");
-  const xLink = qs("#xLink");
-  const ttLink = qs("#ttLink");
-
-  if(brandLink) brandLink.href = CONFIG.pumpfunUrl;
-  if(buyBtnTop) buyBtnTop.href = CONFIG.pumpfunUrl;
-
-  if(xLink) xLink.href = CONFIG.xUrl;
-  if(ttLink) ttLink.href = CONFIG.tiktokUrl;
-
-  if(contractValue) contractValue.textContent = CONFIG.contractAddress;
-
-  if(copyBtn){
-    copyBtn.addEventListener("click", async () => {
-      const text = (CONFIG.contractAddress || "").trim();
-      if(!text || text === "PASTE_CONTRACT_ADDRESS_HERE") return;
-
-      const ok = await copyText(text);
-      copyBtn.textContent = ok ? "COPIED" : "FAILED";
-      setTimeout(()=> copyBtn.textContent = "COPY", 1100);
-    });
-  }
-}
-
-/* =========================
-   Gallery (auto hide if empty)
-========================= */
-function setupGallery(){
-  const sec = qs("#gallery");
-  const img = qs("#galImg");
-  const cap = qs("#galCap");
-  const prev = qs("#galPrev");
-  const next = qs("#galNext");
-
-  const items = CONFIG.galleryImages || [];
-  if(!sec) return;
-
-  if(items.length === 0){
-    sec.style.display = "none";
+copyBtn.addEventListener("click", async () => {
+  const text = (contractInput.value || "").trim();
+  if (!text || text === "PASTE_CONTRACT_ADDRESS_HERE") {
+    toast.textContent = "Paste the contract address first.";
     return;
   }
 
-  let i = 0;
-  const render = () => {
-    const it = items[i];
-    img.style.display = "block";
-    img.src = it.src + "?v=" + Date.now();
-    cap.textContent = it.caption || "";
-  };
-
-  prev.addEventListener("click", () => {
-    i = (i - 1 + items.length) % items.length;
-    render();
-  });
-  next.addEventListener("click", () => {
-    i = (i + 1) % items.length;
-    render();
-  });
-
-  render();
-}
-
-/* =========================
-   Year
-========================= */
-function setupYear(){
-  const y = qs("#year");
-  if(y) y.textContent = new Date().getFullYear();
-}
-
-/* =========================
-   Init
-========================= */
-document.addEventListener("DOMContentLoaded", () => {
-  setupBrandLogo();
-  setupHeroImage();
-  setupAudio();
-  setupLinksAndContract();
-  setupGallery();
-  setupYear();
+  const ok = await copyText(text);
+  toast.textContent = ok ? "COPIED ✅" : "Copy failed ❌";
+  setTimeout(() => (toast.textContent = ""), 1400);
 });
+
+// ---------- Audio toggle ----------
+const audio = document.getElementById("bgAudio");
+const toggleBtn = document.getElementById("audioToggle");
+const icon = document.getElementById("audioIcon");
+
+// Clean icons (no emoji)
+const ICON_MUTED = `
+<svg viewBox="0 0 24 24" fill="none" aria-hidden="true">
+  <path d="M10 7L6.5 10H4v4h2.5L10 17V7Z" stroke="rgba(234,243,255,.95)" stroke-width="1.8" stroke-linejoin="round"/>
+  <path d="M15 9l6 6M21 9l-6 6" stroke="rgba(234,243,255,.75)" stroke-width="1.8" stroke-linecap="round"/>
+</svg>
+`;
+const ICON_SOUND = `
+<svg viewBox="0 0 24 24" fill="none" aria-hidden="true">
+  <path d="M10 7L6.5 10H4v4h2.5L10 17V7Z" stroke="rgba(234,243,255,.95)" stroke-width="1.8" stroke-linejoin="round"/>
+  <path d="M14.5 9.5c1.2 1.2 1.2 3.8 0 5M17 7c2.6 2.6 2.6 7.4 0 10" stroke="rgba(234,243,255,.75)" stroke-width="1.8" stroke-linecap="round"/>
+</svg>
+`;
+
+function updateAudioUI() {
+  icon.innerHTML = audio.muted ? ICON_MUTED : ICON_SOUND;
+}
+
+audio.muted = true;
+updateAudioUI();
+
+// Browsers often block autoplay with sound until user gesture. Muted is generally allowed, but still can fail. :contentReference[oaicite:3]{index=3}
+async function tryPlayMuted() {
+  try {
+    audio.muted = true;
+    await audio.play();
+  } catch {
+    // ignore: will start on first user gesture
+  } finally {
+    updateAudioUI();
+  }
+}
+tryPlayMuted();
+
+// Ensure first user gesture enables playback if needed (still muted)
+window.addEventListener("pointerdown", async () => {
+  try {
+    if (audio.paused) await audio.play();
+  } catch {}
+}, { once: true });
+
+toggleBtn.addEventListener("click", async () => {
+  try {
+    // if audio never started due to policy, start it now
+    if (audio.paused) await audio.play();
+  } catch {}
+
+  audio.muted = !audio.muted;
+  updateAudioUI();
+});
+
+// ---------- Gallery ----------
+const galleryImages = [
+  // Add your images here (place files in repo root or an /img folder)
+  // { src: "./g1.jpg", cap: "Gallery 1" },
+  // { src: "./g2.jpg", cap: "Gallery 2" },
+];
+
+const galSection = document.getElementById("gallery");
+const galImg = document.getElementById("galImg");
+const galCap = document.getElementById("galCap");
+const galPrev = document.getElementById("galPrev");
+const galNext = document.getElementById("galNext");
+
+let gi = 0;
+
+function renderGallery() {
+  if (!galleryImages.length) {
+    // Hide gallery completely if empty (no weird placeholder text)
+    galSection.style.display = "none";
+    return;
+  }
+
+  const item = galleryImages[gi];
+  galImg.src = item.src;
+  galCap.textContent = item.cap || "";
+}
+
+galPrev.addEventListener("click", () => {
+  if (!galleryImages.length) return;
+  gi = (gi - 1 + galleryImages.length) % galleryImages.length;
+  renderGallery();
+});
+
+galNext.addEventListener("click", () => {
+  if (!galleryImages.length) return;
+  gi = (gi + 1) % galleryImages.length;
+  renderGallery();
+});
+
+renderGallery();
