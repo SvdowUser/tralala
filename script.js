@@ -1,110 +1,142 @@
-// Menu
-const overlay = document.getElementById("menuOverlay");
-const openMenu = document.getElementById("openMenu");
-const closeMenu = document.getElementById("closeMenu");
+// --------------------
+// Drawer Menu
+// --------------------
+const drawer = document.getElementById("drawer");
+const menuBtn = document.getElementById("menuBtn");
+const closeDrawer = document.getElementById("closeDrawer");
 
-openMenu?.addEventListener("click", () => {
-  overlay.classList.add("open");
-  overlay.setAttribute("aria-hidden", "false");
-});
-closeMenu?.addEventListener("click", () => {
-  overlay.classList.remove("open");
-  overlay.setAttribute("aria-hidden", "true");
-});
-overlay?.addEventListener("click", (e) => {
-  if (e.target === overlay) closeMenu.click();
-});
-document.querySelectorAll(".menu-link").forEach(a => {
-  a.addEventListener("click", () => closeMenu.click());
-});
-
-// Copy contract
-const copyBtn = document.getElementById("copyBtn");
-const contractText = document.getElementById("contractText");
-
-copyBtn?.addEventListener("click", async () => {
-  try {
-    await navigator.clipboard.writeText(contractText.textContent.trim());
-    copyBtn.textContent = "Copied!";
-    setTimeout(() => (copyBtn.textContent = "Copy"), 900);
-  } catch {
-    copyBtn.textContent = "Copy failed";
-    setTimeout(() => (copyBtn.textContent = "Copy"), 900);
-  }
-});
-
-// Audio (iOS requires user gesture — speaker tap is perfect)
-const audio = document.getElementById("bgAudio");
-const speakerBtn = document.getElementById("speakerBtn");
-const volumeWrap = document.getElementById("volumeWrap");
-const volume = document.getElementById("volume");
-
-let isOn = false;
-
-speakerBtn?.addEventListener("click", async () => {
-  try {
-    if (!isOn) {
-      audio.volume = Number(volume?.value ?? 0.6);
-      await audio.play();
-      isOn = true;
-      speakerBtn.classList.add("on");
-      volumeWrap.classList.add("show");
-      volumeWrap.setAttribute("aria-hidden", "false");
-    } else {
-      audio.pause();
-      isOn = false;
-      speakerBtn.classList.remove("on");
-      volumeWrap.classList.remove("show");
-      volumeWrap.setAttribute("aria-hidden", "true");
-    }
-  } catch (e) {
-    // If autoplay policy blocks, user needs to tap again after interaction (normally this works on tap).
-    console.log(e);
-  }
-});
-
-volume?.addEventListener("input", () => {
-  audio.volume = Number(volume.value);
-});
-
-// Gallery slider
-const track = document.getElementById("track");
-const prev = document.getElementById("prev");
-const next = document.getElementById("next");
-
-let index = 0;
-const slides = () => track?.querySelectorAll("img").length ?? 0;
-
-function render() {
-  if (!track) return;
-  track.style.transform = `translateX(${-index * 100}%)`;
+function openDrawer(){
+  drawer.classList.add("open");
+  drawer.setAttribute("aria-hidden", "false");
+}
+function shutDrawer(){
+  drawer.classList.remove("open");
+  drawer.setAttribute("aria-hidden", "true");
 }
 
-prev?.addEventListener("click", () => {
-  index = (index - 1 + slides()) % slides();
-  render();
+menuBtn?.addEventListener("click", openDrawer);
+closeDrawer?.addEventListener("click", shutDrawer);
+drawer?.addEventListener("click", (e) => {
+  if (e.target === drawer) shutDrawer();
 });
-next?.addEventListener("click", () => {
-  index = (index + 1) % slides();
-  render();
+document.querySelectorAll(".drawer-link").forEach(a => {
+  a.addEventListener("click", () => shutDrawer());
 });
 
-// Touch swipe
-let startX = null;
-track?.addEventListener("touchstart", (e) => {
+// --------------------
+// Audio (autoplay safe)
+// --------------------
+const audio = document.getElementById("bgMusic");
+const audioBtn = document.getElementById("audioBtn");
+
+let started = false;
+
+async function startAudio(){
+  if (!audio || started) return;
+  started = true;
+  audio.volume = 0.35;
+  audio.muted = false;
+
+  try{
+    await audio.play();
+    if (audioBtn) audioBtn.textContent = "🔊";
+  }catch(err){
+    // blocked: user must click button once
+    started = false;
+  }
+}
+
+// Start audio on first user interaction (mobile-friendly)
+window.addEventListener("pointerdown", startAudio, { once: true });
+
+audioBtn?.addEventListener("click", async () => {
+  if (!started) await startAudio();
+  if (!audio) return;
+  audio.muted = !audio.muted;
+  audioBtn.textContent = audio.muted ? "🔇" : "🔊";
+});
+
+// --------------------
+// Contract copy
+// --------------------
+const copyBtn = document.getElementById("copyBtn");
+const contractText = document.getElementById("contractText");
+const copyStatus = document.getElementById("copyStatus");
+
+copyBtn?.addEventListener("click", async () => {
+  try{
+    const text = contractText?.innerText?.trim() || "";
+    await navigator.clipboard.writeText(text);
+    if (copyStatus) copyStatus.textContent = "Copied!";
+    setTimeout(() => { if (copyStatus) copyStatus.textContent = ""; }, 1400);
+  }catch(e){
+    if (copyStatus) copyStatus.textContent = "Copy failed — long-press to copy.";
+  }
+});
+
+// --------------------
+// Gallery slider
+// Replace/extend file names here
+// --------------------
+const galleryFiles = [
+  "assets/gallery1.jpg",
+  "assets/gallery2.jpg",
+  "assets/gallery3.jpg",
+  "assets/gallery4.jpg",
+  "assets/gallery5.jpg",
+  "assets/gallery6.jpg"
+];
+
+const galleryImg = document.getElementById("galleryImg");
+const prevImg = document.getElementById("prevImg");
+const nextImg = document.getElementById("nextImg");
+const dotsWrap = document.getElementById("dots");
+
+let idx = 0;
+
+function renderDots(){
+  if (!dotsWrap) return;
+  dotsWrap.innerHTML = "";
+  galleryFiles.forEach((_, i) => {
+    const d = document.createElement("div");
+    d.className = "dotty" + (i === idx ? " active" : "");
+    d.addEventListener("click", () => {
+      idx = i;
+      updateGallery();
+    });
+    dotsWrap.appendChild(d);
+  });
+}
+
+function updateGallery(){
+  if (!galleryImg) return;
+  galleryImg.src = galleryFiles[idx];
+  renderDots();
+}
+
+prevImg?.addEventListener("click", () => {
+  idx = (idx - 1 + galleryFiles.length) % galleryFiles.length;
+  updateGallery();
+});
+
+nextImg?.addEventListener("click", () => {
+  idx = (idx + 1) % galleryFiles.length;
+  updateGallery();
+});
+
+// Swipe on mobile
+let startX = 0;
+galleryImg?.addEventListener("touchstart", (e) => {
   startX = e.touches[0].clientX;
 }, { passive: true });
 
-track?.addEventListener("touchend", (e) => {
-  if (startX === null) return;
+galleryImg?.addEventListener("touchend", (e) => {
   const endX = e.changedTouches[0].clientX;
-  const dx = endX - startX;
-  if (Math.abs(dx) > 40) {
-    if (dx < 0) next.click();
-    else prev.click();
+  const diff = endX - startX;
+  if (Math.abs(diff) > 40){
+    if (diff > 0) prevImg?.click();
+    else nextImg?.click();
   }
-  startX = null;
 }, { passive: true });
 
-// Footer year
-document.getElementById("year").textContent = new Date().getFullYear();
+updateGallery();
