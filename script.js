@@ -1,166 +1,210 @@
-// ========= Helpers =========
-const $ = (q) => document.querySelector(q);
-const $$ = (q) => document.querySelectorAll(q);
+(() => {
+  // ===== MENU =====
+  const menuBtn = document.getElementById("menuBtn");
+  const menu = document.getElementById("menu");
+  const overlay = document.getElementById("overlay");
 
-// ========= Menu =========
-const menuBtn = $("#menuBtn");
-const menuOverlay = $("#menuOverlay");
-const menuClose = $("#menuClose");
-
-function openMenu(){
-  menuOverlay.classList.add("open");
-  menuOverlay.setAttribute("aria-hidden", "false");
-}
-function closeMenu(){
-  menuOverlay.classList.remove("open");
-  menuOverlay.setAttribute("aria-hidden", "true");
-}
-menuBtn?.addEventListener("click", openMenu);
-menuClose?.addEventListener("click", closeMenu);
-menuOverlay?.addEventListener("click", (e) => {
-  if (e.target === menuOverlay) closeMenu();
-});
-$$(".menu-links a").forEach(a => a.addEventListener("click", closeMenu));
-
-// ========= Audio (IMPORTANT: autoplay blocked; start on first user gesture) =========
-const audio = $("#bgAudio");
-const soundBtn = $("#soundBtn");
-const soundIcon = $("#soundIcon");
-
-let audioEnabled = false;   // user wants sound
-let audioStarted = false;   // audio actually started once
-
-function setIcon(){
-  soundIcon.textContent = audioEnabled ? "🔊" : "🔇";
-}
-
-// Try to start audio (must be called after user interaction)
-async function tryStartAudio(){
-  if (!audio) return;
-  if (audioStarted) return;
-
-  try {
-    audio.volume = 0.85; // you can change
-    await audio.play();
-    audioStarted = true;
-  } catch (err) {
-    // If browser still blocks, user can press sound button again.
+  function openMenu() {
+    menu.style.display = "block";
+    overlay.style.display = "block";
+    menuBtn.setAttribute("aria-expanded", "true");
+    menu.setAttribute("aria-hidden", "false");
+    overlay.setAttribute("aria-hidden", "false");
   }
-}
-
-// Toggle sound (AN/AUS only)
-async function toggleSound(){
-  audioEnabled = !audioEnabled;
-  setIcon();
-
-  if (!audio) return;
-
-  if (audioEnabled) {
-    // Start audio if not started yet
-    await tryStartAudio();
-    audio.muted = false;
-  } else {
-    audio.muted = true;
+  function closeMenu() {
+    menu.style.display = "none";
+    overlay.style.display = "none";
+    menuBtn.setAttribute("aria-expanded", "false");
+    menu.setAttribute("aria-hidden", "true");
+    overlay.setAttribute("aria-hidden", "true");
   }
-}
 
-// Button click
-soundBtn?.addEventListener("click", async () => {
-  await toggleSound();
-});
+  menuBtn?.addEventListener("click", () => {
+    const isOpen = menu.style.display === "block";
+    isOpen ? closeMenu() : openMenu();
+  });
+  overlay?.addEventListener("click", closeMenu);
+  menu?.querySelectorAll("a").forEach(a => a.addEventListener("click", closeMenu));
 
-// Start audio ON FIRST user click anywhere (only if they enabled sound once)
-// If you want "first click starts sound immediately", set audioEnabled=true by default.
-// But you asked for a toggle, so we keep it OFF by default.
-document.addEventListener("click", async () => {
-  // If user already turned it on but audio didn't start yet, try again.
-  if (audioEnabled && !audioStarted) await tryStartAudio();
-}, { once: false });
+  // ===== HERO IMAGE DEBUG / FALLBACK =====
+  const heroImg = document.getElementById("heroImg");
+  const imgFallback = document.getElementById("imgFallback");
 
-// Default state: muted/off
-if (audio) audio.muted = true;
-setIcon();
-
-// ========= Copy Contract =========
-const copyBtn = $("#copyBtn");
-const contractText = $("#contractText");
-
-copyBtn?.addEventListener("click", async () => {
-  try {
-    const txt = contractText?.textContent?.trim() || "";
-    await navigator.clipboard.writeText(txt);
-    copyBtn.textContent = "Copied!";
-    setTimeout(() => (copyBtn.textContent = "Copy"), 1200);
-  } catch {
-    copyBtn.textContent = "Copy failed";
-    setTimeout(() => (copyBtn.textContent = "Copy"), 1200);
+  function showHeroFallback(msg) {
+    if (imgFallback) {
+      imgFallback.hidden = false;
+      if (msg) console.warn(msg);
+    }
   }
-});
 
-// ========= Gallery slider =========
-const track = $("#galTrack");
-const prev = $("#galPrev");
-const next = $("#galNext");
-const dotsWrap = $("#galDots");
-
-let index = 0;
-let total = 0;
-
-function updateGallery(){
-  if (!track) return;
-  track.style.transform = `translateX(${-index * 100}%)`;
-
-  if (dotsWrap) {
-    $$(".dotbtn").forEach((d, i) => d.classList.toggle("active", i === index));
-  }
-}
-
-function buildDots(){
-  if (!track || !dotsWrap) return;
-  const imgs = track.querySelectorAll("img");
-  total = imgs.length;
-  dotsWrap.innerHTML = "";
-
-  for (let i = 0; i < total; i++){
-    const b = document.createElement("button");
-    b.className = "dotbtn" + (i === 0 ? " active" : "");
-    b.setAttribute("aria-label", `Go to slide ${i + 1}`);
-    b.addEventListener("click", () => {
-      index = i;
-      updateGallery();
+  if (heroImg) {
+    heroImg.addEventListener("error", () => {
+      showHeroFallback("Hero image failed to load. Check repo filename/path (hero.png).");
+      console.log("Tried:", heroImg.src);
     });
-    dotsWrap.appendChild(b);
+    heroImg.addEventListener("load", () => {
+      if (imgFallback) imgFallback.hidden = true;
+    });
   }
-}
 
-prev?.addEventListener("click", () => {
-  index = (index - 1 + total) % total;
-  updateGallery();
-});
-next?.addEventListener("click", () => {
-  index = (index + 1) % total;
-  updateGallery();
-});
+  // ===== AUDIO (TOGGLE ONLY, NO SLIDER) =====
+  const audio = document.getElementById("bgAudio");
+  const toggle = document.getElementById("soundToggle");
+  const icon = toggle?.querySelector(".soundToggle__icon");
 
-// Swipe on mobile
-let startX = 0;
-let dx = 0;
-track?.addEventListener("touchstart", (e) => {
-  startX = e.touches[0].clientX;
-  dx = 0;
-}, { passive: true });
+  let isPlaying = false;
+  let hasUserGesture = false;
 
-track?.addEventListener("touchmove", (e) => {
-  dx = e.touches[0].clientX - startX;
-}, { passive: true });
-
-track?.addEventListener("touchend", () => {
-  if (Math.abs(dx) > 50) {
-    if (dx < 0) index = (index + 1) % total;
-    else index = (index - 1 + total) % total;
-    updateGallery();
+  // Browser policy: must be started by user gesture
+  async function tryPlay() {
+    if (!audio) return;
+    try {
+      audio.volume = 1;
+      await audio.play();
+      isPlaying = true;
+      updateSoundUI();
+    } catch (e) {
+      // Autoplay blocked or other error
+      console.warn("Audio play blocked until user gesture:", e);
+      isPlaying = false;
+      updateSoundUI();
+    }
   }
-});
 
-buildDots();
-updateGallery();
+  function pauseAudio() {
+    if (!audio) return;
+    audio.pause();
+    isPlaying = false;
+    updateSoundUI();
+  }
+
+  function updateSoundUI() {
+    if (!toggle || !icon) return;
+    toggle.setAttribute("aria-pressed", String(isPlaying));
+    icon.textContent = isPlaying ? "🔊" : "🔇";
+  }
+
+  // Ensure we count a real gesture
+  function markGesture() {
+    hasUserGesture = true;
+    document.removeEventListener("pointerdown", markGesture);
+    document.removeEventListener("keydown", markGesture);
+  }
+  document.addEventListener("pointerdown", markGesture, { once: true });
+  document.addEventListener("keydown", markGesture, { once: true });
+
+  toggle?.addEventListener("click", async () => {
+    if (!audio) return;
+
+    // If it's not playing, attempt to start. If playing, stop.
+    if (!isPlaying) {
+      // Force user gesture required path
+      if (!hasUserGesture) hasUserGesture = true;
+      await tryPlay();
+    } else {
+      pauseAudio();
+    }
+  });
+
+  // Keep it looped even if some browsers pause on background changes
+  audio?.addEventListener("ended", () => {
+    audio.currentTime = 0;
+    if (isPlaying) tryPlay();
+  });
+
+  updateSoundUI();
+
+  // ===== COPY CONTRACT =====
+  const copyBtn = document.getElementById("copyBtn");
+  const contractText = document.getElementById("contractText");
+  const copyHint = document.getElementById("copyHint");
+
+  copyBtn?.addEventListener("click", async () => {
+    const text = contractText?.textContent?.trim() || "";
+    if (!text || text === "PASTE_CONTRACT_ADDRESS_HERE") {
+      if (copyHint) copyHint.textContent = "Paste your contract address first.";
+      return;
+    }
+    try {
+      await navigator.clipboard.writeText(text);
+      if (copyHint) copyHint.textContent = "Copied!";
+      setTimeout(() => { if (copyHint) copyHint.textContent = ""; }, 1200);
+    } catch (e) {
+      console.warn("Clipboard failed:", e);
+      if (copyHint) copyHint.textContent = "Copy failed (browser blocked).";
+    }
+  });
+
+  // ===== GALLERY (REPLACE FILENAMES) =====
+  // Put your images in repo root (same level as index.html), e.g. g1.jpg, g2.jpg...
+  const galleryData = [
+    { src: "./g1.jpg?v=1", caption: "Gallery 1" },
+    { src: "./g2.jpg?v=1", caption: "Gallery 2" },
+    { src: "./g3.jpg?v=1", caption: "Gallery 3" },
+    { src: "./g4.jpg?v=1", caption: "Gallery 4" },
+    { src: "./g5.jpg?v=1", caption: "Gallery 5" },
+    { src: "./g6.jpg?v=1", caption: "Gallery 6" }
+  ];
+
+  const galleryImg = document.getElementById("galleryImg");
+  const galleryCaption = document.getElementById("galleryCaption");
+  const prevBtn = document.getElementById("prevBtn");
+  const nextBtn = document.getElementById("nextBtn");
+  const dotsWrap = document.getElementById("galleryDots");
+
+  let idx = 0;
+
+  function renderDots() {
+    if (!dotsWrap) return;
+    dotsWrap.innerHTML = "";
+    galleryData.forEach((_, i) => {
+      const d = document.createElement("span");
+      if (i === idx) d.classList.add("is-active");
+      dotsWrap.appendChild(d);
+    });
+  }
+
+  function setGallery(i) {
+    if (!galleryImg || !galleryCaption) return;
+    idx = (i + galleryData.length) % galleryData.length;
+
+    galleryImg.src = galleryData[idx].src;
+    galleryCaption.textContent = galleryData[idx].caption;
+    renderDots();
+  }
+
+  prevBtn?.addEventListener("click", () => setGallery(idx - 1));
+  nextBtn?.addEventListener("click", () => setGallery(idx + 1));
+
+  // Swipe support
+  let startX = null;
+  galleryImg?.addEventListener("pointerdown", (e) => { startX = e.clientX; });
+  galleryImg?.addEventListener("pointerup", (e) => {
+    if (startX == null) return;
+    const dx = e.clientX - startX;
+    startX = null;
+    if (Math.abs(dx) > 40) {
+      dx > 0 ? setGallery(idx - 1) : setGallery(idx + 1);
+    }
+  });
+
+  // Init gallery (only if element exists)
+  if (galleryImg && galleryData.length) setGallery(0);
+
+  // ===== QUICK PATH CHECKS (helps with your hero.png issue) =====
+  // Open DevTools Console and you’ll see if the files are reachable.
+  const checks = [
+    { name: "hero", url: "./hero.png" },
+    { name: "logo", url: "./logo.png" },
+    { name: "bg", url: "./bg.mp3" }
+  ];
+
+  checks.forEach(async (c) => {
+    try {
+      const res = await fetch(c.url, { cache: "no-store" });
+      console.log(`[asset-check] ${c.name}:`, res.status, c.url);
+    } catch (e) {
+      console.warn(`[asset-check] ${c.name} failed:`, c.url, e);
+    }
+  });
+})();
