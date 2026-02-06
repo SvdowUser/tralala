@@ -1,4 +1,42 @@
-// Smooth scroll
+// ======= CONFIG (EDIT THESE) =======
+const PUMP_FUN_URL = "https://pump.fun/PASTE_TOKEN_URL_HERE"; // <-- set your real Pump.fun URL
+const CONTRACT_ADDRESS = "PASTE_CONTRACT_ADDRESS_HERE";       // <-- set real CA
+// Gallery (upload these files into /assets/gallery/)
+const GALLERY = [
+  { src: "./assets/gallery/g1.jpg", cap: "Image 1" },
+  { src: "./assets/gallery/g2.jpg", cap: "Image 2" },
+  { src: "./assets/gallery/g3.jpg", cap: "Image 3" },
+  { src: "./assets/gallery/g4.jpg", cap: "Image 4" },
+  { src: "./assets/gallery/g5.jpg", cap: "Image 5" },
+  { src: "./assets/gallery/g6.jpg", cap: "Image 6" },
+];
+
+// ======= NAV / MENU =======
+const burgerBtn = document.getElementById("burgerBtn");
+const mobileMenu = document.getElementById("mobileMenu");
+const menuClose = document.getElementById("menuClose");
+
+function openMenu() {
+  mobileMenu.classList.add("isOpen");
+  mobileMenu.setAttribute("aria-hidden", "false");
+  burgerBtn.setAttribute("aria-expanded", "true");
+}
+function closeMenu() {
+  mobileMenu.classList.remove("isOpen");
+  mobileMenu.setAttribute("aria-hidden", "true");
+  burgerBtn.setAttribute("aria-expanded", "false");
+}
+
+burgerBtn?.addEventListener("click", () => {
+  if (mobileMenu.classList.contains("isOpen")) closeMenu();
+  else openMenu();
+});
+menuClose?.addEventListener("click", closeMenu);
+mobileMenu?.addEventListener("click", (e) => {
+  if (e.target === mobileMenu) closeMenu();
+});
+
+// Smooth scroll for anchor links
 document.querySelectorAll('a[href^="#"]').forEach(a => {
   a.addEventListener("click", (e) => {
     const id = a.getAttribute("href");
@@ -6,30 +44,40 @@ document.querySelectorAll('a[href^="#"]').forEach(a => {
     const el = document.querySelector(id);
     if (!el) return;
     e.preventDefault();
+    closeMenu();
     el.scrollIntoView({ behavior: "smooth", block: "start" });
   });
 });
 
-// Footer year
-document.getElementById("year").textContent = new Date().getFullYear();
+// ======= Pump.fun links =======
+const pumpBtn = document.getElementById("pumpBtn");
+const pumpFooter = document.getElementById("pumpFooter");
+const pumpCtaTop = document.getElementById("pumpCtaTop");
+const brandLink = document.getElementById("brandLink");
 
-// ---------- Copy contract ----------
-const contractInput = document.getElementById("contractValue");
+[pumpBtn, pumpFooter, pumpCtaTop, brandLink].forEach(el => {
+  if (el) el.href = PUMP_FUN_URL;
+});
+
+// ======= Contract copy =======
+const contractText = document.getElementById("contractText");
 const copyBtn = document.getElementById("copyBtn");
 const toast = document.getElementById("toast");
 
-async function copyText(text) {
-  // Clipboard API works only in secure context + user gesture on many browsers (esp. iOS). 
+if (contractText) contractText.textContent = CONTRACT_ADDRESS;
+
+async function copyToClipboard(text) {
   try {
     await navigator.clipboard.writeText(text);
     return true;
-  } catch (e) {
-    // Fallback (older browsers)
+  } catch {
+    // fallback
     try {
       const ta = document.createElement("textarea");
       ta.value = text;
       ta.style.position = "fixed";
-      ta.style.top = "-1000px";
+      ta.style.left = "-9999px";
+      ta.style.top = "-9999px";
       document.body.appendChild(ta);
       ta.focus();
       ta.select();
@@ -42,110 +90,93 @@ async function copyText(text) {
   }
 }
 
-copyBtn.addEventListener("click", async () => {
-  const text = (contractInput.value || "").trim();
-  if (!text || text === "PASTE_CONTRACT_ADDRESS_HERE") {
-    toast.textContent = "Paste the contract address first.";
-    return;
+copyBtn?.addEventListener("click", async () => {
+  const ok = await copyToClipboard(CONTRACT_ADDRESS);
+  if (toast) {
+    toast.textContent = ok ? "COPIED ✓" : "Copy failed";
+    setTimeout(() => (toast.textContent = ""), 1600);
   }
-
-  const ok = await copyText(text);
-  toast.textContent = ok ? "COPIED ✅" : "Copy failed ❌";
-  setTimeout(() => (toast.textContent = ""), 1400);
+  copyBtn.textContent = "COPIED";
+  setTimeout(() => (copyBtn.textContent = "COPY"), 1200);
 });
 
-// ---------- Audio toggle ----------
+// ======= AUDIO (start muted, clean icon) =======
 const audio = document.getElementById("bgAudio");
-const toggleBtn = document.getElementById("audioToggle");
-const icon = document.getElementById("audioIcon");
+const audioToggle = document.getElementById("audioToggle");
+const audioIcon = document.getElementById("audioIcon");
 
-// Clean icons (no emoji)
-const ICON_MUTED = `
-<svg viewBox="0 0 24 24" fill="none" aria-hidden="true">
-  <path d="M10 7L6.5 10H4v4h2.5L10 17V7Z" stroke="rgba(234,243,255,.95)" stroke-width="1.8" stroke-linejoin="round"/>
-  <path d="M15 9l6 6M21 9l-6 6" stroke="rgba(234,243,255,.75)" stroke-width="1.8" stroke-linecap="round"/>
-</svg>
-`;
-const ICON_SOUND = `
-<svg viewBox="0 0 24 24" fill="none" aria-hidden="true">
-  <path d="M10 7L6.5 10H4v4h2.5L10 17V7Z" stroke="rgba(234,243,255,.95)" stroke-width="1.8" stroke-linejoin="round"/>
-  <path d="M14.5 9.5c1.2 1.2 1.2 3.8 0 5M17 7c2.6 2.6 2.6 7.4 0 10" stroke="rgba(234,243,255,.75)" stroke-width="1.8" stroke-linecap="round"/>
-</svg>
-`;
+// SVG masks for icons (speaker on/off)
+const MASK_SPEAKER_ON = `url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24'%3E%3Cpath d='M3 10v4h4l5 4V6L7 10H3zm13.5 2a3.5 3.5 0 0 0-2-3.15v6.3A3.5 3.5 0 0 0 16.5 12zm0-8a1 1 0 0 1 1 1c0 .43-.27.81-.66.95A8.5 8.5 0 0 1 19 12a8.5 8.5 0 0 1-2.16 5.05 1 1 0 0 1-1.51-1.32A6.5 6.5 0 0 0 17 12a6.5 6.5 0 0 0-1.67-3.73A1 1 0 0 1 16.5 4z'/%3E%3C/svg%3E")`;
+const MASK_SPEAKER_OFF = `url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24'%3E%3Cpath d='M3 10v4h4l5 4V6L7 10H3zm16.3 2 1.7 1.7-1.4 1.4L18 13.4l-1.7 1.7-1.4-1.4L16.6 12l-1.7-1.7 1.4-1.4L18 10.6l1.7-1.7 1.4 1.4L19.4 12z'/%3E%3C/svg%3E")`;
 
-function updateAudioUI() {
-  icon.innerHTML = audio.muted ? ICON_MUTED : ICON_SOUND;
+function setAudioUI(isMuted){
+  if (!audioToggle || !audioIcon) return;
+  audioToggle.classList.toggle("isMuted", isMuted);
+  audioToggle.setAttribute("aria-pressed", String(!isMuted));
+  audioIcon.style.setProperty("--mask", isMuted ? MASK_SPEAKER_OFF : MASK_SPEAKER_ON);
 }
 
-audio.muted = true;
-updateAudioUI();
+function ensureAudio(){
+  if (!audio) return;
+  // iOS requires a user gesture; we only try to play when user clicks.
+  audio.loop = true;
+}
 
-// Browsers often block autoplay with sound until user gesture. Muted is generally allowed, but still can fail. :contentReference[oaicite:3]{index=3}
-async function tryPlayMuted() {
-  try {
-    audio.muted = true;
-    await audio.play();
-  } catch {
-    // ignore: will start on first user gesture
-  } finally {
-    updateAudioUI();
+let muted = true;
+if (audio) audio.muted = true;
+setAudioUI(true);
+ensureAudio();
+
+audioToggle?.addEventListener("click", async () => {
+  if (!audio) return;
+
+  muted = !muted;
+  audio.muted = muted;
+  setAudioUI(muted);
+
+  // Try to play when unmuting
+  if (!muted) {
+    try { await audio.play(); } catch(e) {/* ignore */}
   }
-}
-tryPlayMuted();
-
-// Ensure first user gesture enables playback if needed (still muted)
-window.addEventListener("pointerdown", async () => {
-  try {
-    if (audio.paused) await audio.play();
-  } catch {}
-}, { once: true });
-
-toggleBtn.addEventListener("click", async () => {
-  try {
-    // if audio never started due to policy, start it now
-    if (audio.paused) await audio.play();
-  } catch {}
-
-  audio.muted = !audio.muted;
-  updateAudioUI();
 });
 
-// ---------- Gallery ----------
-const galleryImages = [
-  // Add your images here (place files in repo root or an /img folder)
-  // { src: "./g1.jpg", cap: "Gallery 1" },
-  // { src: "./g2.jpg", cap: "Gallery 2" },
-];
-
-const galSection = document.getElementById("gallery");
+// ======= GALLERY (6 images) =======
 const galImg = document.getElementById("galImg");
 const galCap = document.getElementById("galCap");
 const galPrev = document.getElementById("galPrev");
 const galNext = document.getElementById("galNext");
+const galDots = document.getElementById("galDots");
 
-let gi = 0;
+let galIndex = 0;
 
-function renderGallery() {
-  if (!galleryImages.length) {
-    // Hide gallery completely if empty (no weird placeholder text)
-    galSection.style.display = "none";
-    return;
+function renderDots(){
+  if (!galDots) return;
+  galDots.innerHTML = "";
+  for (let i=0;i<GALLERY.length;i++){
+    const d = document.createElement("span");
+    if (i === galIndex) d.classList.add("isOn");
+    galDots.appendChild(d);
   }
-
-  const item = galleryImages[gi];
-  galImg.src = item.src;
-  galCap.textContent = item.cap || "";
 }
 
-galPrev.addEventListener("click", () => {
-  if (!galleryImages.length) return;
-  gi = (gi - 1 + galleryImages.length) % galleryImages.length;
-  renderGallery();
+function renderGallery(){
+  if (!galImg || !galCap || !GALLERY.length) return;
+  const item = GALLERY[galIndex];
+  galImg.src = item.src;
+  galCap.textContent = item.cap || "";
+  renderDots();
+}
+
+galImg?.addEventListener("error", () => {
+  if (galCap) galCap.textContent = "Image missing — check filename/path in /assets/gallery/";
 });
 
-galNext.addEventListener("click", () => {
-  if (!galleryImages.length) return;
-  gi = (gi + 1) % galleryImages.length;
+galPrev?.addEventListener("click", () => {
+  galIndex = (galIndex - 1 + GALLERY.length) % GALLERY.length;
+  renderGallery();
+});
+galNext?.addEventListener("click", () => {
+  galIndex = (galIndex + 1) % GALLERY.length;
   renderGallery();
 });
 
