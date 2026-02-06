@@ -1,74 +1,110 @@
-// ====== helpers ======
-const $ = (id) => document.getElementById(id);
+// Menu
+const overlay = document.getElementById("menuOverlay");
+const openMenu = document.getElementById("openMenu");
+const closeMenu = document.getElementById("closeMenu");
 
-// Year
-$("year").textContent = new Date().getFullYear();
-
-// Mobile drawer
-const drawer = $("drawer");
-const menuBtn = $("menuBtn");
-const drawerClose = $("drawerClose");
-
-function openDrawer() {
-  drawer.classList.add("open");
-  drawer.setAttribute("aria-hidden", "false");
-}
-function closeDrawer() {
-  drawer.classList.remove("open");
-  drawer.setAttribute("aria-hidden", "true");
-}
-
-menuBtn.addEventListener("click", openDrawer);
-drawerClose.addEventListener("click", closeDrawer);
-drawer.addEventListener("click", (e) => {
-  if (e.target === drawer) closeDrawer();
+openMenu?.addEventListener("click", () => {
+  overlay.classList.add("open");
+  overlay.setAttribute("aria-hidden", "false");
 });
-document.querySelectorAll(".drawerLink").forEach(a => {
-  a.addEventListener("click", closeDrawer);
+closeMenu?.addEventListener("click", () => {
+  overlay.classList.remove("open");
+  overlay.setAttribute("aria-hidden", "true");
 });
-
-// Smooth scroll (optional nice feel)
-document.querySelectorAll('a[href^="#"]').forEach(a => {
-  a.addEventListener("click", (e) => {
-    const target = document.querySelector(a.getAttribute("href"));
-    if (!target) return;
-    e.preventDefault();
-    target.scrollIntoView({ behavior: "smooth", block: "start" });
-  });
+overlay?.addEventListener("click", (e) => {
+  if (e.target === overlay) closeMenu.click();
+});
+document.querySelectorAll(".menu-link").forEach(a => {
+  a.addEventListener("click", () => closeMenu.click());
 });
 
 // Copy contract
-$("copyBtn").addEventListener("click", async () => {
-  const text = $("contractText").textContent.trim();
+const copyBtn = document.getElementById("copyBtn");
+const contractText = document.getElementById("contractText");
+
+copyBtn?.addEventListener("click", async () => {
   try {
-    await navigator.clipboard.writeText(text);
-    $("copyBtn").textContent = "Copied!";
-    setTimeout(() => ($("copyBtn").textContent = "Copy"), 1200);
+    await navigator.clipboard.writeText(contractText.textContent.trim());
+    copyBtn.textContent = "Copied!";
+    setTimeout(() => (copyBtn.textContent = "Copy"), 900);
   } catch {
-    $("copyBtn").textContent = "Copy failed";
-    setTimeout(() => ($("copyBtn").textContent = "Copy"), 1200);
+    copyBtn.textContent = "Copy failed";
+    setTimeout(() => (copyBtn.textContent = "Copy"), 900);
   }
 });
 
-// Music toggle (placeholder)
-const music = $("bgMusic");
-const musicBtn = $("musicBtn");
-let playing = false;
+// Audio (iOS requires user gesture — speaker tap is perfect)
+const audio = document.getElementById("bgAudio");
+const speakerBtn = document.getElementById("speakerBtn");
+const volumeWrap = document.getElementById("volumeWrap");
+const volume = document.getElementById("volume");
 
-musicBtn.addEventListener("click", async () => {
+let isOn = false;
+
+speakerBtn?.addEventListener("click", async () => {
   try {
-    if (!playing) {
-      await music.play();
-      playing = true;
-      musicBtn.querySelector(".icon").textContent = "🔈";
+    if (!isOn) {
+      audio.volume = Number(volume?.value ?? 0.6);
+      await audio.play();
+      isOn = true;
+      speakerBtn.classList.add("on");
+      volumeWrap.classList.add("show");
+      volumeWrap.setAttribute("aria-hidden", "false");
     } else {
-      music.pause();
-      playing = false;
-      musicBtn.querySelector(".icon").textContent = "🔊";
+      audio.pause();
+      isOn = false;
+      speakerBtn.classList.remove("on");
+      volumeWrap.classList.remove("show");
+      volumeWrap.setAttribute("aria-hidden", "true");
     }
-  } catch {
-    // Autoplay block is common on mobile. User must tap (they did), but file may not exist yet.
-    musicBtn.querySelector(".icon").textContent = "❌";
-    setTimeout(() => (musicBtn.querySelector(".icon").textContent = "🔊"), 900);
+  } catch (e) {
+    // If autoplay policy blocks, user needs to tap again after interaction (normally this works on tap).
+    console.log(e);
   }
 });
+
+volume?.addEventListener("input", () => {
+  audio.volume = Number(volume.value);
+});
+
+// Gallery slider
+const track = document.getElementById("track");
+const prev = document.getElementById("prev");
+const next = document.getElementById("next");
+
+let index = 0;
+const slides = () => track?.querySelectorAll("img").length ?? 0;
+
+function render() {
+  if (!track) return;
+  track.style.transform = `translateX(${-index * 100}%)`;
+}
+
+prev?.addEventListener("click", () => {
+  index = (index - 1 + slides()) % slides();
+  render();
+});
+next?.addEventListener("click", () => {
+  index = (index + 1) % slides();
+  render();
+});
+
+// Touch swipe
+let startX = null;
+track?.addEventListener("touchstart", (e) => {
+  startX = e.touches[0].clientX;
+}, { passive: true });
+
+track?.addEventListener("touchend", (e) => {
+  if (startX === null) return;
+  const endX = e.changedTouches[0].clientX;
+  const dx = endX - startX;
+  if (Math.abs(dx) > 40) {
+    if (dx < 0) next.click();
+    else prev.click();
+  }
+  startX = null;
+}, { passive: true });
+
+// Footer year
+document.getElementById("year").textContent = new Date().getFullYear();
