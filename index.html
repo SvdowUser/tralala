@@ -2,209 +2,247 @@
 <html lang="en">
 <head>
   <meta charset="utf-8" />
-  <meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover" />
+  <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover" />
+  <meta name="theme-color" content="#071a2a" />
   <title>$TRALALA</title>
-  <meta name="description" content="$TRALALA — the cutest brainrot fish has emerged from TikTok." />
   <link rel="stylesheet" href="./styles.css" />
 </head>
 
 <body>
-  <!-- Background audio (will start muted; user can unmute) -->
-  <audio id="bgAudio" src="./bg.mp3" preload="auto" loop muted playsinline></audio>
+  <!-- Background layers -->
+  <div class="bg">
+    <div class="bg__radial"></div>
+    <div class="bg__stars"></div>
+    <div class="bg__grain"></div>
+  </div>
 
-  <header class="topbar">
-    <div class="topbar__inner">
-      <!-- Brand: bold, clickable to Pump.fun -->
-      <a class="brand" href="https://pump.fun/PUT_YOUR_TRALALA_URL_HERE" target="_blank" rel="noopener">
-        <span class="brand__dollar">$</span><span class="brand__name">TRALALA</span>
-      </a>
+  <!-- NAV -->
+  <header class="nav">
+    <a class="brand" id="brandLink" href="#" target="_blank" rel="noopener">
+      <span class="brand__icon" aria-hidden="true">$</span>
+      <span class="brand__text">TRALALA</span>
+    </a>
 
-      <!-- Clean nav (no pill boxes) -->
-      <nav class="nav">
-        <a class="nav__link" href="#tokenomics">Tokenomics</a>
-        <a class="nav__link" href="#how">How to buy</a>
-        <a class="nav__link" href="#join">Join</a>
-        <a class="nav__link" href="#gallery">Gallery</a>
-      </nav>
-    </div>
+    <nav class="nav__links" aria-label="Primary">
+      <a href="#tokenomics">Tokenomics</a>
+      <a href="#how">How to buy</a>
+      <a href="#join">Join</a>
+      <a href="#gallery">Gallery</a>
+    </nav>
+
+    <button class="nav__burger" id="burgerBtn" aria-label="Open menu" aria-expanded="false" aria-controls="mobileMenu">
+      <span></span><span></span><span></span>
+    </button>
   </header>
 
-  <main>
+  <!-- MOBILE MENU -->
+  <div class="menu" id="mobileMenu" aria-hidden="true">
+    <div class="menu__panel">
+      <div class="menu__top">
+        <div class="menu__title">$TRALALA</div>
+        <button class="menu__close" id="menuClose" aria-label="Close menu">✕</button>
+      </div>
+
+      <a class="menu__link" href="#tokenomics">Tokenomics</a>
+      <a class="menu__link" href="#how">How to buy</a>
+      <a class="menu__link" href="#join">Join</a>
+      <a class="menu__link" href="#gallery">Gallery</a>
+
+      <div class="menu__divider"></div>
+
+      <a class="menu__cta" id="pumpCtaTop" href="#" target="_blank" rel="noopener">
+        Buy on Pump.fun
+      </a>
+    </div>
+  </div>
+
+  <!-- AUDIO -->
+  <audio id="bgAudio" src="./assets/bg.mp3" preload="auto" loop></audio>
+  <button class="audioBtn" id="audioToggle" aria-label="Toggle sound" aria-pressed="false" title="Sound">
+    <span class="audioBtn__icon" id="audioIcon" aria-hidden="true"></span>
+  </button>
+
+  <main class="wrap">
     <!-- HERO -->
-    <section class="section hero" id="top">
-      <div class="container hero__grid">
-        <div class="hero__left">
-          <div class="chip">
-            <span class="chip__dot"></span>
-            <span>LIVE ON SOLANA</span>
-          </div>
-
-          <h1 class="title">$TRALALA</h1>
-          <p class="subtitle">The cutest brainrot fish has emerged from TikTok.</p>
-
-          <div class="cta">
-            <a class="btn btn--primary" href="https://pump.fun/PUT_YOUR_TRALALA_URL_HERE" target="_blank" rel="noopener">
-              Buy on Pump.fun
-            </a>
-            <a class="btn btn--ghost" href="#tokenomics">View tokenomics</a>
-          </div>
+    <section class="hero" id="top">
+      <div class="hero__left">
+        <div class="pill">
+          <span class="pill__dot"></span>
+          <span>LIVE ON SOLANA</span>
         </div>
 
-        <div class="hero__right">
-          <!-- IMPORTANT: relative path -->
-          <div class="orb">
-            <img class="hero__img" src="./hero.png" alt="Tralala character" />
-          </div>
+        <h1 class="hero__title">$TRALALA</h1>
+        <p class="hero__sub">The cutest brainrot fish has emerged from TikTok.</p>
+
+        <div class="hero__cta">
+          <a class="btn btn--primary" id="pumpBtn" href="#" target="_blank" rel="noopener">Buy on Pump.fun</a>
+          <a class="btn btn--ghost" href="#tokenomics">View tokenomics</a>
+        </div>
+      </div>
+
+      <div class="hero__right">
+        <div class="orb">
+          <div class="orb__ring"></div>
+          <img class="hero__img" src="./assets/hero.png" alt="Tralala character" />
         </div>
       </div>
     </section>
 
     <!-- TOKENOMICS -->
     <section class="section" id="tokenomics">
-      <div class="container">
-        <h2 class="h2">TOKENOMICS</h2>
-        <p class="lead">Transparent. Simple. Built for the meme.</p>
+      <div class="section__head">
+        <h2>TOKENOMICS</h2>
+        <p>Transparent. Simple. Built for the meme.</p>
+      </div>
 
-        <div class="cards">
-          <div class="card">
-            <div class="card__k">Total supply</div>
-            <div class="card__v">1,000,000,000</div>
-            <div class="card__s">One billion TRALALA tokens</div>
-          </div>
-
-          <div class="card">
-            <div class="card__k">Tax</div>
-            <div class="card__v">0%</div>
-            <div class="card__s">No buy/sell tax — pure trading</div>
-          </div>
-
-          <div class="card">
-            <div class="card__k">Liquidity</div>
-            <div class="card__v">Coming soon</div>
-            <div class="card__s">LP lock proof will be linked here</div>
-          </div>
-
-          <div class="card">
-            <div class="card__k">Contract</div>
-            <div class="card__v">Renounced</div>
-            <div class="card__s">Community-first setup</div>
-          </div>
+      <div class="cards">
+        <div class="card">
+          <div class="card__icon">⬡</div>
+          <div class="card__label">Total Supply</div>
+          <div class="card__value">1,000,000,000</div>
+          <div class="card__hint">One billion TRALALA tokens</div>
         </div>
 
-        <div class="contract">
-          <div class="contract__label">CONTRACT ADDRESS</div>
-          <div class="contract__row">
-            <input id="contractValue" class="contract__input" type="text" value="PASTE_CONTRACT_ADDRESS_HERE" readonly />
-            <button id="copyBtn" class="btn btn--small" type="button">Copy</button>
-          </div>
-          <div id="toast" class="toast" aria-live="polite"></div>
+        <div class="card">
+          <div class="card__icon">%</div>
+          <div class="card__label">Tax</div>
+          <div class="card__value">0%</div>
+          <div class="card__hint">No buy/sell tax — pure trading</div>
         </div>
+      </div>
+
+      <div class="contract">
+        <div class="contract__label">CONTRACT ADDRESS</div>
+        <div class="contract__row">
+          <code class="contract__code" id="contractText">PASTE_CONTRACT_ADDRESS_HERE</code>
+          <button class="contract__copy" id="copyBtn" type="button">COPY</button>
+        </div>
+        <div class="toast" id="toast" aria-live="polite" aria-atomic="true"></div>
       </div>
     </section>
 
     <!-- HOW TO BUY -->
     <section class="section" id="how">
-      <div class="container">
-        <h2 class="h2">HOW TO BUY</h2>
-        <p class="lead">Four simple steps.</p>
+      <div class="section__head">
+        <h2>HOW TO BUY</h2>
+        <p>Four simple steps.</p>
+      </div>
 
-        <div class="steps">
-          <div class="step">
-            <div class="step__icon">👛</div>
-            <div class="step__text">
-              <div class="step__title">Get a wallet</div>
-              <div class="step__desc">Download Phantom or Solflare and set it up securely.</div>
-            </div>
-            <div class="step__num">01</div>
+      <div class="steps">
+        <div class="step">
+          <div class="step__icon" aria-hidden="true">
+            <!-- wallet svg -->
+            <svg viewBox="0 0 24 24" width="22" height="22">
+              <path d="M4 7.5C4 6.12 5.12 5 6.5 5H19a1 1 0 0 1 0 2H6.5A.5.5 0 0 0 6 7.5V8h13.5A2.5 2.5 0 0 1 22 10.5v6A2.5 2.5 0 0 1 19.5 19H6.5A2.5 2.5 0 0 1 4 16.5v-9Z" fill="currentColor"/>
+              <path d="M19.5 10H22v3h-2.5a1.5 1.5 0 0 1 0-3Z" fill="currentColor" opacity=".65"/>
+            </svg>
           </div>
+          <div class="step__body">
+            <div class="step__title">Get a Wallet</div>
+            <div class="step__text">Download Phantom or Solflare and set it up securely.</div>
+          </div>
+          <div class="step__num">01</div>
+        </div>
 
-          <div class="step">
-            <div class="step__icon">🪙</div>
-            <div class="step__text">
-              <div class="step__title">Get SOL</div>
-              <div class="step__desc">Buy SOL on an exchange and send it to your wallet.</div>
-            </div>
-            <div class="step__num">02</div>
+        <div class="step">
+          <div class="step__icon" aria-hidden="true">
+            <!-- sol coin -->
+            <svg viewBox="0 0 24 24" width="22" height="22">
+              <path d="M7 8.5c.6-.7 1-.9 1.9-.9h10.2c.5 0 .8.6.5 1l-1.6 1.9c-.6.7-1 .9-1.9.9H6.9c-.5 0-.8-.6-.5-1L7 8.5Z" fill="currentColor"/>
+              <path d="M7 13.5c.6-.7 1-.9 1.9-.9h10.2c.5 0 .8.6.5 1l-1.6 1.9c-.6.7-1 .9-1.9.9H6.9c-.5 0-.8-.6-.5-1L7 13.5Z" fill="currentColor" opacity=".75"/>
+            </svg>
           </div>
+          <div class="step__body">
+            <div class="step__title">Get SOL</div>
+            <div class="step__text">Buy SOL on an exchange and send it to your wallet.</div>
+          </div>
+          <div class="step__num">02</div>
+        </div>
 
-          <div class="step">
-            <div class="step__icon">🔁</div>
-            <div class="step__text">
-              <div class="step__title">Swap for $TRALALA</div>
-              <div class="step__desc">Use Pump.fun link above (or your preferred DEX after launch).</div>
-            </div>
-            <div class="step__num">03</div>
+        <div class="step">
+          <div class="step__icon" aria-hidden="true">
+            <!-- swap -->
+            <svg viewBox="0 0 24 24" width="22" height="22">
+              <path d="M7 7h11l-2-2 1.4-1.4L22.8 9l-5.4 5.4L16 13l2-2H7V7Z" fill="currentColor"/>
+              <path d="M17 17H6l2 2-1.4 1.4L1.2 15l5.4-5.4L8 11l-2 2h11v4Z" fill="currentColor" opacity=".75"/>
+            </svg>
           </div>
+          <div class="step__body">
+            <div class="step__title">Swap for $TRALALA</div>
+            <div class="step__text">Open Pump.fun, paste the token link, and buy.</div>
+          </div>
+          <div class="step__num">03</div>
+        </div>
 
-          <div class="step">
-            <div class="step__icon">⭐</div>
-            <div class="step__text">
-              <div class="step__title">HODL & enjoy</div>
-              <div class="step__desc">Hold strong and enjoy the meme ride.</div>
-            </div>
-            <div class="step__num">04</div>
+        <div class="step">
+          <div class="step__icon" aria-hidden="true">
+            <!-- star -->
+            <svg viewBox="0 0 24 24" width="22" height="22">
+              <path d="M12 17.3 6.2 20.9l1.6-6.6L2.7 9.9l6.7-.6L12 3l2.6 6.3 6.7.6-5.1 4.4 1.6 6.6L12 17.3Z" fill="currentColor"/>
+            </svg>
           </div>
+          <div class="step__body">
+            <div class="step__title">HODL & Enjoy</div>
+            <div class="step__text">Hold strong and enjoy the meme ride.</div>
+          </div>
+          <div class="step__num">04</div>
         </div>
       </div>
     </section>
 
     <!-- JOIN -->
     <section class="section" id="join">
-      <div class="container">
-        <h2 class="h2">JOIN THE ARMY</h2>
-        <p class="lead">Join us and follow the lore.</p>
+      <div class="section__head">
+        <h2>JOIN THE ARMY</h2>
+        <p>Join us and follow the lore.</p>
+      </div>
 
-        <div class="social">
-          <a class="social__card" href="https://x.com/" target="_blank" rel="noopener">
-            <div class="social__icon">𝕏</div>
-            <div>
-              <div class="social__title">Community</div>
-              <div class="social__desc">Join on X</div>
-            </div>
-          </a>
+      <div class="join">
+        <a class="join__card" href="https://x.com" target="_blank" rel="noopener">
+          <div class="join__icon">X</div>
+          <div>
+            <div class="join__title">Community</div>
+            <div class="join__sub">Join on X</div>
+          </div>
+        </a>
 
-          <a class="social__card" href="https://www.tiktok.com/@mythosmonday" target="_blank" rel="noopener">
-            <div class="social__icon">♪</div>
-            <div>
-              <div class="social__title">TikTok</div>
-              <div class="social__desc">@mythosmonday</div>
-            </div>
-          </a>
-        </div>
+        <a class="join__card" href="https://tiktok.com/@mythosmonday" target="_blank" rel="noopener">
+          <div class="join__icon">♪</div>
+          <div>
+            <div class="join__title">TikTok</div>
+            <div class="join__sub">@mythosmonday</div>
+          </div>
+        </a>
       </div>
     </section>
 
     <!-- GALLERY -->
     <section class="section" id="gallery">
-      <div class="container">
-        <h2 class="h2">GALLERY</h2>
-        <p class="lead">Swipe through the community moments.</p>
+      <div class="section__head">
+        <h2>GALLERY</h2>
+        <p>Swipe through the community moments.</p>
+      </div>
 
-        <div class="gallery">
-          <button class="gallery__nav" id="galPrev" type="button" aria-label="Previous">‹</button>
+      <div class="gallery">
+        <button class="gallery__nav" id="galPrev" aria-label="Previous image">‹</button>
 
-          <div class="gallery__frame">
-            <img id="galImg" class="gallery__img" alt="Gallery image" />
-            <div id="galCap" class="gallery__cap"></div>
-          </div>
-
-          <button class="gallery__nav" id="galNext" type="button" aria-label="Next">›</button>
+        <div class="gallery__frame">
+          <img id="galImg" alt="Gallery image" />
+          <div class="gallery__cap" id="galCap"></div>
+          <div class="gallery__dots" id="galDots" aria-hidden="true"></div>
         </div>
+
+        <button class="gallery__nav" id="galNext" aria-label="Next image">›</button>
       </div>
     </section>
 
     <footer class="footer">
-      <div class="container footer__inner">
-        <span>© <span id="year"></span> $TRALALA</span>
-      </div>
+      <span>© $TRALALA</span>
+      <a class="footer__pump" id="pumpFooter" href="#" target="_blank" rel="noopener">Pump.fun</a>
     </footer>
   </main>
 
-  <!-- Audio toggle (bottom-left). Clean icon (no emoji). -->
-  <button id="audioToggle" class="audio" type="button" aria-label="Toggle sound">
-    <span id="audioIcon" class="audio__icon" aria-hidden="true"></span>
-  </button>
-
-  <script src="./script.js"></script>
+  <!-- IMPORTANT: script is script, not stylesheet -->
+  <script src="./script.js" defer></script>
 </body>
 </html>
