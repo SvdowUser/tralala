@@ -222,7 +222,7 @@ function setGallerySrc(file, altFolder = false) {
 
   if (galCap) {
     // Debug: zeigt dir live den Pfad an, den er versucht
-    galCap.textContent = `${galleryImages[galIndex].cap}  •  loading: ${rel}`;
+    galCap.textContent = galleryImages[galIndex].cap || "";
   }
 }
 
