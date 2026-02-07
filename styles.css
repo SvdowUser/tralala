@@ -537,3 +537,6 @@ main, header, nav, section, .container, .content, .page, .wrap {
 .gallery__cap { 
   display: none !important; 
 }
+
+/* Gallery: grauen Caption-Kasten komplett entfernen */
+.gallery__cap { display: none !important; }
