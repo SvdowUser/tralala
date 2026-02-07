@@ -5,23 +5,20 @@ const PUMP_FUN_URL = "PASTE_PUMPFUN_URL_HERE";          // e.g. https://pump.fun
 const CONTRACT_ADDRESS = "PASTE_CONTRACT_ADDRESS_HERE"; // e.g. 7abc...xyz
 
 /* =========================
-   HERO (id mismatch + path + float)
+   HERO (path + float)
 ========================= */
-// In deinem Index: <img class="hero__img" ... />
 const heroImg = document.querySelector(".hero__img");
 if (heroImg) {
-  // Wenn deine hero.png im ROOT liegt:
+  // Wenn hero.png im ROOT liegt (so wie bei dir im Repo):
   heroImg.src = "./hero.png";
 
-  // smooth float (subtil, wie "schweben")
-  // (zusätzlich/anstatt CSS — wirkt auch wenn CSS kaputt ist)
+  // Sanftes "schweben" per JS (falls CSS-Animation mal fehlt)
   let t0 = performance.now();
   const floatLoop = (t) => {
     const dt = (t - t0) / 1000;
-    // sanftes Up/Down + mini sway
-    const y = Math.sin(dt * 1.1) * 10;      // px
-    const r = Math.sin(dt * 0.8) * 1.2;     // deg
-    const x = Math.cos(dt * 0.9) * 3;       // px
+    const y = Math.sin(dt * 1.1) * 10;   // px
+    const r = Math.sin(dt * 0.8) * 1.2;  // deg
+    const x = Math.cos(dt * 0.9) * 3;    // px
     heroImg.style.transform = `translate3d(${x}px, ${-y}px, 0) rotate(${r}deg)`;
     requestAnimationFrame(floatLoop);
   };
@@ -47,14 +44,11 @@ document.querySelectorAll('a[href^="#"]').forEach((a) => {
 });
 
 /* =========================
-   Pump.fun links (brand/button/footer)
-   - setzt nur, wenn URL wirklich eingefügt wurde
+   Pump.fun links (brand/button/footer + optional menu CTA)
 ========================= */
 const pumpBtn = document.getElementById("pumpBtn");
 const pumpFooter = document.getElementById("pumpFooter");
 const brandLink = document.getElementById("brandLink");
-
-// optional, falls du noch irgendwo einen CTA im Menü hast:
 const pumpCtaTop = document.getElementById("pumpCtaTop");
 
 function isRealUrl(u) {
@@ -105,9 +99,10 @@ async function copyToClipboard(text) {
 }
 
 copyBtn?.addEventListener("click", async () => {
-  const value = (contractText?.textContent || "").trim() || (CONTRACT_ADDRESS || "").trim();
+  const value =
+    (contractText?.textContent || "").trim() || (CONTRACT_ADDRESS || "").trim();
 
-  // Wenn noch Platzhalter drin ist, nicht so tun als ob’s klappt:
+  // Wenn noch Platzhalter drin ist:
   if (!value || value.includes("PASTE_CONTRACT")) {
     if (toast) {
       toast.textContent = "Set CONTRACT_ADDRESS first";
@@ -173,18 +168,18 @@ audioToggle?.addEventListener("click", async () => {
 });
 
 /* =========================
-   GALLERY (6 images) — ultra robust for GitHub Pages
-   - resolves URLs via document.baseURI (safe for /repo/ paths)
-   - tries root first, then ./assets/gallery/
-   - shows current tried path in caption for debugging
+   GALLERY (6 images) — FIXED
+   - Works with your files in ROOT: 1.png..6.png
+   - Also supports assets/gallery fallback if you later create folders
+   - NO caption filling (so no gray box text)
 ========================= */
 const galleryImages = [
-  { file: "1.png", cap: "Image 1" },
-  { file: "2.png", cap: "Image 2" },
-  { file: "3.png", cap: "Image 3" },
-  { file: "4.png", cap: "Image 4" },
-  { file: "5.png", cap: "Image 5" },
-  { file: "6.png", cap: "Image 6" },
+  { file: "1.png" },
+  { file: "2.png" },
+  { file: "3.png" },
+  { file: "4.png" },
+  { file: "5.png" },
+  { file: "6.png" },
 ];
 
 const galImg = document.getElementById("galImg");
@@ -192,11 +187,14 @@ const galPrev = document.getElementById("galPrev");
 const galNext = document.getElementById("galNext");
 const galDots = document.getElementById("galDots");
 
+// Caption element (optional). We keep it safe so it never breaks gallery:
+const galCap = document.getElementById("galCap");
+
 let galIndex = 0;
 let triedAlt = false;
 
 function resolveUrl(path) {
-  // macht aus "1.png" automatisch "https://.../tralala/1.png"
+  // Makes correct URL even on GitHub Pages /repo/ paths
   return new URL(path, document.baseURI).toString();
 }
 
@@ -211,26 +209,27 @@ function renderDots() {
 }
 
 function setGallerySrc(file, altFolder = false) {
+  // root first: "1.png"
+  // fallback: "assets/gallery/1.png"
   const rel = altFolder ? `assets/gallery/${file}` : file;
   const url = resolveUrl(rel);
 
   if (galImg) {
-    // cache-bust, damit du sicher NICHT die alte Version siehst
+    // Small cache bust to avoid old cached paths while testing
     galImg.src = url + `?v=${Date.now()}`;
   }
-     if (galCap) {
-    // Debug: zeigt dir live den Pfad an, den er versucht
-    galCap.textContent = `${galleryImages[galIndex].cap}  •  loading: ${rel}`;
-    galCap.textContent = galleryImages[galIndex].cap || "";
-  }
+
+  // IMPORTANT: keep caption empty (no gray box text)
+  if (galCap) galCap.textContent = "";
 }
 
 function renderGallery() {
-  if (!galImg || !galCap || !galleryImages.length) return;
-  triedAlt = false;
+  if (!galImg || !galleryImages.length) return;
 
+  triedAlt = false;
   const item = galleryImages[galIndex];
-  galImg.loading = "eager"; // für Test: sofort laden
+
+  galImg.loading = "eager"; // load instantly
   setGallerySrc(item.file, false);
   renderDots();
 }
@@ -238,19 +237,18 @@ function renderGallery() {
 galImg?.addEventListener("error", () => {
   const item = galleryImages[galIndex];
 
-  // wenn root nicht klappt → probier assets/gallery
+  // If root fails -> try assets/gallery
   if (!triedAlt) {
     triedAlt = true;
     setGallerySrc(item.file, true);
     return;
   }
 
-  // wenn auch das nicht klappt → klare Meldung
-  if (galCap) {
-    galCap.textContent =
-      `IMAGE NOT FOUND: tried "${item.file}" and "assets/gallery/${item.file}". ` +
-      `Check exact filename (case-sensitive) + GitHub Pages deployment.`;
-  }
+  // If also fails -> keep caption empty, but log for you
+  console.warn(
+    `Gallery image not found. Tried "${item.file}" and "assets/gallery/${item.file}".`
+  );
+  if (galCap) galCap.textContent = ""; // ensure no text
 });
 
 galPrev?.addEventListener("click", () => {
@@ -263,25 +261,35 @@ galNext?.addEventListener("click", () => {
   renderGallery();
 });
 
-// swipe optional
+// Swipe support (mobile)
 let touchStartX = null;
-galImg?.addEventListener("touchstart", (e) => {
-  touchStartX = e.touches?.[0]?.clientX ?? null;
-}, { passive: true });
+galImg?.addEventListener(
+  "touchstart",
+  (e) => {
+    touchStartX = e.touches?.[0]?.clientX ?? null;
+  },
+  { passive: true }
+);
 
-galImg?.addEventListener("touchend", (e) => {
-  if (touchStartX == null) return;
-  const endX = e.changedTouches?.[0]?.clientX ?? null;
-  if (endX == null) return;
+galImg?.addEventListener(
+  "touchend",
+  (e) => {
+    if (touchStartX == null) return;
+    const endX = e.changedTouches?.[0]?.clientX ?? null;
+    if (endX == null) return;
 
-  const dx = endX - touchStartX;
-  if (Math.abs(dx) > 40) {
-    galIndex = dx > 0
-      ? (galIndex - 1 + galleryImages.length) % galleryImages.length
-      : (galIndex + 1) % galleryImages.length;
-    renderGallery();
-  }
-  touchStartX = null;
-}, { passive: true });
+    const dx = endX - touchStartX;
+    if (Math.abs(dx) > 40) {
+      galIndex =
+        dx > 0
+          ? (galIndex - 1 + galleryImages.length) % galleryImages.length
+          : (galIndex + 1) % galleryImages.length;
+      renderGallery();
+    }
+    touchStartX = null;
+  },
+  { passive: true }
+);
 
+// Init
 renderGallery();
