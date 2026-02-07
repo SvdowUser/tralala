@@ -188,7 +188,6 @@ const galleryImages = [
 ];
 
 const galImg = document.getElementById("galImg");
-const galCap = document.getElementById("galCap");
 const galPrev = document.getElementById("galPrev");
 const galNext = document.getElementById("galNext");
 const galDots = document.getElementById("galDots");
@@ -220,10 +219,6 @@ function setGallerySrc(file, altFolder = false) {
     galImg.src = url + `?v=${Date.now()}`;
   }
 
-  if (galCap) {
-    // Debug: zeigt dir live den Pfad an, den er versucht
-    galCap.textContent = galleryImages[galIndex].cap || "";
-  }
 }
 
 function renderGallery() {
