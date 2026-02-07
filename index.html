@@ -65,46 +65,20 @@
     - Inline Styles überschreiben dein styles.css, damit du NUR index ändern musst
     - bleibt kompatibel mit deinem script.js (#audioToggle + #audioIcon + --mask)
   -->
-  <button
-    class="audioBtn"
-    id="audioToggle"
-    aria-label="Toggle sound"
-    aria-pressed="false"
-    title="Sound"
-    style="
-      position: fixed;
-      left: 16px;
-      bottom: calc(16px + env(safe-area-inset-bottom));
-      z-index: 20;
-      width: 46px;
-      height: 46px;
-      border-radius: 16px;
-      border: 1px solid rgba(255,255,255,.12);
-      background: rgba(255,255,255,.06);
-      backdrop-filter: blur(8px);
-      -webkit-backdrop-filter: blur(8px);
-      box-shadow: 0 12px 28px rgba(0,0,0,.22);
-      color: rgba(255,255,255,.92);
-      display: grid;
-      place-items: center;
-      padding: 0;
-      cursor: pointer;
-      -webkit-tap-highlight-color: transparent;
-      touch-action: manipulation;
-    "
-  >
-    <span
-      class="audioBtn__icon"
-      id="audioIcon"
-      aria-hidden="true"
-      style="
-        width: 100%;
-        height: 100%;
-        display: grid;
-        place-items: center;
-      "
-    ></span>
-  </button>
+<button class="audioBtn" id="audioToggle" aria-label="Toggle sound" aria-pressed="false" title="Sound">
+  <span class="audioBtn__icon" aria-hidden="true">
+    <svg id="audioSvg" viewBox="0 0 24 24" width="26" height="26" fill="none" xmlns="http://www.w3.org/2000/svg">
+      <!-- speaker -->
+      <path id="spkBody" d="M3 10v4h4l5 4V6L7 10H3Z" fill="currentColor"/>
+      <!-- waves (only when sound ON) -->
+      <path id="spkWave" d="M16.5 12a3.5 3.5 0 0 0-2-3.15v6.3A3.5 3.5 0 0 0 16.5 12Z" fill="currentColor" opacity="0.9"/>
+      <path id="spkWave2" d="M18.8 6.6a1 1 0 0 1 .2 1.4A8.5 8.5 0 0 1 19 12a8.5 8.5 0 0 1-2 4.99 1 1 0 1 1-1.52-1.3A6.5 6.5 0 0 0 17 12a6.5 6.5 0 0 0-1.52-3.7 1 1 0 0 1 .2-1.4 1 1 0 0 1 1.4.21Z" fill="currentColor" opacity="0.75"/>
+      <!-- slash (only when MUTED) -->
+      <path id="spkSlash" d="M20 4 4 20" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" opacity="0.95"/>
+    </svg>
+  </span>
+</button>
+
 
   <main class="wrap">
     <!-- HERO -->
