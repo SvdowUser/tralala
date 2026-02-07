@@ -594,3 +594,20 @@ main, header, nav, section, .container, .content, .page, .wrap {
   height: 24px;
 }
 
+/* === AUDIO ICON FIX (disable mask square, use inline SVG instead) === */
+.audioBtn__icon::before{
+  content: none !important;
+}
+
+.audioBtn__icon{
+  display:grid;
+  place-items:center;
+}
+
+.audioBtn__icon svg{
+  width: 24px;
+  height: 24px;
+  display:block;
+  opacity: .92;
+}
+
