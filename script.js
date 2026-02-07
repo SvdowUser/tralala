@@ -11,9 +11,9 @@ const CONTRACT_ADDRESS = "PASTE_CONTRACT_ADDRESS_HERE"; // e.g. 7abc...xyz
 const heroImg = document.querySelector(".hero__img");
 if (heroImg) {
   // ohne führenden Slash, GitHub Pages safe:
-  heroImg.src = "./assets/hero.png";
+  heroImg.src = "./hero.png";
   heroImg.addEventListener("error", () => {
-    console.warn("Hero image not loading. Check path: ./assets/hero.png");
+    console.warn("Hero image not loading. Check path: ./hero.png");
   });
 }
 
@@ -148,12 +148,12 @@ audioToggle?.addEventListener("click", async () => {
    GALLERY (6 images) — fix: use ONE constant (no GALLERY vs galleryImages bug)
 ========================= */
 const galleryImages = [
-  { src: "assets/gallery/1.png", cap: "Image 1" },
-  { src: "assets/gallery/2.png", cap: "Image 2" },
-  { src: "assets/gallery/3.png", cap: "Image 3" },
-  { src: "assets/gallery/4.png", cap: "Image 4" },
-  { src: "assets/gallery/5.png", cap: "Image 5" },
-  { src: "assets/gallery/6.png", cap: "Image 6" },
+  { src: "1.png", cap: "Image 1" },
+  { src: "2.png", cap: "Image 2" },
+  { src: "3.png", cap: "Image 3" },
+  { src: "4.png", cap: "Image 4" },
+  { src: "5.png", cap: "Image 5" },
+  { src: "6.png", cap: "Image 6" },
 ];
 
 
