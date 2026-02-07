@@ -218,7 +218,11 @@ function setGallerySrc(file, altFolder = false) {
     // cache-bust, damit du sicher NICHT die alte Version siehst
     galImg.src = url + `?v=${Date.now()}`;
   }
-
+     if (galCap) {
+    // Debug: zeigt dir live den Pfad an, den er versucht
+    galCap.textContent = `${galleryImages[galIndex].cap}  •  loading: ${rel}`;
+    galCap.textContent = galleryImages[galIndex].cap || "";
+  }
 }
 
 function renderGallery() {
