@@ -65,19 +65,42 @@
     - SVG shows ONLY one state at a time (muted vs sound on)
     - uses aria-pressed to switch visuals (script should toggle aria-pressed)
   -->
-<button class="audioBtn audioBtn--pp" id="audioToggle" aria-label="Toggle sound" aria-pressed="false" title="Sound">
-    <span class="audioBtn__pp" aria-hidden="true">
-      <!-- PLAY (zeigt wenn muted) -->
-      <svg class="pp pp--play" viewBox="0 0 24 24" width="22" height="22">
-        <path d="M8 5v14l12-7-12-7Z" fill="currentColor"></path>
-      </svg>
+<button class="audioBtn" id="audioToggle" aria-label="Toggle sound" aria-pressed="false" title="Sound">
+  <!-- ID bleibt, damit dein script.js happy ist -->
+  <span class="audioBtn__icon" id="audioIcon" aria-hidden="true">
+    <!-- PLAY (wenn muted / aria-pressed=false) -->
+    <svg class="ppIcon ppPlay" viewBox="0 0 24 24" width="22" height="22" xmlns="http://www.w3.org/2000/svg">
+      <path d="M8 5v14l12-7-12-7Z" fill="currentColor"/>
+    </svg>
 
-      <!-- PAUSE (zeigt wenn sound on) -->
-      <svg class="pp pp--pause" viewBox="0 0 24 24" width="22" height="22">
-        <path d="M7 5h4v14H7V5Zm6 0h4v14h-4V5Z" fill="currentColor"></path>
-      </svg>
-    </span>
-  </button>
+    <!-- PAUSE (wenn sound an / aria-pressed=true) -->
+    <svg class="ppIcon ppPause" viewBox="0 0 24 24" width="22" height="22" xmlns="http://www.w3.org/2000/svg">
+      <path d="M7 5h4v14H7V5Zm6 0h4v14h-4V5Z" fill="currentColor"/>
+    </svg>
+  </span>
+
+  <style>
+    /* 1) Entfernt das weiße Quadrat / Masken aus styles.css */
+    #audioToggle #audioIcon::before { content: none !important; }
+    #audioToggle #audioIcon {
+      display: grid !important;
+      place-items: center !important;
+      background: none !important;
+      -webkit-mask: none !important;
+      mask: none !important;
+      -webkit-mask-image: none !important;
+      mask-image: none !important;
+    }
+
+    /* 2) Grundzustand: beide aus */
+    #audioToggle .ppIcon { display: none !important; }
+
+    /* 3) Nur eins sichtbar – gesteuert über aria-pressed (dein Script setzt das) */
+    #audioToggle[aria-pressed="false"] .ppPlay  { display: block !important; } /* muted => PLAY */
+    #audioToggle[aria-pressed="true"]  .ppPause { display: block !important; } /* sound on => PAUSE */
+  </style>
+</button>
+
 
   <main class="wrap">
     <!-- HERO -->
