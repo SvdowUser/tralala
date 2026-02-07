@@ -588,16 +588,20 @@ main, header, nav, section, .container, .content, .page, .wrap {
   100% { transform: translate3d(0,60px,0); opacity:.10; }
 }
 
-/* Burger MUSS über allem sein & tappbar */
-.nav { z-index: 2000; }
-#burgerBtn { z-index: 2001; pointer-events: auto; cursor: pointer; touch-action: manipulation; }
+/* ===== FIX: Burger muss immer klickbar sein ===== */
+.nav{
+  z-index: 9999 !important;
+}
+.nav__burger{
+  position: relative !important;
+  z-index: 10000 !important;
+  pointer-events: auto !important;
+  cursor: pointer;
+  -webkit-tap-highlight-color: transparent;
+}
 
-/* Menü muss darüber liegen */
-.menu { z-index: 3000; }
-
-/* Falls du irgendwo pointer-events killst: */
-.nav__burger, .nav__burger * { pointer-events: auto; }
-
-.nav { z-index: 2000; }
-#burgerBtn { pointer-events:auto !important; z-index:2001; }
-.menu { z-index:3000; }
+/* falls irgendein Layer drüber liegt */
+.bg, .bg *{
+  pointer-events: none !important;
+}
+}
