@@ -147,14 +147,15 @@ audioToggle?.addEventListener("click", async () => {
 /* =========================
    GALLERY (6 images) — fix: use ONE constant (no GALLERY vs galleryImages bug)
 ========================= */
-const GALLERY = [
-  { src: "./assets/gallery/1.png", cap: "Image 1" },
-  { src: "./assets/gallery/2.png", cap: "Image 2" },
-  { src: "./assets/gallery/3.png", cap: "Image 3" },
-  { src: "./assets/gallery/4.png", cap: "Image 4" },
-  { src: "./assets/gallery/5.png", cap: "Image 5" },
-  { src: "./assets/gallery/6.png", cap: "Image 6" },
+const galleryImages = [
+  { src: "assets/gallery/1.png", cap: "Image 1" },
+  { src: "assets/gallery/2.png", cap: "Image 2" },
+  { src: "assets/gallery/3.png", cap: "Image 3" },
+  { src: "assets/gallery/4.png", cap: "Image 4" },
+  { src: "assets/gallery/5.png", cap: "Image 5" },
+  { src: "assets/gallery/6.png", cap: "Image 6" },
 ];
+
 
 const galImg = document.getElementById("galImg");
 const galCap = document.getElementById("galCap");
