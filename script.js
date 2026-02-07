@@ -173,18 +173,18 @@ audioToggle?.addEventListener("click", async () => {
 });
 
 /* =========================
-   GALLERY (6 images)
-   FIXES:
-   - nutzt NUR galleryImages (kein GALLERY-Name mehr)
-   - Pfade robust (Root oder /assets/gallery/)
+   GALLERY (6 images) — ultra robust for GitHub Pages
+   - resolves URLs via document.baseURI (safe for /repo/ paths)
+   - tries root first, then ./assets/gallery/
+   - shows current tried path in caption for debugging
 ========================= */
 const galleryImages = [
-  { src: "./1.png", cap: "Image 1" },
-  { src: "./2.png", cap: "Image 2" },
-  { src: "./3.png", cap: "Image 3" },
-  { src: "./4.png", cap: "Image 4" },
-  { src: "./5.png", cap: "Image 5" },
-  { src: "./6.png", cap: "Image 6" },
+  { file: "1.png", cap: "Image 1" },
+  { file: "2.png", cap: "Image 2" },
+  { file: "3.png", cap: "Image 3" },
+  { file: "4.png", cap: "Image 4" },
+  { file: "5.png", cap: "Image 5" },
+  { file: "6.png", cap: "Image 6" },
 ];
 
 const galImg = document.getElementById("galImg");
@@ -194,12 +194,11 @@ const galNext = document.getElementById("galNext");
 const galDots = document.getElementById("galDots");
 
 let galIndex = 0;
+let triedAlt = false;
 
-// falls du doch später einen Ordner nutzt:
-function asAltPath(src) {
-  // "./1.png" -> "./assets/gallery/1.png"
-  const filename = src.replace("./", "");
-  return `./assets/gallery/${filename}`;
+function resolveUrl(path) {
+  // macht aus "1.png" automatisch "https://.../tralala/1.png"
+  return new URL(path, document.baseURI).toString();
 }
 
 function renderDots() {
@@ -212,31 +211,46 @@ function renderDots() {
   }
 }
 
+function setGallerySrc(file, altFolder = false) {
+  const rel = altFolder ? `assets/gallery/${file}` : file;
+  const url = resolveUrl(rel);
+
+  if (galImg) {
+    // cache-bust, damit du sicher NICHT die alte Version siehst
+    galImg.src = url + `?v=${Date.now()}`;
+  }
+
+  if (galCap) {
+    // Debug: zeigt dir live den Pfad an, den er versucht
+    galCap.textContent = `${galleryImages[galIndex].cap}  •  loading: ${rel}`;
+  }
+}
+
 function renderGallery() {
   if (!galImg || !galCap || !galleryImages.length) return;
+  triedAlt = false;
 
   const item = galleryImages[galIndex];
-  galImg.loading = "lazy";
-  galImg.src = item.src;
-  galCap.textContent = item.cap || "";
+  galImg.loading = "eager"; // für Test: sofort laden
+  setGallerySrc(item.file, false);
   renderDots();
 }
 
 galImg?.addEventListener("error", () => {
-  // probier automatisch den alternativen Pfad (assets/gallery)
   const item = galleryImages[galIndex];
-  const current = galImg.getAttribute("src") || "";
 
-  const alt = asAltPath(item.src);
-
-  if (current !== alt) {
-    galImg.src = alt;
+  // wenn root nicht klappt → probier assets/gallery
+  if (!triedAlt) {
+    triedAlt = true;
+    setGallerySrc(item.file, true);
     return;
   }
 
+  // wenn auch das nicht klappt → klare Meldung
   if (galCap) {
     galCap.textContent =
-      "Image missing — check file name + location (./1.png … ./6.png OR ./assets/gallery/1.png …)";
+      `IMAGE NOT FOUND: tried "${item.file}" and "assets/gallery/${item.file}". ` +
+      `Check exact filename (case-sensitive) + GitHub Pages deployment.`;
   }
 });
 
@@ -250,36 +264,25 @@ galNext?.addEventListener("click", () => {
   renderGallery();
 });
 
-// Swipe on mobile
+// swipe optional
 let touchStartX = null;
-galImg?.addEventListener(
-  "touchstart",
-  (e) => {
-    touchStartX = e.touches?.[0]?.clientX ?? null;
-  },
-  { passive: true }
-);
+galImg?.addEventListener("touchstart", (e) => {
+  touchStartX = e.touches?.[0]?.clientX ?? null;
+}, { passive: true });
 
-galImg?.addEventListener(
-  "touchend",
-  (e) => {
-    if (touchStartX == null) return;
-    const endX = e.changedTouches?.[0]?.clientX ?? null;
-    if (endX == null) return;
+galImg?.addEventListener("touchend", (e) => {
+  if (touchStartX == null) return;
+  const endX = e.changedTouches?.[0]?.clientX ?? null;
+  if (endX == null) return;
 
-    const dx = endX - touchStartX;
-    if (Math.abs(dx) > 40) {
-      if (dx > 0) {
-        galIndex = (galIndex - 1 + galleryImages.length) % galleryImages.length;
-      } else {
-        galIndex = (galIndex + 1) % galleryImages.length;
-      }
-      renderGallery();
-    }
-    touchStartX = null;
-  },
-  { passive: true }
-);
+  const dx = endX - touchStartX;
+  if (Math.abs(dx) > 40) {
+    galIndex = dx > 0
+      ? (galIndex - 1 + galleryImages.length) % galleryImages.length
+      : (galIndex + 1) % galleryImages.length;
+    renderGallery();
+  }
+  touchStartX = null;
+}, { passive: true });
 
-// initial
 renderGallery();
