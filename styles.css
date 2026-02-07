@@ -587,3 +587,13 @@ main, header, nav, section, .container, .content, .page, .wrap {
   10%  { opacity:.55; }
   100% { transform: translate3d(0,60px,0); opacity:.10; }
 }
+
+/* Burger MUSS über allem sein & tappbar */
+.nav { z-index: 2000; }
+#burgerBtn { z-index: 2001; pointer-events: auto; cursor: pointer; touch-action: manipulation; }
+
+/* Menü muss darüber liegen */
+.menu { z-index: 3000; }
+
+/* Falls du irgendwo pointer-events killst: */
+.nav__burger, .nav__burger * { pointer-events: auto; }
