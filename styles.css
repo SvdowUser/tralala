@@ -540,3 +540,27 @@ main, header, nav, section, .container, .content, .page, .wrap {
 
 /* Gallery: grauen Caption-Kasten komplett entfernen */
 .gallery__cap { display: none !important; }
+
+/* Audio button mobile polish */
+.audioBtn{
+  width: 52px;
+  height: 52px;
+  border-radius: 16px;
+  display: grid;
+  place-items: center;
+  -webkit-tap-highlight-color: transparent;
+  touch-action: manipulation;
+}
+
+.audioBtn__icon{
+  width: 100%;
+  height: 100%;
+  display: grid;
+  place-items: center;
+}
+
+.audioBtn__icon::before{
+  width: 24px;
+  height: 24px;
+}
+
