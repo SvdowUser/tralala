@@ -557,6 +557,36 @@ main, header, nav, section, .container, .content, .page, .wrap {
   height: 100%;
   display: grid;
   place-items: center;
+  /* Audio button - cleaner, less chunky */
+.audioBtn{
+  width: 52px;
+  height: 52px;
+  border-radius: 16px;
+  display: grid;
+  place-items: center;
+
+  background: linear-gradient(180deg, rgba(255,255,255,.08), rgba(255,255,255,.04));
+  border: 1px solid rgba(255,255,255,.14);
+  box-shadow: 0 16px 34px rgba(0,0,0,.28);
+  backdrop-filter: blur(10px);
+
+  -webkit-tap-highlight-color: transparent;
+  touch-action: manipulation;
+}
+
+.audioBtn:active{ transform: scale(.98); }
+
+.audioBtn__svg{
+  width: 24px;
+  height: 24px;
+  color: rgba(255,255,255,.92);
+}
+
+.audioBtn:not(.isMuted){
+  box-shadow: 0 16px 34px rgba(47,125,255,.22);
+  border-color: rgba(78,163,255,.28);
+}
+
 }
 
 .audioBtn__icon::before{
