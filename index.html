@@ -10,16 +10,15 @@
 
 <body>
   <!-- Background layers -->
-  <div class="bg" aria-hidden="true">
+  <div class="bg">
     <div class="bg__radial"></div>
     <div class="bg__stars"></div>
     <div class="bg__grain"></div>
   </div>
 
-  <!-- NAV (clean: no burger / no mobile overlay) -->
+  <!-- NAV -->
   <header class="nav">
-    <!-- Link to Pump.fun token page -->
-    <a class="brand" id="brandLink" href="PASTE_PUMPFUN_URL_HERE" target="_blank" rel="noopener">
+    <a class="brand" id="brandLink" href="#" target="_blank" rel="noopener">
       <span class="brand__icon" aria-hidden="true">$</span>
       <span class="brand__text">TRALALA</span>
     </a>
@@ -30,14 +29,82 @@
       <a href="#join">Join</a>
       <a href="#gallery">Gallery</a>
     </nav>
+
+    <button class="nav__burger" id="burgerBtn" aria-label="Open menu" aria-expanded="false" aria-controls="mobileMenu">
+      <span></span><span></span><span></span>
+    </button>
   </header>
+
+  <!-- MOBILE MENU -->
+  <div class="menu" id="mobileMenu" aria-hidden="true">
+    <div class="menu__panel">
+      <div class="menu__top">
+        <div class="menu__title">$TRALALA</div>
+        <button class="menu__close" id="menuClose" aria-label="Close menu">✕</button>
+      </div>
+
+      <a class="menu__link" href="#tokenomics">Tokenomics</a>
+      <a class="menu__link" href="#how">How to buy</a>
+      <a class="menu__link" href="#join">Join</a>
+      <a class="menu__link" href="#gallery">Gallery</a>
+
+      <div class="menu__divider"></div>
+
+      <a class="menu__cta" id="pumpCtaTop" href="#" target="_blank" rel="noopener">
+        Buy on Pump.fun
+      </a>
+    </div>
+  </div>
 
   <!-- AUDIO -->
   <audio id="bgAudio" src="./bg.mp3" preload="auto" loop></audio>
-<button class="audioBtn" id="audioToggle" aria-label="Toggle sound" aria-pressed="false" title="Sound">
-  <svg class="audioBtn__svg" id="audioSvg" viewBox="0 0 24 24" aria-hidden="true"></svg>
-</button>
 
+  <!--
+    Audio Button FIX:
+    - kleiner + cleaner wie die weißen Icons
+    - Inline Styles überschreiben dein styles.css, damit du NUR index ändern musst
+    - bleibt kompatibel mit deinem script.js (#audioToggle + #audioIcon + --mask)
+  -->
+  <button
+    class="audioBtn"
+    id="audioToggle"
+    aria-label="Toggle sound"
+    aria-pressed="false"
+    title="Sound"
+    style="
+      position: fixed;
+      left: 16px;
+      bottom: calc(16px + env(safe-area-inset-bottom));
+      z-index: 20;
+      width: 46px;
+      height: 46px;
+      border-radius: 16px;
+      border: 1px solid rgba(255,255,255,.12);
+      background: rgba(255,255,255,.06);
+      backdrop-filter: blur(8px);
+      -webkit-backdrop-filter: blur(8px);
+      box-shadow: 0 12px 28px rgba(0,0,0,.22);
+      color: rgba(255,255,255,.92);
+      display: grid;
+      place-items: center;
+      padding: 0;
+      cursor: pointer;
+      -webkit-tap-highlight-color: transparent;
+      touch-action: manipulation;
+    "
+  >
+    <span
+      class="audioBtn__icon"
+      id="audioIcon"
+      aria-hidden="true"
+      style="
+        width: 100%;
+        height: 100%;
+        display: grid;
+        place-items: center;
+      "
+    ></span>
+  </button>
 
   <main class="wrap">
     <!-- HERO -->
@@ -52,9 +119,7 @@
         <p class="hero__sub">The cutest brainrot fish has emerged from TikTok.</p>
 
         <div class="hero__cta">
-          <a class="btn btn--primary" id="pumpBtn" href="PASTE_PUMPFUN_URL_HERE" target="_blank" rel="noopener">
-            Buy on Pump.fun
-          </a>
+          <a class="btn btn--primary" id="pumpBtn" href="#" target="_blank" rel="noopener">Buy on Pump.fun</a>
           <a class="btn btn--ghost" href="#tokenomics">View tokenomics</a>
         </div>
       </div>
@@ -144,7 +209,7 @@
             </svg>
           </div>
           <div class="step__body">
-            <div class="step__title">Buy $TRALALA</div>
+            <div class="step__title">Swap for $TRALALA</div>
             <div class="step__text">Open Pump.fun, paste the token link, and buy.</div>
           </div>
           <div class="step__num">03</div>
@@ -173,7 +238,7 @@
       </div>
 
       <div class="join">
-        <a class="join__card" href="https://x.com/PASTE_X_HANDLE_HERE" target="_blank" rel="noopener">
+        <a class="join__card" href="https://x.com" target="_blank" rel="noopener">
           <div class="join__icon">X</div>
           <div>
             <div class="join__title">Community</div>
@@ -181,11 +246,11 @@
           </div>
         </a>
 
-        <a class="join__card" href="https://www.tiktok.com/@mythosmondayS" target="_blank" rel="noopener">
+        <a class="join__card" href="https://tiktok.com/@mythosmonday" target="_blank" rel="noopener">
           <div class="join__icon">♪</div>
           <div>
             <div class="join__title">TikTok</div>
-            <div class="join__sub">@mythosmondayS</div>
+            <div class="join__sub">@mythosmonday</div>
           </div>
         </a>
       </div>
@@ -199,20 +264,21 @@
       </div>
 
       <div class="gallery">
-        <button class="gallery__nav" id="galPrev" aria-label="Previous image" type="button">‹</button>
+        <button class="gallery__nav" id="galPrev" aria-label="Previous image">‹</button>
 
         <div class="gallery__frame">
           <img id="galImg" alt="Gallery image" />
+          <div class="gallery__cap" id="galCap"></div>
           <div class="gallery__dots" id="galDots" aria-hidden="true"></div>
         </div>
 
-        <button class="gallery__nav" id="galNext" aria-label="Next image" type="button">›</button>
+        <button class="gallery__nav" id="galNext" aria-label="Next image">›</button>
       </div>
     </section>
 
     <footer class="footer">
       <span>© $TRALALA</span>
-      <a class="footer__pump" id="pumpFooter" href="PASTE_PUMPFUN_URL_HERE" target="_blank" rel="noopener">Pump.fun</a>
+      <a class="footer__pump" id="pumpFooter" href="#" target="_blank" rel="noopener">Pump.fun</a>
     </footer>
   </main>
 
