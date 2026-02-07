@@ -533,3 +533,7 @@ main, header, nav, section, .container, .content, .page, .wrap {
   z-index: 2;
 }
 
+/* Gallery caption AUS (grauer Kasten weg) */
+.gallery__cap { 
+  display: none !important; 
+}
