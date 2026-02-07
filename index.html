@@ -65,34 +65,19 @@
     - SVG shows ONLY one state at a time (muted vs sound on)
     - uses aria-pressed to switch visuals (script should toggle aria-pressed)
   -->
-<button class="audioBtn" id="audioToggle" aria-label="Toggle sound" aria-pressed="false" title="Sound">
-  <!-- WICHTIG: id wieder da, damit script.js happy ist -->
-  <span class="audioBtn__icon" id="audioIcon" aria-hidden="true" style="display:grid;place-items:center;">
-    <!-- Clean SVG Icon -->
-    <svg viewBox="0 0 24 24" width="26" height="26" xmlns="http://www.w3.org/2000/svg" style="display:block;">
-      <path d="M3 10v4h4l5 4V6L7 10H3Z" fill="currentColor"/>
-      <!-- waves (nur wenn ON) -->
-      <g id="waves" style="display:none;">
-        <path d="M16.5 12a3.5 3.5 0 0 0-2-3.15v6.3A3.5 3.5 0 0 0 16.5 12Z" fill="currentColor" opacity="0.9"/>
-        <path d="M18.8 6.6a1 1 0 0 1 .2 1.4A8.5 8.5 0 0 1 19 12a8.5 8.5 0 0 1-2 4.99 1 1 0 1 1-1.52-1.3A6.5 6.5 0 0 0 17 12a6.5 6.5 0 0 0-1.52-3.7 1 1 0 0 1 .2-1.4 1 1 0 0 1 1.4.21Z" fill="currentColor" opacity="0.75"/>
-      </g>
-      <!-- slash (nur wenn MUTED) -->
-      <path id="slash" d="M20 4 4 20" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" opacity="0.95"/>
-    </svg>
-  </span>
+<button class="audioBtn audioBtn--pp" id="audioToggle" aria-label="Toggle sound" aria-pressed="false" title="Sound">
+    <span class="audioBtn__pp" aria-hidden="true">
+      <!-- PLAY (zeigt wenn muted) -->
+      <svg class="pp pp--play" viewBox="0 0 24 24" width="22" height="22">
+        <path d="M8 5v14l12-7-12-7Z" fill="currentColor"></path>
+      </svg>
 
-  <!-- FIX: Das weiße Quadrat kommt von .audioBtn__icon::before in styles.css -->
-  <style>
-    #audioToggle .audioBtn__icon::before { content: none !important; }
-
-    /* Icon-Logik nur über aria-pressed (dein script setzt das) */
-    #audioToggle[aria-pressed="true"] #waves { display: block !important; }
-    #audioToggle[aria-pressed="true"] #slash { display: none !important; }
-
-    #audioToggle[aria-pressed="false"] #waves { display: none !important; }
-    #audioToggle[aria-pressed="false"] #slash { display: block !important; }
-  </style>
-</button>
+      <!-- PAUSE (zeigt wenn sound on) -->
+      <svg class="pp pp--pause" viewBox="0 0 24 24" width="22" height="22">
+        <path d="M7 5h4v14H7V5Zm6 0h4v14h-4V5Z" fill="currentColor"></path>
+      </svg>
+    </span>
+  </button>
 
   <main class="wrap">
     <!-- HERO -->
