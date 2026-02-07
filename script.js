@@ -2,7 +2,7 @@
    CONFIG (set these!)
 ========================= */
 const PUMP_FUN_URL = "PASTE_PUMPFUN_URL_HERE";          // e.g. https://pump.fun/....
-const CONTRACT_ADDRESS = "PASTE_CONTRACT_ADDRESS_HERE"; // e.g. 7abc...xyz
+const CONTRACT_ADDRESS = "89muFzE1VpotYQfKm7xsuEbhgxRLyinmsELGTCSLpump"; // e.g. 7abc...xyz
 
 /* =========================
    HELPERS
