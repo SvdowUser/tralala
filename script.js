@@ -1,17 +1,32 @@
 /* =========================
    CONFIG (set these!)
 ========================= */
-const PUMP_FUN_URL = "PASTE_PUMPFUN_URL_HERE";         // e.g. https://pump.fun/....
+const PUMP_FUN_URL = "PASTE_PUMPFUN_URL_HERE";          // e.g. https://pump.fun/....
 const CONTRACT_ADDRESS = "PASTE_CONTRACT_ADDRESS_HERE"; // e.g. 7abc...xyz
 
 /* =========================
-   HERO (fix id mismatch + path)
+   HERO (id mismatch + path + float)
 ========================= */
-// In deinem Index hat das Bild KEIN id="heroImg", sondern class="hero__img"
+// In deinem Index: <img class="hero__img" ... />
 const heroImg = document.querySelector(".hero__img");
 if (heroImg) {
-  // ohne führenden Slash, GitHub Pages safe:
+  // Wenn deine hero.png im ROOT liegt:
   heroImg.src = "./hero.png";
+
+  // smooth float (subtil, wie "schweben")
+  // (zusätzlich/anstatt CSS — wirkt auch wenn CSS kaputt ist)
+  let t0 = performance.now();
+  const floatLoop = (t) => {
+    const dt = (t - t0) / 1000;
+    // sanftes Up/Down + mini sway
+    const y = Math.sin(dt * 1.1) * 10;      // px
+    const r = Math.sin(dt * 0.8) * 1.2;     // deg
+    const x = Math.cos(dt * 0.9) * 3;       // px
+    heroImg.style.transform = `translate3d(${x}px, ${-y}px, 0) rotate(${r}deg)`;
+    requestAnimationFrame(floatLoop);
+  };
+  requestAnimationFrame(floatLoop);
+
   heroImg.addEventListener("error", () => {
     console.warn("Hero image not loading. Check path: ./hero.png");
   });
@@ -33,13 +48,21 @@ document.querySelectorAll('a[href^="#"]').forEach((a) => {
 
 /* =========================
    Pump.fun links (brand/button/footer)
+   - setzt nur, wenn URL wirklich eingefügt wurde
 ========================= */
 const pumpBtn = document.getElementById("pumpBtn");
 const pumpFooter = document.getElementById("pumpFooter");
 const brandLink = document.getElementById("brandLink");
 
-[pumpBtn, pumpFooter, brandLink].forEach((el) => {
-  if (el && PUMP_FUN_URL) el.href = PUMP_FUN_URL;
+// optional, falls du noch irgendwo einen CTA im Menü hast:
+const pumpCtaTop = document.getElementById("pumpCtaTop");
+
+function isRealUrl(u) {
+  return typeof u === "string" && u.startsWith("http");
+}
+
+[pumpBtn, pumpFooter, brandLink, pumpCtaTop].forEach((el) => {
+  if (el && isRealUrl(PUMP_FUN_URL)) el.href = PUMP_FUN_URL;
 });
 
 /* =========================
@@ -68,7 +91,6 @@ async function copyToClipboard(text) {
       ta.style.top = "-9999px";
       document.body.appendChild(ta);
 
-      // iOS selection workaround
       ta.focus();
       ta.select();
       ta.setSelectionRange(0, ta.value.length);
@@ -83,8 +105,16 @@ async function copyToClipboard(text) {
 }
 
 copyBtn?.addEventListener("click", async () => {
-  const value =
-    (contractText?.textContent || "").trim() || CONTRACT_ADDRESS.trim();
+  const value = (contractText?.textContent || "").trim() || (CONTRACT_ADDRESS || "").trim();
+
+  // Wenn noch Platzhalter drin ist, nicht so tun als ob’s klappt:
+  if (!value || value.includes("PASTE_CONTRACT")) {
+    if (toast) {
+      toast.textContent = "Set CONTRACT_ADDRESS first";
+      setTimeout(() => (toast.textContent = ""), 1600);
+    }
+    return;
+  }
 
   const ok = await copyToClipboard(value);
 
@@ -121,7 +151,7 @@ let muted = true;
 
 if (audio) {
   audio.loop = true;
-  audio.muted = true; // start muted (wie du wolltest)
+  audio.muted = true; // start muted
 }
 
 setAudioUI(true);
@@ -133,29 +163,29 @@ audioToggle?.addEventListener("click", async () => {
   audio.muted = muted;
   setAudioUI(muted);
 
-  // iOS: play nur bei user gesture -> hier ok
   if (!muted) {
     try {
       await audio.play();
     } catch (e) {
-      // Wenn Browser blockt, bleibt es halt stumm – UI bleibt korrekt
       console.warn("Audio play blocked by browser policy.", e);
     }
   }
 });
 
 /* =========================
-   GALLERY (6 images) — fix: use ONE constant (no GALLERY vs galleryImages bug)
+   GALLERY (6 images)
+   FIXES:
+   - nutzt NUR galleryImages (kein GALLERY-Name mehr)
+   - Pfade robust (Root oder /assets/gallery/)
 ========================= */
 const galleryImages = [
-  { src: "1.png", cap: "Image 1" },
-  { src: "2.png", cap: "Image 2" },
-  { src: "3.png", cap: "Image 3" },
-  { src: "4.png", cap: "Image 4" },
-  { src: "5.png", cap: "Image 5" },
-  { src: "6.png", cap: "Image 6" },
+  { src: "./1.png", cap: "Image 1" },
+  { src: "./2.png", cap: "Image 2" },
+  { src: "./3.png", cap: "Image 3" },
+  { src: "./4.png", cap: "Image 4" },
+  { src: "./5.png", cap: "Image 5" },
+  { src: "./6.png", cap: "Image 6" },
 ];
-
 
 const galImg = document.getElementById("galImg");
 const galCap = document.getElementById("galCap");
@@ -165,10 +195,17 @@ const galDots = document.getElementById("galDots");
 
 let galIndex = 0;
 
+// falls du doch später einen Ordner nutzt:
+function asAltPath(src) {
+  // "./1.png" -> "./assets/gallery/1.png"
+  const filename = src.replace("./", "");
+  return `./assets/gallery/${filename}`;
+}
+
 function renderDots() {
   if (!galDots) return;
   galDots.innerHTML = "";
-  for (let i = 0; i < GALLERY.length; i++) {
+  for (let i = 0; i < galleryImages.length; i++) {
     const d = document.createElement("span");
     if (i === galIndex) d.classList.add("isOn");
     galDots.appendChild(d);
@@ -176,52 +213,73 @@ function renderDots() {
 }
 
 function renderGallery() {
-  if (!galImg || !galCap || !GALLERY.length) return;
-  const item = GALLERY[galIndex];
+  if (!galImg || !galCap || !galleryImages.length) return;
 
-  galImg.src = item.src;
+  const item = galleryImages[galIndex];
   galImg.loading = "lazy";
+  galImg.src = item.src;
   galCap.textContent = item.cap || "";
   renderDots();
 }
 
 galImg?.addEventListener("error", () => {
+  // probier automatisch den alternativen Pfad (assets/gallery)
+  const item = galleryImages[galIndex];
+  const current = galImg.getAttribute("src") || "";
+
+  const alt = asAltPath(item.src);
+
+  if (current !== alt) {
+    galImg.src = alt;
+    return;
+  }
+
   if (galCap) {
-    galCap.textContent = "Image missing — check filename/path in ./assets/gallery/";
+    galCap.textContent =
+      "Image missing — check file name + location (./1.png … ./6.png OR ./assets/gallery/1.png …)";
   }
 });
 
 galPrev?.addEventListener("click", () => {
-  galIndex = (galIndex - 1 + GALLERY.length) % GALLERY.length;
+  galIndex = (galIndex - 1 + galleryImages.length) % galleryImages.length;
   renderGallery();
 });
 
 galNext?.addEventListener("click", () => {
-  galIndex = (galIndex + 1) % GALLERY.length;
+  galIndex = (galIndex + 1) % galleryImages.length;
   renderGallery();
 });
 
-// Optional: swipe on mobile
+// Swipe on mobile
 let touchStartX = null;
-galImg?.addEventListener("touchstart", (e) => {
-  touchStartX = e.touches?.[0]?.clientX ?? null;
-}, { passive: true });
+galImg?.addEventListener(
+  "touchstart",
+  (e) => {
+    touchStartX = e.touches?.[0]?.clientX ?? null;
+  },
+  { passive: true }
+);
 
-galImg?.addEventListener("touchend", (e) => {
-  if (touchStartX == null) return;
-  const endX = e.changedTouches?.[0]?.clientX ?? null;
-  if (endX == null) return;
+galImg?.addEventListener(
+  "touchend",
+  (e) => {
+    if (touchStartX == null) return;
+    const endX = e.changedTouches?.[0]?.clientX ?? null;
+    if (endX == null) return;
 
-  const dx = endX - touchStartX;
-  if (Math.abs(dx) > 40) {
-    if (dx > 0) {
-      galIndex = (galIndex - 1 + GALLERY.length) % GALLERY.length;
-    } else {
-      galIndex = (galIndex + 1) % GALLERY.length;
+    const dx = endX - touchStartX;
+    if (Math.abs(dx) > 40) {
+      if (dx > 0) {
+        galIndex = (galIndex - 1 + galleryImages.length) % galleryImages.length;
+      } else {
+        galIndex = (galIndex + 1) % galleryImages.length;
+      }
+      renderGallery();
     }
-    renderGallery();
-  }
-  touchStartX = null;
-}, { passive: true });
+    touchStartX = null;
+  },
+  { passive: true }
+);
 
+// initial
 renderGallery();
