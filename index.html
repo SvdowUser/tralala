@@ -1,289 +1,320 @@
-<!doctype html>
-<html lang="en">
-<head>
-  <meta charset="utf-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover" />
-  <meta name="theme-color" content="#071a2a" />
-  <title>$TRALALA</title>
-  <link rel="stylesheet" href="./styles.css" />
-</head>
+/* =========================
+   CONFIG (set these!)
+========================= */
+const PUMP_FUN_URL =
+  "https://pump.fun/coin/89muFzE1VpotYQfKm7xsuEbhgxRLyinmsELGTCSLpump";
+const CONTRACT_ADDRESS =
+  "89muFzE1VpotYQfKm7xsuEbhgxRLyinmsELGTCSLpump";
 
-<body>
-  <!-- Background layers -->
-<div class="bg">
-  <div class="bg__radial"></div>
-  <div class="bg__stars"></div>
+/* =========================
+   HELPERS
+========================= */
+function isRealUrl(u) {
+  return typeof u === "string" && /^https?:\/\//i.test(u);
+}
 
-  <!-- NEW: spark layers -->
-  <div class="bg__sparks bg__sparks--top"></div>
-  <div class="bg__sparks bg__sparks--bottom"></div>
+// Resolve relative path safely for GitHub Pages (/repo/...)
+function resolveUrl(path) {
+  return new URL(path, document.baseURI).toString();
+}
 
-  <div class="bg__grain"></div>
-</div>
+/* =========================
+   HERO (path + float)
+========================= */
+const heroImg = document.querySelector(".hero__img");
+if (heroImg) {
+  heroImg.src = resolveUrl("./hero.png");
 
+  let t0 = performance.now();
+  const floatLoop = (t) => {
+    const dt = (t - t0) / 1000;
+    const y = Math.sin(dt * 1.05) * 10;
+    const x = Math.cos(dt * 0.85) * 3;
+    const r = Math.sin(dt * 0.7) * 1.0;
+    heroImg.style.transform = `translate3d(${x}px, ${-y}px, 0) rotate(${r}deg)`;
+    requestAnimationFrame(floatLoop);
+  };
+  requestAnimationFrame(floatLoop);
 
-  <!-- NAV -->
-  <header class="nav">
-    <a class="brand" id="brandLink" href="#" target="_blank" rel="noopener">
-      <span class="brand__icon" aria-hidden="true">$</span>
-      <span class="brand__text">TRALALA</span>
-    </a>
+  heroImg.addEventListener("error", () => {
+    console.warn("Hero image not loading. Check file name/path: hero.png in repo root.");
+  });
+}
 
-    <nav class="nav__links" aria-label="Primary">
-      <a href="#tokenomics">Tokenomics</a>
-      <a href="#how">How to buy</a>
-      <a href="#join">Join</a>
-      <a href="#gallery">Gallery</a>
-    </nav>
+/* =========================
+   Smooth scroll (nur # Links)
+========================= */
+document.querySelectorAll('a[href^="#"]').forEach((a) => {
+  a.addEventListener("click", (e) => {
+    const id = a.getAttribute("href");
+    if (!id || id === "#") return;
 
-    <button class="nav__burger" id="burgerBtn" aria-label="Open menu" aria-expanded="false" aria-controls="mobileMenu">
-      <span></span><span></span><span></span>
-    </button>
-  </header>
+    const el = document.querySelector(id);
+    if (!el) return;
 
-  <!-- MOBILE MENU -->
-  <div class="menu" id="mobileMenu" aria-hidden="true">
-    <div class="menu__panel">
-      <div class="menu__top">
-        <div class="menu__title">$TRALALA</div>
-        <button class="menu__close" id="menuClose" aria-label="Close menu">✕</button>
-      </div>
+    e.preventDefault();
+    el.scrollIntoView({ behavior: "smooth", block: "start" });
+  });
+});
 
-      <a class="menu__link" href="#tokenomics">Tokenomics</a>
-      <a class="menu__link" href="#how">How to buy</a>
-      <a class="menu__link" href="#join">Join</a>
-      <a class="menu__link" href="#gallery">Gallery</a>
+/* =========================
+   Pump.fun links (incl. swap button)
+========================= */
+const pumpBtn = document.getElementById("pumpBtn");
+const pumpFooter = document.getElementById("pumpFooter");
+const brandLink = document.getElementById("brandLink");
+const pumpCtaTop = document.getElementById("pumpCtaTop");
+const pumpSwapBtn = document.getElementById("pumpSwapBtn"); // NEW
 
-      <div class="menu__divider"></div>
+[pumpBtn, pumpFooter, brandLink, pumpCtaTop, pumpSwapBtn].forEach((el) => {
+  if (el && isRealUrl(PUMP_FUN_URL)) el.href = PUMP_FUN_URL;
+});
 
-      <a class="menu__cta" id="pumpCtaTop" href="#" target="_blank" rel="noopener">
-        Buy on Pump.fun
-      </a>
-    </div>
-  </div>
+/* =========================
+   MOBILE MENU (Burger)
+========================= */
+const burgerBtn = document.getElementById("burgerBtn");
+const mobileMenu = document.getElementById("mobileMenu");
+const menuClose = document.getElementById("menuClose");
 
-  <!-- AUDIO -->
-  <audio id="bgAudio" src="./bg.mp3" preload="auto" loop></audio>
+function openMenu() {
+  if (!mobileMenu || !burgerBtn) return;
+  mobileMenu.classList.add("is-open");
+  mobileMenu.setAttribute("aria-hidden", "false");
+  burgerBtn.setAttribute("aria-expanded", "true");
 
-  <!--
-    Audio Button FIX (INDEX ONLY):
-    - clean glass button
-    - SVG shows ONLY one state at a time (muted vs sound on)
-    - uses aria-pressed to switch visuals (script should toggle aria-pressed)
-  -->
-<button class="audioBtn" id="audioToggle" aria-label="Toggle sound" aria-pressed="false" title="Sound">
-  <!-- ID bleibt, damit dein script.js happy ist -->
-  <span class="audioBtn__icon" id="audioIcon" aria-hidden="true">
-    <!-- PLAY (wenn muted / aria-pressed=false) -->
-    <svg class="ppIcon ppPlay" viewBox="0 0 24 24" width="22" height="22" xmlns="http://www.w3.org/2000/svg">
-      <path d="M8 5v14l12-7-12-7Z" fill="currentColor"/>
-    </svg>
+  // Scroll lock
+  document.body.style.overflow = "hidden";
+}
 
-    <!-- PAUSE (wenn sound an / aria-pressed=true) -->
-    <svg class="ppIcon ppPause" viewBox="0 0 24 24" width="22" height="22" xmlns="http://www.w3.org/2000/svg">
-      <path d="M7 5h4v14H7V5Zm6 0h4v14h-4V5Z" fill="currentColor"/>
-    </svg>
-  </span>
+function closeMenu() {
+  if (!mobileMenu || !burgerBtn) return;
+  mobileMenu.classList.remove("is-open");
+  mobileMenu.setAttribute("aria-hidden", "true");
+  burgerBtn.setAttribute("aria-expanded", "false");
 
-  <style>
-    /* 1) Entfernt das weiße Quadrat / Masken aus styles.css */
-    #audioToggle #audioIcon::before { content: none !important; }
-    #audioToggle #audioIcon {
-      display: grid !important;
-      place-items: center !important;
-      background: none !important;
-      -webkit-mask: none !important;
-      mask: none !important;
-      -webkit-mask-image: none !important;
-      mask-image: none !important;
+  // Unlock scroll
+  document.body.style.overflow = "";
+}
+
+burgerBtn?.addEventListener("click", () => {
+  if (!mobileMenu) return;
+  const isOpen = mobileMenu.classList.contains("is-open");
+  isOpen ? closeMenu() : openMenu();
+});
+
+menuClose?.addEventListener("click", closeMenu);
+
+// Klick auf Overlay außerhalb Panel schließt
+mobileMenu?.addEventListener("click", (e) => {
+  if (e.target === mobileMenu) closeMenu();
+});
+
+// Klick auf Menü-Links schließt auch
+mobileMenu?.querySelectorAll('a[href^="#"]').forEach((a) => {
+  a.addEventListener("click", () => {
+    closeMenu();
+  });
+});
+
+// ESC schließt
+document.addEventListener("keydown", (e) => {
+  if (e.key === "Escape") closeMenu();
+});
+
+/* =========================
+   Contract copy (mobile + iOS fallback)
+========================= */
+const contractText = document.getElementById("contractText");
+const copyBtn = document.getElementById("copyBtn");
+const toast = document.getElementById("toast");
+
+if (contractText) contractText.textContent = CONTRACT_ADDRESS;
+
+async function copyToClipboard(text) {
+  try {
+    await navigator.clipboard.writeText(text);
+    return true;
+  } catch (_) {
+    try {
+      const ta = document.createElement("textarea");
+      ta.value = text;
+      ta.setAttribute("readonly", "");
+      ta.style.position = "fixed";
+      ta.style.left = "-9999px";
+      ta.style.top = "-9999px";
+      document.body.appendChild(ta);
+
+      ta.focus();
+      ta.select();
+      ta.setSelectionRange(0, ta.value.length);
+
+      const ok = document.execCommand("copy");
+      document.body.removeChild(ta);
+      return ok;
+    } catch (_) {
+      return false;
     }
+  }
+}
 
-    /* 2) Grundzustand: beide aus */
-    #audioToggle .ppIcon { display: none !important; }
+copyBtn?.addEventListener("click", async () => {
+  const value =
+    (contractText?.textContent || "").trim() || (CONTRACT_ADDRESS || "").trim();
 
-    /* 3) Nur eins sichtbar – gesteuert über aria-pressed (dein Script setzt das) */
-    #audioToggle[aria-pressed="false"] .ppPlay  { display: block !important; } /* muted => PLAY */
-    #audioToggle[aria-pressed="true"]  .ppPause { display: block !important; } /* sound on => PAUSE */
-  </style>
-</button>
+  if (!value) {
+    if (toast) {
+      toast.textContent = "Missing contract address";
+      setTimeout(() => (toast.textContent = ""), 1600);
+    }
+    return;
+  }
 
+  const ok = await copyToClipboard(value);
 
-  <main class="wrap">
-    <!-- HERO -->
-    <section class="hero" id="top">
-      <div class="hero__left">
-        <div class="pill">
-          <span class="pill__dot"></span>
-          <span>LIVE ON SOLANA</span>
-        </div>
+  if (toast) {
+    toast.textContent = ok ? "COPIED ✓" : "Copy failed";
+    setTimeout(() => (toast.textContent = ""), 1600);
+  }
 
-        <h1 class="hero__title">$TRALALA</h1>
-        <p class="hero__sub">The cutest brainrot fish has emerged from TikTok.</p>
+  if (copyBtn) {
+    copyBtn.textContent = ok ? "COPIED" : "COPY";
+    setTimeout(() => (copyBtn.textContent = "COPY"), 1200);
+  }
+});
 
-        <div class="hero__cta">
-          <a class="btn btn--primary" id="pumpBtn" href="#" target="_blank" rel="noopener">Buy on Pump.fun</a>
-          <a class="btn btn--ghost" href="#tokenomics">View tokenomics</a>
-        </div>
-      </div>
+/* =========================
+   AUDIO (start muted) — Play/Pause SVG
+   (No mask icons anymore)
+========================= */
+const audio = document.getElementById("bgAudio");
+const audioToggle = document.getElementById("audioToggle");
 
-      <div class="hero__right">
-        <div class="orb">
-          <div class="orb__ring"></div>
-          <img class="hero__img" src="./hero.png" alt="Tralala character" />
-        </div>
-      </div>
-    </section>
+let muted = true;
 
-    <!-- TOKENOMICS -->
-    <section class="section" id="tokenomics">
-      <div class="section__head">
-        <h2>TOKENOMICS</h2>
-        <p>Transparent. Simple. Built for the meme.</p>
-      </div>
+function setAudioUI(isMuted) {
+  if (!audioToggle) return;
+  audioToggle.classList.toggle("isMuted", isMuted);
+  audioToggle.setAttribute("aria-pressed", String(!isMuted)); // true = sound on = pause icon
+}
 
-      <div class="cards">
-        <div class="card">
-          <div class="card__icon">⬡</div>
-          <div class="card__label">Total Supply</div>
-          <div class="card__value">1,000,000,000</div>
-          <div class="card__hint">One billion TRALALA tokens</div>
-        </div>
+if (audio) {
+  audio.loop = true;
+  audio.muted = true;
+}
+setAudioUI(true);
 
-        <div class="card">
-          <div class="card__icon">%</div>
-          <div class="card__label">Tax</div>
-          <div class="card__value">0%</div>
-          <div class="card__hint">No buy/sell tax — pure trading</div>
-        </div>
-      </div>
+audioToggle?.addEventListener("click", async () => {
+  if (!audio) return;
 
-      <div class="contract">
-        <div class="contract__label">CONTRACT ADDRESS</div>
-        <div class="contract__row">
-          <code class="contract__code" id="contractText">89muFzE1VpotYQfKm7xsuEbhgxRLyinmsELGTCSLpump</code>
-          <button class="contract__copy" id="copyBtn" type="button">COPY</button>
-        </div>
-        <div class="toast" id="toast" aria-live="polite" aria-atomic="true"></div>
-      </div>
-    </section>
+  muted = !muted;
+  audio.muted = muted;
+  setAudioUI(muted);
 
-    <!-- HOW TO BUY -->
-    <section class="section" id="how">
-      <div class="section__head">
-        <h2>HOW TO BUY</h2>
-        <p>Four simple steps.</p>
-      </div>
+  if (!muted) {
+    try {
+      await audio.play();
+    } catch (e) {
+      console.warn("Audio play blocked by browser policy.", e);
+    }
+  } else {
+    // optional: pause when muted
+    try { audio.pause(); } catch (_) {}
+  }
+});
 
-      <div class="steps">
-        <div class="step">
-          <div class="step__icon" aria-hidden="true">
-            <svg viewBox="0 0 24 24" width="22" height="22">
-              <path d="M4 7.5C4 6.12 5.12 5 6.5 5H19a1 1 0 0 1 0 2H6.5A.5.5 0 0 0 6 7.5V8h13.5A2.5 2.5 0 0 1 22 10.5v6A2.5 2.5 0 0 1 19.5 19H6.5A2.5 2.5 0 0 1 4 16.5v-9Z" fill="currentColor"/>
-              <path d="M19.5 10H22v3h-2.5a1.5 1.5 0 0 1 0-3Z" fill="currentColor" opacity=".65"/>
-            </svg>
-          </div>
-          <div class="step__body">
-            <div class="step__title">Get a Wallet</div>
-            <div class="step__text">Download Phantom or Solflare and set it up securely.</div>
-          </div>
-          <div class="step__num">01</div>
-        </div>
+/* =========================
+   GALLERY (ROOT files 1.png..6.png)
+========================= */
+const galleryImages = [
+  { file: "1.png", cap: "Image 1" },
+  { file: "2.png", cap: "Image 2" },
+  { file: "3.png", cap: "Image 3" },
+  { file: "4.png", cap: "Image 4" },
+  { file: "5.png", cap: "Image 5" },
+  { file: "6.png", cap: "Image 6" },
+];
 
-        <div class="step">
-          <div class="step__icon" aria-hidden="true">
-            <svg viewBox="0 0 24 24" width="22" height="22">
-              <path d="M7 8.5c.6-.7 1-.9 1.9-.9h10.2c.5 0 .8.6.5 1l-1.6 1.9c-.6.7-1 .9-1.9.9H6.9c-.5 0-.8-.6-.5-1L7 8.5Z" fill="currentColor"/>
-              <path d="M7 13.5c.6-.7 1-.9 1.9-.9h10.2c.5 0 .8.6.5 1l-1.6 1.9c-.6.7-1 .9-1.9.9H6.9c-.5 0-.8-.6-.5-1L7 13.5Z" fill="currentColor" opacity=".75"/>
-            </svg>
-          </div>
-          <div class="step__body">
-            <div class="step__title">Get SOL</div>
-            <div class="step__text">Buy SOL on an exchange and send it to your wallet.</div>
-          </div>
-          <div class="step__num">02</div>
-        </div>
+const galImg = document.getElementById("galImg");
+const galCap = document.getElementById("galCap");
+const galPrev = document.getElementById("galPrev");
+const galNext = document.getElementById("galNext");
+const galDots = document.getElementById("galDots");
 
-        <div class="step">
-          <div class="step__icon" aria-hidden="true">
-            <svg viewBox="0 0 24 24" width="22" height="22">
-              <path d="M7 7h11l-2-2 1.4-1.4L22.8 9l-5.4 5.4L16 13l2-2H7V7Z" fill="currentColor"/>
-              <path d="M17 17H6l2 2-1.4 1.4L1.2 15l5.4-5.4L8 11l-2 2h11v4Z" fill="currentColor" opacity=".75"/>
-            </svg>
-          </div>
-          <div class="step__body">
-            <div class="step__title">Swap for $TRALALA</div>
-            <div class="step__text">Open Pump.fun, paste the token link, and buy.</div>
-          </div>
-          <div class="step__num">03</div>
-        </div>
+let galIndex = 0;
 
-        <div class="step">
-          <div class="step__icon" aria-hidden="true">
-            <svg viewBox="0 0 24 24" width="22" height="22">
-              <path d="M12 17.3 6.2 20.9l1.6-6.6L2.7 9.9l6.7-.6L12 3l2.6 6.3 6.7.6-5.1 4.4 1.6 6.6L12 17.3Z" fill="currentColor"/>
-            </svg>
-          </div>
-          <div class="step__body">
-            <div class="step__title">HODL & Enjoy</div>
-            <div class="step__text">Hold strong and enjoy the meme ride.</div>
-          </div>
-          <div class="step__num">04</div>
-        </div>
-      </div>
-    </section>
+function renderDots() {
+  if (!galDots) return;
+  galDots.innerHTML = "";
+  for (let i = 0; i < galleryImages.length; i++) {
+    const d = document.createElement("span");
+    if (i === galIndex) d.classList.add("isOn");
+    galDots.appendChild(d);
+  }
+}
 
-    <!-- JOIN -->
-    <section class="section" id="join">
-      <div class="section__head">
-        <h2>JOIN THE ARMY</h2>
-        <p>Join us and follow the lore.</p>
-      </div>
+function setGalleryImage() {
+  if (!galImg || !galleryImages.length) return;
 
-      <div class="join">
-        <a class="join__card" href="https://x.com" target="_blank" rel="noopener">
-          <div class="join__icon">X</div>
-          <div>
-            <div class="join__title">Community</div>
-            <div class="join__sub">Join on X</div>
-          </div>
-        </a>
+  const item = galleryImages[galIndex];
+  const url = resolveUrl(`./${item.file}`);
 
-        <a class="join__card" href="https://tiktok.com/@mythosmonday" target="_blank" rel="noopener">
-          <div class="join__icon">♪</div>
-          <div>
-            <div class="join__title">TikTok</div>
-            <div class="join__sub">@mythosmonday</div>
-          </div>
-        </a>
-      </div>
-    </section>
+  // cache bust
+  galImg.src = `${url}?v=${Date.now()}`;
+  galImg.loading = "eager";
 
-    <!-- GALLERY -->
-    <section class="section" id="gallery">
-      <div class="section__head">
-        <h2>GALLERY</h2>
-        <p>Swipe through the community moments.</p>
-      </div>
+  // caption off
+  if (galCap) {
+    galCap.textContent = "";
+    galCap.style.display = "none";
+  }
 
-      <div class="gallery">
-        <button class="gallery__nav" id="galPrev" aria-label="Previous image">‹</button>
+  renderDots();
+}
 
-        <div class="gallery__frame">
-          <img id="galImg" alt="Gallery image" />
-          <div class="gallery__cap" id="galCap"></div>
-          <div class="gallery__dots" id="galDots" aria-hidden="true"></div>
-        </div>
+galImg?.addEventListener("error", () => {
+  console.warn("Gallery image not loading. Check file names in repo root: 1.png..6.png");
+});
 
-        <button class="gallery__nav" id="galNext" aria-label="Next image">›</button>
-      </div>
-    </section>
+galPrev?.addEventListener("click", () => {
+  galIndex = (galIndex - 1 + galleryImages.length) % galleryImages.length;
+  setGalleryImage();
+});
 
-    <footer class="footer">
-      <span>© $TRALALA</span>
-      <a class="footer__pump" id="pumpFooter" href="#" target="_blank" rel="noopener">Pump.fun</a>
-    </footer>
-  </main>
+galNext?.addEventListener("click", () => {
+  galIndex = (galIndex + 1) % galleryImages.length;
+  setGalleryImage();
+});
 
-  <script src="./script.js" defer></script>
-</body>
-</html>
+// Swipe on mobile
+let touchStartX = null;
+galImg?.addEventListener(
+  "touchstart",
+  (e) => {
+    touchStartX = e.touches?.[0]?.clientX ?? null;
+  },
+  { passive: true }
+);
+
+galImg?.addEventListener(
+  "touchend",
+  (e) => {
+    if (touchStartX == null) return;
+    const endX = e.changedTouches?.[0]?.clientX ?? null;
+    if (endX == null) return;
+
+    const dx = endX - touchStartX;
+    if (Math.abs(dx) > 40) {
+      galIndex =
+        dx > 0
+          ? (galIndex - 1 + galleryImages.length) % galleryImages.length
+          : (galIndex + 1) % galleryImages.length;
+      setGalleryImage();
+    }
+    touchStartX = null;
+  },
+  { passive: true }
+);
+
+// init
+setGalleryImage();
