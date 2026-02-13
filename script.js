@@ -1,8 +1,10 @@
 /* =========================
    CONFIG (set these!)
 ========================= */
-const PUMP_FUN_URL = "https://pump.fun/coin/89muFzE1VpotYQfKm7xsuEbhgxRLyinmsELGTCSLpump";          // e.g. https://pump.fun/....
-const CONTRACT_ADDRESS = "89muFzE1VpotYQfKm7xsuEbhgxRLyinmsELGTCSLpump"; // e.g. 7abc...xyz
+const PUMP_FUN_URL =
+  "https://pump.fun/coin/89muFzE1VpotYQfKm7xsuEbhgxRLyinmsELGTCSLpump";
+const CONTRACT_ADDRESS =
+  "89muFzE1VpotYQfKm7xsuEbhgxRLyinmsELGTCSLpump";
 
 /* =========================
    HELPERS
@@ -21,16 +23,14 @@ function resolveUrl(path) {
 ========================= */
 const heroImg = document.querySelector(".hero__img");
 if (heroImg) {
-  // hero.png liegt im ROOT
   heroImg.src = resolveUrl("./hero.png");
 
-  // smooth float (subtil)
   let t0 = performance.now();
   const floatLoop = (t) => {
     const dt = (t - t0) / 1000;
-    const y = Math.sin(dt * 1.05) * 10;  // px
-    const x = Math.cos(dt * 0.85) * 3;   // px
-    const r = Math.sin(dt * 0.70) * 1.0; // deg
+    const y = Math.sin(dt * 1.05) * 10;
+    const x = Math.cos(dt * 0.85) * 3;
+    const r = Math.sin(dt * 0.7) * 1.0;
     heroImg.style.transform = `translate3d(${x}px, ${-y}px, 0) rotate(${r}deg)`;
     requestAnimationFrame(floatLoop);
   };
@@ -48,23 +48,78 @@ document.querySelectorAll('a[href^="#"]').forEach((a) => {
   a.addEventListener("click", (e) => {
     const id = a.getAttribute("href");
     if (!id || id === "#") return;
+
     const el = document.querySelector(id);
     if (!el) return;
+
     e.preventDefault();
     el.scrollIntoView({ behavior: "smooth", block: "start" });
   });
 });
 
 /* =========================
-   Pump.fun links
+   Pump.fun links (incl. swap button)
 ========================= */
 const pumpBtn = document.getElementById("pumpBtn");
 const pumpFooter = document.getElementById("pumpFooter");
 const brandLink = document.getElementById("brandLink");
-const pumpCtaTop = document.getElementById("pumpCtaTop"); // optional (falls vorhanden)
+const pumpCtaTop = document.getElementById("pumpCtaTop");
+const pumpSwapBtn = document.getElementById("pumpSwapBtn"); // NEW
 
-[pumpBtn, pumpFooter, brandLink, pumpCtaTop].forEach((el) => {
+[pumpBtn, pumpFooter, brandLink, pumpCtaTop, pumpSwapBtn].forEach((el) => {
   if (el && isRealUrl(PUMP_FUN_URL)) el.href = PUMP_FUN_URL;
+});
+
+/* =========================
+   MOBILE MENU (Burger)
+========================= */
+const burgerBtn = document.getElementById("burgerBtn");
+const mobileMenu = document.getElementById("mobileMenu");
+const menuClose = document.getElementById("menuClose");
+
+function openMenu() {
+  if (!mobileMenu || !burgerBtn) return;
+  mobileMenu.classList.add("is-open");
+  mobileMenu.setAttribute("aria-hidden", "false");
+  burgerBtn.setAttribute("aria-expanded", "true");
+
+  // Scroll lock
+  document.body.style.overflow = "hidden";
+}
+
+function closeMenu() {
+  if (!mobileMenu || !burgerBtn) return;
+  mobileMenu.classList.remove("is-open");
+  mobileMenu.setAttribute("aria-hidden", "true");
+  burgerBtn.setAttribute("aria-expanded", "false");
+
+  // Unlock scroll
+  document.body.style.overflow = "";
+}
+
+burgerBtn?.addEventListener("click", () => {
+  if (!mobileMenu) return;
+  const isOpen = mobileMenu.classList.contains("is-open");
+  isOpen ? closeMenu() : openMenu();
+});
+
+menuClose?.addEventListener("click", closeMenu);
+
+// Klick auf Overlay außerhalb Panel schließt
+mobileMenu?.addEventListener("click", (e) => {
+  if (e.target === mobileMenu) closeMenu();
+});
+
+// Klick auf Menü-Links schließt auch
+mobileMenu?.querySelectorAll('a[href^="#"]').forEach((a) => {
+  a.addEventListener("click", () => {
+    closeMenu();
+  });
+});
+
+// ESC schließt
+document.addEventListener("keydown", (e) => {
+  if (e.key === "Escape") closeMenu();
 });
 
 /* =========================
@@ -107,9 +162,9 @@ copyBtn?.addEventListener("click", async () => {
   const value =
     (contractText?.textContent || "").trim() || (CONTRACT_ADDRESS || "").trim();
 
-  if (!value || value.includes("PASTE_CONTRACT")) {
+  if (!value) {
     if (toast) {
-      toast.textContent = "Set CONTRACT_ADDRESS first";
+      toast.textContent = "Missing contract address";
       setTimeout(() => (toast.textContent = ""), 1600);
     }
     return;
@@ -129,24 +184,19 @@ copyBtn?.addEventListener("click", async () => {
 });
 
 /* =========================
-   AUDIO (start muted, clean icon)
+   AUDIO (start muted) — Play/Pause SVG
+   (No mask icons anymore)
 ========================= */
 const audio = document.getElementById("bgAudio");
 const audioToggle = document.getElementById("audioToggle");
-const audioIcon = document.getElementById("audioIcon");
-
-// Icon masks (speaker on/off)
-const MASK_SPEAKER_ON = `url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24'%3E%3Cpath d='M3 10v4h4l5 4V6L7 10H3zm13.5 2a3.5 3.5 0 0 0-2-3.15v6.3A3.5 3.5 0 0 0 16.5 12zm0-8a1 1 0 0 1 1 1c0 .43-.27.81-.66.95A8.5 8.5 0 0 1 19 12a8.5 8.5 0 0 1-2.16 5.05 1 1 0 0 1-1.51-1.32A6.5 6.5 0 0 0 17 12a6.5 6.5 0 0 0-1.67-3.73A1 1 0 0 1 16.5 4z'/%3E%3C/svg%3E")`;
-const MASK_SPEAKER_OFF = `url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24'%3E%3Cpath d='M3 10v4h4l5 4V6L7 10H3zm16.3 2 1.7 1.7-1.4 1.4L18 13.4l-1.7 1.7-1.4-1.4L16.6 12l-1.7-1.7 1.4-1.4L18 10.6l1.7-1.7 1.4 1.4L19.4 12z'/%3E%3C/svg%3E")`;
-
-function setAudioUI(isMuted) {
-  if (!audioToggle || !audioIcon) return;
-  audioToggle.classList.toggle("isMuted", isMuted);
-  audioToggle.setAttribute("aria-pressed", String(!isMuted));
-  audioIcon.style.setProperty("--mask", isMuted ? MASK_SPEAKER_OFF : MASK_SPEAKER_ON);
-}
 
 let muted = true;
+
+function setAudioUI(isMuted) {
+  if (!audioToggle) return;
+  audioToggle.classList.toggle("isMuted", isMuted);
+  audioToggle.setAttribute("aria-pressed", String(!isMuted)); // true = sound on = pause icon
+}
 
 if (audio) {
   audio.loop = true;
@@ -167,13 +217,14 @@ audioToggle?.addEventListener("click", async () => {
     } catch (e) {
       console.warn("Audio play blocked by browser policy.", e);
     }
+  } else {
+    // optional: pause when muted
+    try { audio.pause(); } catch (_) {}
   }
 });
 
 /* =========================
    GALLERY (ROOT files 1.png..6.png)
-   - robust for GitHub Pages
-   - no caption overlay (nur Bild!)
 ========================= */
 const galleryImages = [
   { file: "1.png", cap: "Image 1" },
@@ -185,7 +236,7 @@ const galleryImages = [
 ];
 
 const galImg = document.getElementById("galImg");
-const galCap = document.getElementById("galCap"); // existiert im HTML
+const galCap = document.getElementById("galCap");
 const galPrev = document.getElementById("galPrev");
 const galNext = document.getElementById("galNext");
 const galDots = document.getElementById("galDots");
@@ -206,18 +257,16 @@ function setGalleryImage() {
   if (!galImg || !galleryImages.length) return;
 
   const item = galleryImages[galIndex];
-
-  // Bild-URL sauber auflösen (GitHub Pages safe)
   const url = resolveUrl(`./${item.file}`);
 
-  // cache bust (hilft wenn GitHub Pages noch cached)
+  // cache bust
   galImg.src = `${url}?v=${Date.now()}`;
   galImg.loading = "eager";
 
-  // DU wolltest den grauen Kasten weg:
+  // caption off
   if (galCap) {
-    galCap.textContent = "";          // keine Texte
-    galCap.style.display = "none";    // komplett ausblenden
+    galCap.textContent = "";
+    galCap.style.display = "none";
   }
 
   renderDots();
