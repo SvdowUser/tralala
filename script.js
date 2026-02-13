@@ -1,25 +1,25 @@
 /* =========================
    CONFIG (set these!)
 ========================= */
-const PUMP_FUN_URL =
-  "https://pump.fun/coin/89muFzE1VpotYQfKm7xsuEbhgxRLyinmsELGTCSLpump";
-const CONTRACT_ADDRESS =
-  "89muFzE1VpotYQfKm7xsuEbhgxRLyinmsELGTCSLpump";
+const CONTRACT_ADDRESS = "89muFzE1VpotYQfKm7xsuEbhgxRLyinmsELGTCSLpump";
+
+// Pump.fun URLs (used for buttons + embed)
+// NOTE: Some setups use /coin/<address>. If your page doesn't load, switch the two lines below.
+const PUMP_COIN_URL = `https://pump.fun/coin/${CONTRACT_ADDRESS}`;
+const PUMP_EMBED_URL = PUMP_COIN_URL;
 
 /* =========================
    HELPERS
 ========================= */
+function resolveUrl(path) {
+  return new URL(path, document.baseURI).toString();
+}
 function isRealUrl(u) {
   return typeof u === "string" && /^https?:\/\//i.test(u);
 }
 
-// Resolve relative path safely for GitHub Pages (/repo/...)
-function resolveUrl(path) {
-  return new URL(path, document.baseURI).toString();
-}
-
 /* =========================
-   HERO (path + float)
+   HERO (image path + float)
 ========================= */
 const heroImg = document.querySelector(".hero__img");
 if (heroImg) {
@@ -30,48 +30,29 @@ if (heroImg) {
     const dt = (t - t0) / 1000;
     const y = Math.sin(dt * 1.05) * 10;
     const x = Math.cos(dt * 0.85) * 3;
-    const r = Math.sin(dt * 0.7) * 1.0;
+    const r = Math.sin(dt * 0.70) * 1.0;
     heroImg.style.transform = `translate3d(${x}px, ${-y}px, 0) rotate(${r}deg)`;
     requestAnimationFrame(floatLoop);
   };
   requestAnimationFrame(floatLoop);
-
-  heroImg.addEventListener("error", () => {
-    console.warn("Hero image not loading. Check file name/path: hero.png in repo root.");
-  });
 }
 
 /* =========================
-   Smooth scroll (nur # Links)
+   Smooth scroll (only # links)
 ========================= */
 document.querySelectorAll('a[href^="#"]').forEach((a) => {
   a.addEventListener("click", (e) => {
     const id = a.getAttribute("href");
     if (!id || id === "#") return;
-
     const el = document.querySelector(id);
     if (!el) return;
-
     e.preventDefault();
     el.scrollIntoView({ behavior: "smooth", block: "start" });
   });
 });
 
 /* =========================
-   Pump.fun links (incl. swap button)
-========================= */
-const pumpBtn = document.getElementById("pumpBtn");
-const pumpFooter = document.getElementById("pumpFooter");
-const brandLink = document.getElementById("brandLink");
-const pumpCtaTop = document.getElementById("pumpCtaTop");
-const pumpSwapBtn = document.getElementById("pumpSwapBtn"); // NEW
-
-[pumpBtn, pumpFooter, brandLink, pumpCtaTop, pumpSwapBtn].forEach((el) => {
-  if (el && isRealUrl(PUMP_FUN_URL)) el.href = PUMP_FUN_URL;
-});
-
-/* =========================
-   MOBILE MENU (Burger)
+   Mobile menu (burger)
 ========================= */
 const burgerBtn = document.getElementById("burgerBtn");
 const mobileMenu = document.getElementById("mobileMenu");
@@ -79,48 +60,44 @@ const menuClose = document.getElementById("menuClose");
 
 function openMenu() {
   if (!mobileMenu || !burgerBtn) return;
-  mobileMenu.classList.add("is-open");
+  mobileMenu.classList.add("isOpen");
   mobileMenu.setAttribute("aria-hidden", "false");
   burgerBtn.setAttribute("aria-expanded", "true");
-
-  // Scroll lock
-  document.body.style.overflow = "hidden";
 }
-
 function closeMenu() {
   if (!mobileMenu || !burgerBtn) return;
-  mobileMenu.classList.remove("is-open");
+  mobileMenu.classList.remove("isOpen");
   mobileMenu.setAttribute("aria-hidden", "true");
   burgerBtn.setAttribute("aria-expanded", "false");
-
-  // Unlock scroll
-  document.body.style.overflow = "";
 }
 
 burgerBtn?.addEventListener("click", () => {
-  if (!mobileMenu) return;
-  const isOpen = mobileMenu.classList.contains("is-open");
+  const isOpen = mobileMenu?.classList.contains("isOpen");
   isOpen ? closeMenu() : openMenu();
 });
-
 menuClose?.addEventListener("click", closeMenu);
-
-// Klick auf Overlay außerhalb Panel schließt
 mobileMenu?.addEventListener("click", (e) => {
   if (e.target === mobileMenu) closeMenu();
 });
+document.querySelectorAll(".menu__link").forEach((a) => a.addEventListener("click", closeMenu));
 
-// Klick auf Menü-Links schließt auch
-mobileMenu?.querySelectorAll('a[href^="#"]').forEach((a) => {
-  a.addEventListener("click", () => {
-    closeMenu();
-  });
+/* =========================
+   Pump links + Swap embed
+========================= */
+const pumpBtn = document.getElementById("pumpBtn");
+const pumpFooter = document.getElementById("pumpFooter");
+const brandLink = document.getElementById("brandLink");
+const pumpCtaTop = document.getElementById("pumpCtaTop");
+const pumpSwapBtn = document.getElementById("pumpSwapBtn");
+const swapFrame = document.getElementById("swapFrame");
+
+[pumpBtn, pumpFooter, brandLink, pumpCtaTop, pumpSwapBtn].forEach((el) => {
+  if (el && isRealUrl(PUMP_COIN_URL)) el.href = PUMP_COIN_URL;
 });
 
-// ESC schließt
-document.addEventListener("keydown", (e) => {
-  if (e.key === "Escape") closeMenu();
-});
+if (swapFrame && isRealUrl(PUMP_EMBED_URL)) {
+  swapFrame.src = PUMP_EMBED_URL;
+}
 
 /* =========================
    Contract copy (mobile + iOS fallback)
@@ -144,11 +121,9 @@ async function copyToClipboard(text) {
       ta.style.left = "-9999px";
       ta.style.top = "-9999px";
       document.body.appendChild(ta);
-
       ta.focus();
       ta.select();
       ta.setSelectionRange(0, ta.value.length);
-
       const ok = document.execCommand("copy");
       document.body.removeChild(ta);
       return ok;
@@ -159,16 +134,8 @@ async function copyToClipboard(text) {
 }
 
 copyBtn?.addEventListener("click", async () => {
-  const value =
-    (contractText?.textContent || "").trim() || (CONTRACT_ADDRESS || "").trim();
-
-  if (!value) {
-    if (toast) {
-      toast.textContent = "Missing contract address";
-      setTimeout(() => (toast.textContent = ""), 1600);
-    }
-    return;
-  }
+  const value = (contractText?.textContent || "").trim();
+  if (!value) return;
 
   const ok = await copyToClipboard(value);
 
@@ -184,8 +151,7 @@ copyBtn?.addEventListener("click", async () => {
 });
 
 /* =========================
-   AUDIO (start muted) — Play/Pause SVG
-   (No mask icons anymore)
+   AUDIO (start muted)
 ========================= */
 const audio = document.getElementById("bgAudio");
 const audioToggle = document.getElementById("audioToggle");
@@ -194,8 +160,7 @@ let muted = true;
 
 function setAudioUI(isMuted) {
   if (!audioToggle) return;
-  audioToggle.classList.toggle("isMuted", isMuted);
-  audioToggle.setAttribute("aria-pressed", String(!isMuted)); // true = sound on = pause icon
+  audioToggle.setAttribute("aria-pressed", String(!isMuted));
 }
 
 if (audio) {
@@ -206,20 +171,12 @@ setAudioUI(true);
 
 audioToggle?.addEventListener("click", async () => {
   if (!audio) return;
-
   muted = !muted;
   audio.muted = muted;
   setAudioUI(muted);
 
   if (!muted) {
-    try {
-      await audio.play();
-    } catch (e) {
-      console.warn("Audio play blocked by browser policy.", e);
-    }
-  } else {
-    // optional: pause when muted
-    try { audio.pause(); } catch (_) {}
+    try { await audio.play(); } catch (e) { console.warn("Audio play blocked.", e); }
   }
 });
 
@@ -227,12 +184,8 @@ audioToggle?.addEventListener("click", async () => {
    GALLERY (ROOT files 1.png..6.png)
 ========================= */
 const galleryImages = [
-  { file: "1.png", cap: "Image 1" },
-  { file: "2.png", cap: "Image 2" },
-  { file: "3.png", cap: "Image 3" },
-  { file: "4.png", cap: "Image 4" },
-  { file: "5.png", cap: "Image 5" },
-  { file: "6.png", cap: "Image 6" },
+  { file: "1.png" }, { file: "2.png" }, { file: "3.png" },
+  { file: "4.png" }, { file: "5.png" }, { file: "6.png" },
 ];
 
 const galImg = document.getElementById("galImg");
@@ -255,66 +208,46 @@ function renderDots() {
 
 function setGalleryImage() {
   if (!galImg || !galleryImages.length) return;
-
   const item = galleryImages[galIndex];
   const url = resolveUrl(`./${item.file}`);
-
-  // cache bust
   galImg.src = `${url}?v=${Date.now()}`;
   galImg.loading = "eager";
 
-  // caption off
   if (galCap) {
     galCap.textContent = "";
     galCap.style.display = "none";
   }
-
   renderDots();
 }
-
-galImg?.addEventListener("error", () => {
-  console.warn("Gallery image not loading. Check file names in repo root: 1.png..6.png");
-});
 
 galPrev?.addEventListener("click", () => {
   galIndex = (galIndex - 1 + galleryImages.length) % galleryImages.length;
   setGalleryImage();
 });
-
 galNext?.addEventListener("click", () => {
   galIndex = (galIndex + 1) % galleryImages.length;
   setGalleryImage();
 });
 
-// Swipe on mobile
+// Swipe
 let touchStartX = null;
-galImg?.addEventListener(
-  "touchstart",
-  (e) => {
-    touchStartX = e.touches?.[0]?.clientX ?? null;
-  },
-  { passive: true }
-);
+galImg?.addEventListener("touchstart", (e) => {
+  touchStartX = e.touches?.[0]?.clientX ?? null;
+}, { passive: true });
 
-galImg?.addEventListener(
-  "touchend",
-  (e) => {
-    if (touchStartX == null) return;
-    const endX = e.changedTouches?.[0]?.clientX ?? null;
-    if (endX == null) return;
+galImg?.addEventListener("touchend", (e) => {
+  if (touchStartX == null) return;
+  const endX = e.changedTouches?.[0]?.clientX ?? null;
+  if (endX == null) return;
 
-    const dx = endX - touchStartX;
-    if (Math.abs(dx) > 40) {
-      galIndex =
-        dx > 0
-          ? (galIndex - 1 + galleryImages.length) % galleryImages.length
-          : (galIndex + 1) % galleryImages.length;
-      setGalleryImage();
-    }
-    touchStartX = null;
-  },
-  { passive: true }
-);
+  const dx = endX - touchStartX;
+  if (Math.abs(dx) > 40) {
+    galIndex = dx > 0
+      ? (galIndex - 1 + galleryImages.length) % galleryImages.length
+      : (galIndex + 1) % galleryImages.length;
+    setGalleryImage();
+  }
+  touchStartX = null;
+}, { passive: true });
 
-// init
 setGalleryImage();
