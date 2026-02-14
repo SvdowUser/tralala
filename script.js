@@ -1,25 +1,24 @@
 /* =========================
-   CONFIG (edit these)
+   CONFIG
 ========================= */
 const CONTRACT_ADDRESS = "89muFzE1VpotYQfKm7xsuEbhgxRLyinmsELGTCSLpump";
 
-// Pump.fun URL
+// Links (HIER EINTRAGEN)
+const X_PROFILE_URL = "PASTE_YOUR_X_PROFILE_URL_HERE";     // z.B. https://x.com/deinhandle
+const TIKTOK_URL    = "https://tiktok.com/@mythosmonday";
+
+// Optional Tracker (leer lassen => Icon bleibt trotzdem sichtbar, Link geht dann nirgends)
+// Wenn du willst, kann ich auch auto-hide machen – sag kurz.
+const DEXSCREENER_URL = ""; // z.B. https://dexscreener.com/solana/....
+const DEXTOOLS_URL    = ""; // z.B. https://www.dextools.io/app/en/solana/...
+
+// Pump.fun
 const PUMP_COIN_URL = `https://pump.fun/coin/${CONTRACT_ADDRESS}`;
 
-// Put your REAL social links here:
-const X_PROFILE_URL = "PASTE_YOUR_X_PROFILE_URL_HERE";  // <- set this
-const TIKTOK_URL = "https://tiktok.com/@mythosmonday";
+// Phantom deep link: Seite in Phantom öffnen (hilft auf iPhone, wenn Connect “nichts zeigt”)
+const PHANTOM_OPEN_URL = `https://phantom.app/ul/browse/${encodeURIComponent(location.href)}`;
 
-// Optional tracker links (leave "" to auto-hide icons)
-const DEXSCREENER_URL = ""; // e.g. https://dexscreener.com/solana/<PAIR_OR_TOKEN>
-const DEXTOOLS_URL = "";    // e.g. https://www.dextools.io/app/en/solana/...
-
-// Phantom helpers (good iPhone fallback)
-const PHANTOM_TOKEN_URL = `https://phantom.com/tokens/solana/${CONTRACT_ADDRESS}`;
-// Phantom official browse deeplink pattern
-const PHANTOM_BROWSE_URL = `https://phantom.app/ul/browse/${encodeURIComponent(location.href)}`;
-
-// Jupiter Terminal
+// Jupiter
 const SOL_MINT = "So11111111111111111111111111111111111111112";
 
 /* =========================
@@ -31,34 +30,15 @@ function resolveUrl(path) {
 function isRealUrl(u) {
   return typeof u === "string" && /^https?:\/\//i.test(u);
 }
-function setHref(el, url) {
-  if (!el) return;
-  if (!isRealUrl(url)) {
-    // hide optional icons if url missing
-    el.style.display = "none";
-    el.setAttribute("aria-hidden", "true");
-    el.tabIndex = -1;
-    return;
-  }
-  el.href = url;
-  el.style.display = "";
-}
-function isIOS() {
-  return /iPad|iPhone|iPod/.test(navigator.userAgent);
-}
-function hasInjectedWallet() {
-  // some wallets inject window.solana, Phantom sets isPhantom
-  return !!(window.solana && (window.solana.isPhantom || window.solana.isSolflare || window.solana.isBackpack));
-}
 
 /* =========================
-   HERO (image path + float)
+   HERO float (wie bei dir)
 ========================= */
 const heroImg = document.querySelector(".hero__img");
 if (heroImg) {
   heroImg.src = resolveUrl("./hero.png");
-
   let t0 = performance.now();
+
   const floatLoop = (t) => {
     const dt = (t - t0) / 1000;
     const y = Math.sin(dt * 1.05) * 10;
@@ -85,7 +65,7 @@ document.querySelectorAll('a[href^="#"]').forEach((a) => {
 });
 
 /* =========================
-   Mobile menu (burger)
+   Mobile menu
 ========================= */
 const burgerBtn = document.getElementById("burgerBtn");
 const mobileMenu = document.getElementById("mobileMenu");
@@ -103,7 +83,6 @@ function closeMenu() {
   mobileMenu.setAttribute("aria-hidden", "true");
   burgerBtn.setAttribute("aria-expanded", "false");
 }
-
 burgerBtn?.addEventListener("click", () => {
   const isOpen = mobileMenu?.classList.contains("isOpen");
   isOpen ? closeMenu() : openMenu();
@@ -113,56 +92,56 @@ mobileMenu?.addEventListener("click", (e) => { if (e.target === mobileMenu) clos
 document.querySelectorAll(".menu__link").forEach((a) => a.addEventListener("click", closeMenu));
 
 /* =========================
-   Links wiring
+   Links setzen
 ========================= */
-setHref(document.getElementById("pumpBtn"), PUMP_COIN_URL);
-setHref(document.getElementById("pumpFooter"), PUMP_COIN_URL);
-setHref(document.getElementById("brandLink"), PUMP_COIN_URL);
-setHref(document.getElementById("pumpCtaTop"), PUMP_COIN_URL);
-setHref(document.getElementById("pumpSwapLink"), PUMP_COIN_URL);
+const pumpBtn = document.getElementById("pumpBtn");
+const pumpFooter = document.getElementById("pumpFooter");
+const brandLink = document.getElementById("brandLink");
+const pumpCtaTop = document.getElementById("pumpCtaTop");
+const pumpSwapLink = document.getElementById("pumpSwapLink");
+[pumpBtn, pumpFooter, brandLink, pumpCtaTop, pumpSwapLink].forEach((el) => {
+  if (el) el.href = PUMP_COIN_URL;
+});
 
-// Social icons under Gallery
-setHref(document.getElementById("xLink"), X_PROFILE_URL);
-setHref(document.getElementById("tiktokLink"), TIKTOK_URL);
+// Join section
+const xJoinLink = document.getElementById("xJoinLink");
+const tiktokJoinLink = document.getElementById("tiktokJoinLink");
+if (xJoinLink && isRealUrl(X_PROFILE_URL)) xJoinLink.href = X_PROFILE_URL;
+if (tiktokJoinLink && isRealUrl(TIKTOK_URL)) tiktokJoinLink.href = TIKTOK_URL;
 
-// Optional trackers/tools
-setHref(document.getElementById("dexscreenerLink"), DEXSCREENER_URL);
-setHref(document.getElementById("dextoolsLink"), DEXTOOLS_URL);
-setHref(document.getElementById("pumpLink"), PUMP_COIN_URL);
+// Social icons section
+const xIconLink = document.getElementById("xIconLink");
+const tiktokIconLink = document.getElementById("tiktokIconLink");
+const dexscreenerIconLink = document.getElementById("dexscreenerIconLink");
+const dextoolsIconLink = document.getElementById("dextoolsIconLink");
+const pumpIconLink = document.getElementById("pumpIconLink");
+
+if (xIconLink && isRealUrl(X_PROFILE_URL)) xIconLink.href = X_PROFILE_URL;
+if (tiktokIconLink && isRealUrl(TIKTOK_URL)) tiktokIconLink.href = TIKTOK_URL;
+
+if (dexscreenerIconLink && isRealUrl(DEXSCREENER_URL)) dexscreenerIconLink.href = DEXSCREENER_URL;
+if (dextoolsIconLink && isRealUrl(DEXTOOLS_URL)) dextoolsIconLink.href = DEXTOOLS_URL;
+
+if (pumpIconLink) pumpIconLink.href = PUMP_COIN_URL;
+
+// Phantom link
+const phantomOpen = document.getElementById("phantomOpen");
+if (phantomOpen) phantomOpen.href = PHANTOM_OPEN_URL;
 
 /* =========================
-   iOS Phantom fallback hint
-   - If the wallet modal doesn't show on iPhone, user can open in Phantom browser.
-========================= */
-const walletHint = document.getElementById("walletHint");
-const phantomBrowseBtn = document.getElementById("phantomBrowseBtn");
-if (phantomBrowseBtn) phantomBrowseBtn.href = PHANTOM_BROWSE_URL;
-
-// show hint only when it makes sense
-if (walletHint) {
-  const shouldShow =
-    isIOS() && !hasInjectedWallet(); // common: iOS Safari has no injected wallets
-  walletHint.style.display = shouldShow ? "block" : "none";
-}
-
-/* =========================
-   SWAP (Jupiter Terminal)
+   Jupiter Terminal init
 ========================= */
 function initJupiterTerminal() {
-  const host = document.getElementById("jupiter-terminal");
+  const hostId = "jupiter-terminal";
+  const host = document.getElementById(hostId);
   if (!host) return;
 
-  // Safety: if script hasn't loaded yet, wait a bit
   const tryInit = () => {
-    if (!window.Jupiter || typeof window.Jupiter.init !== "function") {
-      // still not ready
-      return false;
-    }
+    if (!window.Jupiter || typeof window.Jupiter.init !== "function") return false;
 
-    // Init
     window.Jupiter.init({
       displayMode: "integrated",
-      integratedTargetId: "jupiter-terminal",
+      integratedTargetId: hostId,
       endpoint: "https://api.mainnet-beta.solana.com",
       strictTokenList: false,
       formProps: {
@@ -176,27 +155,16 @@ function initJupiterTerminal() {
 
   if (tryInit()) return;
 
-  // retry a few times (slow mobile)
   let tries = 0;
   const timer = setInterval(() => {
     tries++;
-    if (tryInit() || tries > 20) clearInterval(timer);
-    if (tries > 20 && host) {
-      host.innerHTML = `<div style="padding:16px; text-align:center; opacity:.75;">
-        Swap konnte nicht geladen werden. Bitte nutze den Pump.fun Link.
-        <div style="margin-top:10px;">
-          <a href="${PUMP_COIN_URL}" target="_blank" rel="noopener" style="color:#fff; text-decoration:underline;">Open Pump.fun</a>
-          &nbsp;·&nbsp;
-          <a href="${PHANTOM_TOKEN_URL}" target="_blank" rel="noopener" style="color:#fff; text-decoration:underline;">Open in Phantom</a>
-        </div>
-      </div>`;
-    }
-  }, 250);
+    if (tryInit() || tries > 30) clearInterval(timer);
+  }, 200);
 }
 initJupiterTerminal();
 
 /* =========================
-   Contract copy
+   Contract copy (wie bei dir)
 ========================= */
 const contractText = document.getElementById("contractText");
 const copyBtn = document.getElementById("copyBtn");
@@ -247,7 +215,7 @@ copyBtn?.addEventListener("click", async () => {
 });
 
 /* =========================
-   AUDIO (start muted)
+   AUDIO (wie bei dir)
 ========================= */
 const audio = document.getElementById("bgAudio");
 const audioToggle = document.getElementById("audioToggle");
@@ -255,7 +223,7 @@ const audioToggle = document.getElementById("audioToggle");
 let muted = true;
 function setAudioUI(isMuted) {
   if (!audioToggle) return;
-  audioToggle.setAttribute("aria-pressed", String(!isMuted)); // true = playing
+  audioToggle.setAttribute("aria-pressed", String(!isMuted));
 }
 if (audio) {
   audio.loop = true;
@@ -270,12 +238,13 @@ audioToggle?.addEventListener("click", async () => {
   setAudioUI(muted);
 
   if (!muted) {
-    try { await audio.play(); } catch (e) { console.warn("Audio play blocked.", e); }
+    try { await audio.play(); }
+    catch (e) { console.warn("Audio play blocked.", e); }
   }
 });
 
 /* =========================
-   GALLERY
+   GALLERY (Swipe wie bei dir)
 ========================= */
 const galleryImages = [
   { file: "1.png" }, { file: "2.png" }, { file: "3.png" },
