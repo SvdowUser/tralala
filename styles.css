@@ -42,22 +42,6 @@ body{
   background-size: 900px 320px;
   opacity:.7;
 }
-.bg__sparks{
-  position:absolute; inset:0;
-  background:
-    radial-gradient(14px 2px at 30% 20%, rgba(255,255,255,.12), transparent 70%),
-    radial-gradient(20px 2px at 60% 30%, rgba(255,255,255,.10), transparent 70%),
-    radial-gradient(18px 2px at 80% 40%, rgba(255,255,255,.10), transparent 70%);
-  filter: blur(0.2px);
-  opacity:.55;
-}
-.bg__sparks--bottom{ transform: translateY(240px); opacity:.35; }
-.bg__grain{
-  position:absolute; inset:0;
-  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='160' height='160'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='.9' numOctaves='3' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='160' height='160' filter='url(%23n)' opacity='.18'/%3E%3C/svg%3E");
-  opacity:.10;
-  mix-blend-mode: overlay;
-}
 
 /* Layout */
 .wrap{ width:min(1040px, 92vw); margin: 110px auto 70px; }
