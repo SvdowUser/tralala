@@ -8,12 +8,12 @@
 
   <link rel="stylesheet" href="./styles.css" />
 
-  <!-- Jupiter Terminal (preload wie in den offiziellen Beispielen) -->
+  <!-- Jupiter Terminal -->
   <script src="https://terminal.jup.ag/main-v3.js" data-preload></script>
 </head>
 
 <body>
-  <!-- Background layers -->
+  <!-- Background layers (wie bei dir) -->
   <div class="bg">
     <div class="bg__radial"></div>
     <div class="bg__stars"></div>
@@ -34,6 +34,7 @@
       <a href="#swap">Swap</a>
       <a href="#how">How to buy</a>
       <a href="#roadmap">Roadmap</a>
+      <a href="#join">Join</a>
       <a href="#gallery">Gallery</a>
       <a href="#socials">Socials</a>
     </nav>
@@ -55,6 +56,7 @@
       <a class="menu__link" href="#swap">Swap</a>
       <a class="menu__link" href="#how">How to buy</a>
       <a class="menu__link" href="#roadmap">Roadmap</a>
+      <a class="menu__link" href="#join">Join</a>
       <a class="menu__link" href="#gallery">Gallery</a>
       <a class="menu__link" href="#socials">Socials</a>
 
@@ -143,32 +145,22 @@
       </div>
     </section>
 
-    <!-- SWAP -->
+    <!-- SWAP (Jupiter integriert, aber im gleichen Glas-Stil) -->
     <section class="section" id="swap">
       <div class="section__head">
         <h2>SWAP</h2>
         <p>Swap SOL to $TRALALA directly here.</p>
       </div>
 
-      <!-- iOS / Browser hint (shown only if needed by script.js) -->
-      <div class="walletHint" id="walletHint" style="display:none;">
-        <div class="walletHint__title">iPhone Tip</div>
-        <div class="walletHint__text">
-          If “Connect Wallet” shows nothing, open this page in Phantom.
-        </div>
-        <a class="walletHint__btn" id="phantomBrowseBtn" href="#" target="_blank" rel="noopener">Open in Phantom</a>
-      </div>
-
       <div class="terminalWrap">
-        <!-- IMPORTANT:
-             wrapper is NOT overflow hidden (so wallet modal can't be cut off)
-             only this inner clip is overflow hidden for nice rounded corners -->
         <div class="terminalClip">
           <div id="jupiter-terminal" class="terminal"></div>
         </div>
 
         <div class="swapNote">
-          If it doesn’t load, open
+          If “Connect Wallet” shows nothing on iPhone, open in
+          <a id="phantomOpen" href="#" target="_blank" rel="noopener noreferrer">Phantom</a>
+          or use
           <a id="pumpSwapLink" href="#" target="_blank" rel="noopener noreferrer">Pump.fun</a>.
         </div>
       </div>
@@ -239,49 +231,75 @@
       </div>
     </section>
 
-    <!-- ROADMAP -->
+    <!-- ROADMAP (im Step-Stil wie How to buy) -->
     <section class="section" id="roadmap">
       <div class="section__head">
         <h2>ROADMAP</h2>
-        <p>Simple milestones. Community-first.</p>
+        <p>Simple milestones. Same clean style.</p>
       </div>
 
-      <div class="roadmap">
-        <div class="roadCard">
-          <div class="roadTop">
-            <div class="roadTag">PHASE 1</div>
-            <div class="roadTitle">Launch & Foundations</div>
+      <div class="steps">
+        <div class="step">
+          <div class="step__icon" aria-hidden="true">🚀</div>
+          <div class="step__body">
+            <div class="step__title">Phase 1 — Launch</div>
+            <div class="step__text">Website, socials, first content waves & community setup.</div>
           </div>
-          <ul class="roadList">
-            <li>Website + socials setup</li>
-            <li>Initial content push</li>
-            <li>Community onboarding</li>
-          </ul>
+          <div class="step__num">01</div>
         </div>
 
-        <div class="roadCard">
-          <div class="roadTop">
-            <div class="roadTag">PHASE 2</div>
-            <div class="roadTitle">Growth & Listings</div>
+        <div class="step">
+          <div class="step__icon" aria-hidden="true">📈</div>
+          <div class="step__body">
+            <div class="step__title">Phase 2 — Growth</div>
+            <div class="step__text">More viral videos, raids, holders growth, trackers & visibility.</div>
           </div>
-          <ul class="roadList">
-            <li>Consistent TikTok/X output</li>
-            <li>Trackers + visibility</li>
-            <li>Collabs / community events</li>
-          </ul>
+          <div class="step__num">02</div>
         </div>
 
-        <div class="roadCard">
-          <div class="roadTop">
-            <div class="roadTag">PHASE 3</div>
-            <div class="roadTitle">Utility & Expansion</div>
+        <div class="step">
+          <div class="step__icon" aria-hidden="true">🧠</div>
+          <div class="step__body">
+            <div class="step__title">Phase 3 — Lore</div>
+            <div class="step__text">Lore drops, collabs, community events and more content formats.</div>
           </div>
-          <ul class="roadList">
-            <li>More “lore” drops</li>
-            <li>Website upgrades</li>
-            <li>Long-term community plans</li>
-          </ul>
+          <div class="step__num">03</div>
         </div>
+
+        <div class="step">
+          <div class="step__icon" aria-hidden="true">🌊</div>
+          <div class="step__body">
+            <div class="step__title">Phase 4 — Expand</div>
+            <div class="step__text">Bigger pushes, website upgrades, long-term ecosystem plans.</div>
+          </div>
+          <div class="step__num">04</div>
+        </div>
+      </div>
+    </section>
+
+    <!-- JOIN -->
+    <section class="section" id="join">
+      <div class="section__head">
+        <h2>JOIN THE ARMY</h2>
+        <p>Join us and follow the lore.</p>
+      </div>
+
+      <div class="join">
+        <a class="join__card" id="xJoinLink" href="#" target="_blank" rel="noopener">
+          <div class="join__icon">X</div>
+          <div>
+            <div class="join__title">Community</div>
+            <div class="join__sub">Join on X</div>
+          </div>
+        </a>
+
+        <a class="join__card" id="tiktokJoinLink" href="#" target="_blank" rel="noopener">
+          <div class="join__icon">♪</div>
+          <div>
+            <div class="join__title">TikTok</div>
+            <div class="join__sub">@mythosmonday</div>
+          </div>
+        </a>
       </div>
     </section>
 
@@ -305,36 +323,29 @@
       </div>
     </section>
 
-    <!-- SOCIALS (UNDER GALLERY) -->
+    <!-- SOCIALS (unter Gallery, Icons-only, zentriert) -->
     <section class="section" id="socials">
       <div class="section__head">
         <h2>SOCIALS</h2>
-        <p>Join the mission.</p>
+        <p>Quick links & trackers.</p>
       </div>
 
-      <div class="iconRow">
-        <!-- These 2 use pure SVG icons (no images needed) -->
-        <a class="iconBtn" id="xLink" href="#" target="_blank" rel="noopener" aria-label="X">
-          <span class="iconBtn__inner">X</span>
-        </a>
-        <a class="iconBtn" id="tiktokLink" href="#" target="_blank" rel="noopener" aria-label="TikTok">
-          <span class="iconBtn__inner">♪</span>
-        </a>
+      <div class="socialIcons">
+        <a class="socialIcon" id="xIconLink" href="#" target="_blank" rel="noopener" aria-label="X">X</a>
+        <a class="socialIcon" id="tiktokIconLink" href="#" target="_blank" rel="noopener" aria-label="TikTok">♪</a>
 
-        <!-- Optional: use images for trackers/tools (white PNG/SVG with transparent bg) -->
-        <a class="iconBtn iconBtn--img" id="dexscreenerLink" href="#" target="_blank" rel="noopener" aria-label="Dexscreener">
+        <!-- Tracker icons via images (weiß, transparent) -->
+        <a class="socialIcon socialIcon--img" id="dexscreenerIconLink" href="#" target="_blank" rel="noopener" aria-label="Dexscreener">
           <img src="./icons/dexscreener.png" alt="Dexscreener" />
         </a>
-        <a class="iconBtn iconBtn--img" id="pumpLink" href="#" target="_blank" rel="noopener" aria-label="Pump.fun">
-          <img src="./icons/pumpfun.png" alt="Pump.fun" />
-        </a>
-        <a class="iconBtn iconBtn--img" id="dextoolsLink" href="#" target="_blank" rel="noopener" aria-label="Dextools">
+
+        <a class="socialIcon socialIcon--img" id="dextoolsIconLink" href="#" target="_blank" rel="noopener" aria-label="Dextools">
           <img src="./icons/dextools.png" alt="Dextools" />
         </a>
-      </div>
 
-      <div class="socialsNote">
-        Tip: Put your icon files in <code>/icons</code>. If a link is empty, the icon auto-hides.
+        <a class="socialIcon socialIcon--img" id="pumpIconLink" href="#" target="_blank" rel="noopener" aria-label="Pump.fun">
+          <img src="./icons/pumpfun.png" alt="Pump.fun" />
+        </a>
       </div>
     </section>
 
