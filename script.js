@@ -7,7 +7,7 @@ const CONTRACT_ADDRESS = "89muFzE1VpotYQfKm7xsuEbhgxRLyinmsELGTCSLpump";
 const PUMP_COIN_URL = `https://pump.fun/coin/${CONTRACT_ADDRESS}`;
 
 // Jupiter Terminal (wallet connect + swap on-site)
-const JUP_TERMINAL_SCRIPT = "https://terminal.jup.ag/main-v3.js";
+const JUP_TERMINAL_SCRIPT = "https://plugin.jup.ag/plugin-v1.js"; // current embed loader
 const SOL_MINT = "So11111111111111111111111111111111111111112";
 
 /* =========================
@@ -39,6 +39,7 @@ function loadScriptOnce(src) {
 const heroImg = document.querySelector(".hero__img");
 if (heroImg) {
   heroImg.src = resolveUrl("./hero.png");
+
   let t0 = performance.now();
   const floatLoop = (t) => {
     const dt = (t - t0) / 1000;
@@ -49,6 +50,10 @@ if (heroImg) {
     requestAnimationFrame(floatLoop);
   };
   requestAnimationFrame(floatLoop);
+
+  heroImg.addEventListener("error", () => {
+    console.warn("Hero image not loading. Check file name/path: hero.png in repo root.");
+  });
 }
 
 /* =========================
@@ -84,12 +89,15 @@ function closeMenu() {
   mobileMenu.setAttribute("aria-hidden", "true");
   burgerBtn.setAttribute("aria-expanded", "false");
 }
+
 burgerBtn?.addEventListener("click", () => {
   const isOpen = mobileMenu?.classList.contains("isOpen");
   isOpen ? closeMenu() : openMenu();
 });
 menuClose?.addEventListener("click", closeMenu);
-mobileMenu?.addEventListener("click", (e) => { if (e.target === mobileMenu) closeMenu(); });
+mobileMenu?.addEventListener("click", (e) => {
+  if (e.target === mobileMenu) closeMenu();
+});
 document.querySelectorAll(".menu__link").forEach((a) => a.addEventListener("click", closeMenu));
 
 /* =========================
@@ -105,22 +113,32 @@ const pumpSwapLink = document.getElementById("pumpSwapLink");
   if (el && isRealUrl(PUMP_COIN_URL)) el.href = PUMP_COIN_URL;
 });
 
+// falls noch irgendwo ein alter "pumpSwapBtn" rumliegt: verstecken (keine doppelten Buttons)
+const oldPumpSwapBtn = document.getElementById("pumpSwapBtn");
+if (oldPumpSwapBtn) {
+  oldPumpSwapBtn.style.display = "none";
+  oldPumpSwapBtn.setAttribute("aria-hidden", "true");
+  oldPumpSwapBtn.tabIndex = -1;
+}
+
 /* =========================
    SWAP (Jupiter Terminal)
 ========================= */
 async function initJupiterTerminal() {
   const host = document.getElementById("jupiter-terminal");
+  const note = document.getElementById("swapNote");
   if (!host) return;
 
   try {
     await loadScriptOnce(JUP_TERMINAL_SCRIPT);
 
+    // plugin creates window.Jupiter / window.Jupiter.init
     if (!window.Jupiter || typeof window.Jupiter.init !== "function") {
-      host.innerHTML = `<div style="padding:16px; text-align:center; opacity:.75;">
-        Swap konnte nicht geladen werden. Bitte nutze den Pump.fun Link.
-      </div>`;
-      return;
+      throw new Error("Jupiter.init missing");
     }
+
+    // Clear host (safety)
+    host.innerHTML = "";
 
     window.Jupiter.init({
       displayMode: "integrated",
@@ -129,20 +147,25 @@ async function initJupiterTerminal() {
       strictTokenList: false,
       formProps: {
         initialInputMint: SOL_MINT,
-        initialOutputMint: CONTRACT_ADDRESS,
+        initialOutputMint: CONTRACT_ADDRESS
       }
     });
+
+    // wenn es lädt: note bleibt trotzdem als fallback sichtbar (ist okay),
+    // du kannst sie auch ausblenden, aber ich lasse sie als "If it doesn’t load..."
+    if (note) note.style.display = "block";
   } catch (e) {
     console.warn(e);
     host.innerHTML = `<div style="padding:16px; text-align:center; opacity:.75;">
-      Swap konnte nicht geladen werden. Bitte nutze den Pump.fun Link.
+      Swap konnte nicht geladen werden. Bitte nutze <a href="${PUMP_COIN_URL}" target="_blank" rel="noopener noreferrer" style="color:rgba(255,255,255,.85); text-decoration:underline; text-underline-offset:3px;">Pump.fun</a>.
     </div>`;
+    if (note) note.style.display = "none";
   }
 }
-initJupiterTerminal();
+initJupiterTerminal(); // docs: plugin embed :contentReference[oaicite:1]{index=1}
 
 /* =========================
-   Contract copy
+   Contract copy (mobile + iOS fallback)
 ========================= */
 const contractText = document.getElementById("contractText");
 const copyBtn = document.getElementById("copyBtn");
@@ -216,12 +239,16 @@ audioToggle?.addEventListener("click", async () => {
   setAudioUI(muted);
 
   if (!muted) {
-    try { await audio.play(); } catch (e) { console.warn("Audio play blocked.", e); }
+    try {
+      await audio.play();
+    } catch (e) {
+      console.warn("Audio play blocked.", e);
+    }
   }
 });
 
 /* =========================
-   GALLERY
+   GALLERY (ROOT files 1.png..6.png)
 ========================= */
 const galleryImages = [
   { file: "1.png" }, { file: "2.png" }, { file: "3.png" },
@@ -233,6 +260,7 @@ const galCap = document.getElementById("galCap");
 const galPrev = document.getElementById("galPrev");
 const galNext = document.getElementById("galNext");
 const galDots = document.getElementById("galDots");
+
 let galIndex = 0;
 
 function renderDots() {
