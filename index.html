@@ -5,7 +5,11 @@
   <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover" />
   <meta name="theme-color" content="#071a2a" />
   <title>$TRALALA</title>
+
   <link rel="stylesheet" href="./styles.css" />
+
+  <!-- Jupiter Terminal (preload wie in den offiziellen Beispielen) -->
+  <script src="https://terminal.jup.ag/main-v3.js" data-preload></script>
 </head>
 
 <body>
@@ -13,6 +17,8 @@
   <div class="bg">
     <div class="bg__radial"></div>
     <div class="bg__stars"></div>
+    <div class="bg__sparks bg__sparks--top"></div>
+    <div class="bg__sparks bg__sparks--bottom"></div>
     <div class="bg__grain"></div>
   </div>
 
@@ -27,13 +33,320 @@
       <a href="#tokenomics">Tokenomics</a>
       <a href="#swap">Swap</a>
       <a href="#how">How to buy</a>
-      <a href="#join">Join</a>
+      <a href="#roadmap">Roadmap</a>
       <a href="#gallery">Gallery</a>
+      <a href="#socials">Socials</a>
     </nav>
 
     <button class="nav__burger" id="burgerBtn" aria-label="Open menu" aria-expanded="false" aria-controls="mobileMenu">
       <span></span><span></span><span></span>
     </button>
+  </header>
+
+  <!-- MOBILE MENU -->
+  <div class="menu" id="mobileMenu" aria-hidden="true">
+    <div class="menu__panel">
+      <div class="menu__top">
+        <div class="menu__title">$TRALALA</div>
+        <button class="menu__close" id="menuClose" aria-label="Close menu">✕</button>
+      </div>
+
+      <a class="menu__link" href="#tokenomics">Tokenomics</a>
+      <a class="menu__link" href="#swap">Swap</a>
+      <a class="menu__link" href="#how">How to buy</a>
+      <a class="menu__link" href="#roadmap">Roadmap</a>
+      <a class="menu__link" href="#gallery">Gallery</a>
+      <a class="menu__link" href="#socials">Socials</a>
+
+      <div class="menu__divider"></div>
+
+      <a class="menu__cta" id="pumpCtaTop" href="#" target="_blank" rel="noopener">
+        Open Pump.fun
+      </a>
+    </div>
+  </div>
+
+  <!-- AUDIO -->
+  <audio id="bgAudio" src="./bg.mp3" preload="auto" loop></audio>
+
+  <!-- Audio Button -->
+  <button class="audioBtn" id="audioToggle" aria-label="Toggle sound" aria-pressed="false" title="Sound">
+    <span class="audioBtn__icon" aria-hidden="true">
+      <!-- PLAY (muted) -->
+      <svg class="ppIcon ppPlay" viewBox="0 0 24 24" width="22" height="22" xmlns="http://www.w3.org/2000/svg">
+        <path d="M8 5v14l12-7-12-7Z" fill="currentColor"/>
+      </svg>
+
+      <!-- PAUSE (sound on) -->
+      <svg class="ppIcon ppPause" viewBox="0 0 24 24" width="22" height="22" xmlns="http://www.w3.org/2000/svg">
+        <path d="M7 5h4v14H7V5Zm6 0h4v14h-4V5Z" fill="currentColor"/>
+      </svg>
+    </span>
+  </button>
+
+  <main class="wrap">
+    <!-- HERO -->
+    <section class="hero" id="top">
+      <div class="hero__left">
+        <div class="pill">
+          <span class="pill__dot"></span>
+          <span>LIVE ON SOLANA</span>
+        </div>
+
+        <h1 class="hero__title">$TRALALA</h1>
+        <p class="hero__sub">The cutest brainrot fish has emerged from TikTok.</p>
+
+        <div class="hero__cta">
+          <a class="btn btn--primary" id="pumpBtn" href="#" target="_blank" rel="noopener">Open Pump.fun</a>
+          <a class="btn btn--ghost" href="#swap">Swap on-site</a>
+        </div>
+      </div>
+
+      <div class="hero__right">
+        <div class="orb">
+          <div class="orb__ring"></div>
+          <img class="hero__img" src="./hero.png" alt="Tralala character" />
+        </div>
+      </div>
+    </section>
+
+    <!-- TOKENOMICS -->
+    <section class="section" id="tokenomics">
+      <div class="section__head">
+        <h2>TOKENOMICS</h2>
+        <p>Transparent. Simple. Built for the meme.</p>
+      </div>
+
+      <div class="cards">
+        <div class="card">
+          <div class="card__icon">⬡</div>
+          <div class="card__label">Total Supply</div>
+          <div class="card__value">1,000,000,000</div>
+          <div class="card__hint">One billion TRALALA tokens</div>
+        </div>
+
+        <div class="card">
+          <div class="card__icon">%</div>
+          <div class="card__label">Tax</div>
+          <div class="card__value">0%</div>
+          <div class="card__hint">No buy/sell tax — pure trading</div>
+        </div>
+      </div>
+
+      <div class="contract">
+        <div class="contract__label">CONTRACT ADDRESS</div>
+        <div class="contract__row">
+          <code class="contract__code" id="contractText">PASTE_CONTRACT</code>
+          <button class="contract__copy" id="copyBtn" type="button">COPY</button>
+        </div>
+        <div class="toast" id="toast" aria-live="polite" aria-atomic="true"></div>
+      </div>
+    </section>
+
+    <!-- SWAP -->
+    <section class="section" id="swap">
+      <div class="section__head">
+        <h2>SWAP</h2>
+        <p>Swap SOL to $TRALALA directly here.</p>
+      </div>
+
+      <!-- iOS / Browser hint (shown only if needed by script.js) -->
+      <div class="walletHint" id="walletHint" style="display:none;">
+        <div class="walletHint__title">iPhone Tip</div>
+        <div class="walletHint__text">
+          If “Connect Wallet” shows nothing, open this page in Phantom.
+        </div>
+        <a class="walletHint__btn" id="phantomBrowseBtn" href="#" target="_blank" rel="noopener">Open in Phantom</a>
+      </div>
+
+      <div class="terminalWrap">
+        <!-- IMPORTANT:
+             wrapper is NOT overflow hidden (so wallet modal can't be cut off)
+             only this inner clip is overflow hidden for nice rounded corners -->
+        <div class="terminalClip">
+          <div id="jupiter-terminal" class="terminal"></div>
+        </div>
+
+        <div class="swapNote">
+          If it doesn’t load, open
+          <a id="pumpSwapLink" href="#" target="_blank" rel="noopener noreferrer">Pump.fun</a>.
+        </div>
+      </div>
+    </section>
+
+    <!-- HOW TO BUY -->
+    <section class="section" id="how">
+      <div class="section__head">
+        <h2>HOW TO BUY</h2>
+        <p>Four simple steps.</p>
+      </div>
+
+      <div class="steps">
+        <div class="step">
+          <div class="step__icon" aria-hidden="true">
+            <svg viewBox="0 0 24 24" width="22" height="22">
+              <path d="M4 7.5C4 6.12 5.12 5 6.5 5H19a1 1 0 0 1 0 2H6.5A.5.5 0 0 0 6 7.5V8h13.5A2.5 2.5 0 0 1 22 10.5v6A2.5 2.5 0 0 1 19.5 19H6.5A2.5 2.5 0 0 1 4 16.5v-9Z" fill="currentColor"/>
+              <path d="M19.5 10H22v3h-2.5a1.5 1.5 0 0 1 0-3Z" fill="currentColor" opacity=".65"/>
+            </svg>
+          </div>
+          <div class="step__body">
+            <div class="step__title">Get a Wallet</div>
+            <div class="step__text">Download Phantom or Solflare and set it up securely.</div>
+          </div>
+          <div class="step__num">01</div>
+        </div>
+
+        <div class="step">
+          <div class="step__icon" aria-hidden="true">
+            <svg viewBox="0 0 24 24" width="22" height="22">
+              <path d="M7 8.5c.6-.7 1-.9 1.9-.9h10.2c.5 0 .8.6.5 1l-1.6 1.9c-.6.7-1 .9-1.9.9H6.9c-.5 0-.8-.6-.5-1L7 8.5Z" fill="currentColor"/>
+              <path d="M7 13.5c.6-.7 1-.9 1.9-.9h10.2c.5 0 .8.6.5 1l-1.6 1.9c-.6.7-1 .9-1.9.9H6.9c-.5 0-.8-.6-.5-1L7 13.5Z" fill="currentColor" opacity=".75"/>
+            </svg>
+          </div>
+          <div class="step__body">
+            <div class="step__title">Get SOL</div>
+            <div class="step__text">Buy SOL on an exchange and send it to your wallet.</div>
+          </div>
+          <div class="step__num">02</div>
+        </div>
+
+        <div class="step">
+          <div class="step__icon" aria-hidden="true">
+            <svg viewBox="0 0 24 24" width="22" height="22">
+              <path d="M7 7h11l-2-2 1.4-1.4L22.8 9l-5.4 5.4L16 13l2-2H7V7Z" fill="currentColor"/>
+              <path d="M17 17H6l2 2-1.4 1.4L1.2 15l5.4-5.4L8 11l-2 2h11v4Z" fill="currentColor" opacity=".75"/>
+            </svg>
+          </div>
+          <div class="step__body">
+            <div class="step__title">Swap for $TRALALA</div>
+            <div class="step__text">Use the Swap section above (or open Pump.fun) and buy.</div>
+          </div>
+          <div class="step__num">03</div>
+        </div>
+
+        <div class="step">
+          <div class="step__icon" aria-hidden="true">
+            <svg viewBox="0 0 24 24" width="22" height="22">
+              <path d="M12 17.3 6.2 20.9l1.6-6.6L2.7 9.9l6.7-.6L12 3l2.6 6.3 6.7.6-5.1 4.4 1.6 6.6L12 17.3Z" fill="currentColor"/>
+            </svg>
+          </div>
+          <div class="step__body">
+            <div class="step__title">HODL & Enjoy</div>
+            <div class="step__text">Hold strong and enjoy the meme ride.</div>
+          </div>
+          <div class="step__num">04</div>
+        </div>
+      </div>
+    </section>
+
+    <!-- ROADMAP -->
+    <section class="section" id="roadmap">
+      <div class="section__head">
+        <h2>ROADMAP</h2>
+        <p>Simple milestones. Community-first.</p>
+      </div>
+
+      <div class="roadmap">
+        <div class="roadCard">
+          <div class="roadTop">
+            <div class="roadTag">PHASE 1</div>
+            <div class="roadTitle">Launch & Foundations</div>
+          </div>
+          <ul class="roadList">
+            <li>Website + socials setup</li>
+            <li>Initial content push</li>
+            <li>Community onboarding</li>
+          </ul>
+        </div>
+
+        <div class="roadCard">
+          <div class="roadTop">
+            <div class="roadTag">PHASE 2</div>
+            <div class="roadTitle">Growth & Listings</div>
+          </div>
+          <ul class="roadList">
+            <li>Consistent TikTok/X output</li>
+            <li>Trackers + visibility</li>
+            <li>Collabs / community events</li>
+          </ul>
+        </div>
+
+        <div class="roadCard">
+          <div class="roadTop">
+            <div class="roadTag">PHASE 3</div>
+            <div class="roadTitle">Utility & Expansion</div>
+          </div>
+          <ul class="roadList">
+            <li>More “lore” drops</li>
+            <li>Website upgrades</li>
+            <li>Long-term community plans</li>
+          </ul>
+        </div>
+      </div>
+    </section>
+
+    <!-- GALLERY -->
+    <section class="section" id="gallery">
+      <div class="section__head">
+        <h2>GALLERY</h2>
+        <p>Swipe through the community moments.</p>
+      </div>
+
+      <div class="gallery">
+        <button class="gallery__nav" id="galPrev" aria-label="Previous image">‹</button>
+
+        <div class="gallery__frame">
+          <img id="galImg" alt="Gallery image" />
+          <div class="gallery__cap" id="galCap"></div>
+          <div class="gallery__dots" id="galDots" aria-hidden="true"></div>
+        </div>
+
+        <button class="gallery__nav" id="galNext" aria-label="Next image">›</button>
+      </div>
+    </section>
+
+    <!-- SOCIALS (UNDER GALLERY) -->
+    <section class="section" id="socials">
+      <div class="section__head">
+        <h2>SOCIALS</h2>
+        <p>Join the mission.</p>
+      </div>
+
+      <div class="iconRow">
+        <!-- These 2 use pure SVG icons (no images needed) -->
+        <a class="iconBtn" id="xLink" href="#" target="_blank" rel="noopener" aria-label="X">
+          <span class="iconBtn__inner">X</span>
+        </a>
+        <a class="iconBtn" id="tiktokLink" href="#" target="_blank" rel="noopener" aria-label="TikTok">
+          <span class="iconBtn__inner">♪</span>
+        </a>
+
+        <!-- Optional: use images for trackers/tools (white PNG/SVG with transparent bg) -->
+        <a class="iconBtn iconBtn--img" id="dexscreenerLink" href="#" target="_blank" rel="noopener" aria-label="Dexscreener">
+          <img src="./icons/dexscreener.png" alt="Dexscreener" />
+        </a>
+        <a class="iconBtn iconBtn--img" id="pumpLink" href="#" target="_blank" rel="noopener" aria-label="Pump.fun">
+          <img src="./icons/pumpfun.png" alt="Pump.fun" />
+        </a>
+        <a class="iconBtn iconBtn--img" id="dextoolsLink" href="#" target="_blank" rel="noopener" aria-label="Dextools">
+          <img src="./icons/dextools.png" alt="Dextools" />
+        </a>
+      </div>
+
+      <div class="socialsNote">
+        Tip: Put your icon files in <code>/icons</code>. If a link is empty, the icon auto-hides.
+      </div>
+    </section>
+
+    <footer class="footer">
+      <span>© $TRALALA</span>
+      <a class="footer__pump" id="pumpFooter" href="#" target="_blank" rel="noopener">Pump.fun</a>
+    </footer>
+  </main>
+
+  <script src="./script.js" defer></script>
+</body>
+</html>
   </header>
 
   <!-- MOBILE MENU -->
