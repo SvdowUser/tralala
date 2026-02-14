@@ -4,8 +4,11 @@
 const CONTRACT_ADDRESS = "89muFzE1VpotYQfKm7xsuEbhgxRLyinmsELGTCSLpump";
 
 // Pump.fun URLs (used for buttons + embed)
-// NOTE: Some setups use /coin/<address>. If your page doesn't load, switch the two lines below.
+// NOTE: Some setups use /coin/<address>. If your page doesn't load, switch to ALT below.
 const PUMP_COIN_URL = `https://pump.fun/coin/${CONTRACT_ADDRESS}`;
+// const PUMP_COIN_URL = `https://pump.fun/${CONTRACT_ADDRESS}`; // ALT
+
+// Embed URL (usually same). If embed gets blocked, we auto-hide the iframe and show a note.
 const PUMP_EMBED_URL = PUMP_COIN_URL;
 
 /* =========================
@@ -35,6 +38,10 @@ if (heroImg) {
     requestAnimationFrame(floatLoop);
   };
   requestAnimationFrame(floatLoop);
+
+  heroImg.addEventListener("error", () => {
+    console.warn("Hero image not loading. Check file name/path: hero.png in repo root.");
+  });
 }
 
 /* =========================
@@ -83,20 +90,79 @@ document.querySelectorAll(".menu__link").forEach((a) => a.addEventListener("clic
 
 /* =========================
    Pump links + Swap embed
+   - keeps ONLY top Buy button as main CTA
+   - if you still have #pumpSwapBtn in HTML, we hide it to avoid double buttons
+   - detects blocked/blank embeds and shows a fallback note
 ========================= */
 const pumpBtn = document.getElementById("pumpBtn");
 const pumpFooter = document.getElementById("pumpFooter");
 const brandLink = document.getElementById("brandLink");
 const pumpCtaTop = document.getElementById("pumpCtaTop");
-const pumpSwapBtn = document.getElementById("pumpSwapBtn");
-const swapFrame = document.getElementById("swapFrame");
+const pumpSwapBtn = document.getElementById("pumpSwapBtn"); // optional (we hide to prevent duplicates)
 
-[pumpBtn, pumpFooter, brandLink, pumpCtaTop, pumpSwapBtn].forEach((el) => {
+const swapFrame = document.getElementById("swapFrame");
+const swapSection = document.getElementById("swap");
+
+// optional: a note element inside swap section (recommended)
+// <div class="swapNote" id="swapNote">...</div>
+let swapNote = document.getElementById("swapNote");
+
+// If it doesn't exist, create a clean note automatically (so you don't have to edit HTML)
+if (!swapNote && swapSection) {
+  swapNote = document.createElement("div");
+  swapNote.id = "swapNote";
+  swapNote.className = "swapNote";
+  swapNote.style.display = "none";
+  swapNote.textContent =
+    "Swap window blocked by your browser — use the Buy button at the top (Pump.fun).";
+  swapSection.appendChild(swapNote);
+}
+
+// set all Pump links
+[pumpBtn, pumpFooter, brandLink, pumpCtaTop].forEach((el) => {
   if (el && isRealUrl(PUMP_COIN_URL)) el.href = PUMP_COIN_URL;
 });
 
+// avoid duplicate CTAs: if pumpSwapBtn exists in your HTML, hide it
+if (pumpSwapBtn) {
+  pumpSwapBtn.style.display = "none";
+  pumpSwapBtn.setAttribute("aria-hidden", "true");
+  pumpSwapBtn.tabIndex = -1;
+}
+
+// set embed src
 if (swapFrame && isRealUrl(PUMP_EMBED_URL)) {
   swapFrame.src = PUMP_EMBED_URL;
+
+  // Detect blocked embeds (common with X-Frame-Options / CSP).
+  // We cannot read the iframe content cross-origin, but we can:
+  // - show a note if load never happens in time
+  // - show a note if an error event fires
+  let loaded = false;
+
+  const showSwapBlocked = () => {
+    if (!swapFrame) return;
+    // Hide iframe to avoid empty big box
+    swapFrame.style.display = "none";
+    // Show a nice fallback note
+    if (swapNote) swapNote.style.display = "block";
+  };
+
+  swapFrame.addEventListener("load", () => {
+    loaded = true;
+    // If it loads, keep iframe visible and hide note
+    swapFrame.style.display = "block";
+    if (swapNote) swapNote.style.display = "none";
+  });
+
+  swapFrame.addEventListener("error", () => {
+    showSwapBlocked();
+  });
+
+  // Timeout fallback (if it never loads, often means blocked or stuck)
+  setTimeout(() => {
+    if (!loaded) showSwapBlocked();
+  }, 3500);
 }
 
 /* =========================
@@ -152,6 +218,8 @@ copyBtn?.addEventListener("click", async () => {
 
 /* =========================
    AUDIO (start muted)
+   - your HTML uses aria-pressed + SVG play/pause
+   - we toggle aria-pressed properly so the right icon shows
 ========================= */
 const audio = document.getElementById("bgAudio");
 const audioToggle = document.getElementById("audioToggle");
@@ -160,7 +228,7 @@ let muted = true;
 
 function setAudioUI(isMuted) {
   if (!audioToggle) return;
-  audioToggle.setAttribute("aria-pressed", String(!isMuted));
+  audioToggle.setAttribute("aria-pressed", String(!isMuted)); // true = playing
 }
 
 if (audio) {
@@ -171,12 +239,17 @@ setAudioUI(true);
 
 audioToggle?.addEventListener("click", async () => {
   if (!audio) return;
+
   muted = !muted;
   audio.muted = muted;
   setAudioUI(muted);
 
   if (!muted) {
-    try { await audio.play(); } catch (e) { console.warn("Audio play blocked.", e); }
+    try {
+      await audio.play();
+    } catch (e) {
+      console.warn("Audio play blocked.", e);
+    }
   }
 });
 
@@ -210,15 +283,22 @@ function setGalleryImage() {
   if (!galImg || !galleryImages.length) return;
   const item = galleryImages[galIndex];
   const url = resolveUrl(`./${item.file}`);
+
+  // cache bust (helps GitHub Pages caching)
   galImg.src = `${url}?v=${Date.now()}`;
   galImg.loading = "eager";
 
+  // hide caption overlay
   if (galCap) {
     galCap.textContent = "";
     galCap.style.display = "none";
   }
   renderDots();
 }
+
+galImg?.addEventListener("error", () => {
+  console.warn("Gallery image not loading. Check file names in repo root: 1.png..6.png");
+});
 
 galPrev?.addEventListener("click", () => {
   galIndex = (galIndex - 1 + galleryImages.length) % galleryImages.length;
