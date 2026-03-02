@@ -1,7 +1,7 @@
 /* =========================
    CONFIG
 ========================= */
-const CONTRACT_ADDRESS = "89muFzE1VpotYQfKm7xsuEbhgxRLyinmsELGTCSLpump";
+const CONTRACT_ADDRESS = "none";
 
 // Links (HIER EINTRAGEN)
 const X_PROFILE_URL = "PASTE_YOUR_X_PROFILE_URL_HERE";     // z.B. https://x.com/deinhandle
