@@ -5,7 +5,7 @@ const CONTRACT_ADDRESS = "none";
 
 // Links (HIER EINTRAGEN)
 const X_PROFILE_URL = "PASTE_YOUR_X_PROFILE_URL_HERE";     // z.B. https://x.com/deinhandle
-const TIKTOK_URL    = "https://tiktok.com/@mythosmonday";
+const TIKTOK_URL    = "https://tiktok.com/@mythosmondays";
 
 // Optional Tracker (leer lassen => Icon bleibt trotzdem sichtbar, Link geht dann nirgends)
 // Wenn du willst, kann ich auch auto-hide machen – sag kurz.
