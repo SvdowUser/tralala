@@ -20,7 +20,6 @@ function isRealUrl(u) {
 
 /* =========================
    HERO FX
-========================= */
 const heroImg = document.querySelector(".hero__img");
 const orb = document.querySelector(".orb");
 if (heroImg) {
@@ -44,16 +43,9 @@ if (heroImg) {
 
 window.addEventListener("pointermove", (e) => {
   if (!orb || window.matchMedia("(max-width: 920px)").matches) return;
-  const x = (e.clientX / window.innerWidth - 0.5) * 10;
-  const y = (e.clientY / window.innerHeight - 0.5) * -10;
-  orb.style.setProperty("--tiltX", `${x.toFixed(2)}deg`);
-  orb.style.setProperty("--tiltY", `${y.toFixed(2)}deg`);
-});
-
-window.addEventListener("pointerleave", () => {
-  if (!orb) return;
-  orb.style.setProperty("--tiltX", "0deg");
-  orb.style.setProperty("--tiltY", "0deg");
+  const x = (e.clientX / window.innerWidth - 0.5) * 8;
+  const y = (e.clientY / window.innerHeight - 0.5) * -8;
+  orb.style.transform = `rotateX(${y}deg) rotateY(${x}deg)`;
 });
 
 /* =========================
