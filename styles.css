@@ -196,8 +196,21 @@ body{
   box-shadow: 0 0 18px rgba(45,124,255,.55);
 }
 .hero__title{ margin: 16px 0 8px; font-size: 58px; letter-spacing:.02em; }
-.hero__sub{ margin:0 0 18px; color: var(--muted); font-size: 17px; line-height:1.5; }
+
+.hero__sub{ margin:0 0 18px; color: var(--muted); font-size: 17px; line-height:1.5; max-width: 58ch; }
+.hero__badges{ display:flex; gap:8px; flex-wrap:wrap; margin: 0 0 18px; }
+.hero__badges span{
+  display:inline-flex;
+  padding: 6px 10px;
+  border-radius: 999px;
+  border:1px solid rgba(255,255,255,.14);
+  background: rgba(255,255,255,.05);
+  color: rgba(255,255,255,.82);
+  font-size: 12px;
+  font-weight: 700;
+}
 .hero__cta{ display:flex; gap:12px; flex-wrap:wrap; }
+
 
 .btn{
   display:inline-flex; align-items:center; justify-content:center;
@@ -232,9 +245,23 @@ body{
 }
 .hero__img{
   width: 62%;
+  max-width: 320px;
   height:auto;
   position:relative;
+  z-index: 2;
   filter: drop-shadow(0 30px 50px rgba(0,0,0,.35));
+}
+.hero__img.is-broken{
+  display:none;
+}
+.orb::after{
+  content: "TRALALA";
+  position:absolute;
+  inset:auto 50% 18%;
+  transform: translateX(-50%);
+  letter-spacing: .22em;
+  font-size: 12px;
+  color: rgba(255,255,255,.5);
 }
 @media (max-width:860px){
   .hero{ grid-template-columns: 1fr; }
@@ -466,6 +493,7 @@ body{
 
 /* Audio button */
 .audioBtn{
+  cursor:pointer;
   position:fixed;
   left:18px;
   bottom:18px;
@@ -484,3 +512,5 @@ body{
 .ppIcon{ display:none; }
 #audioToggle[aria-pressed="false"] .ppPlay  { display:block; }
 #audioToggle[aria-pressed="true"]  .ppPause { display:block; }
+
+#audioToggle[aria-pressed="true"]{ box-shadow: 0 8px 35px rgba(45,124,255,.35); border-color: rgba(45,124,255,.55); }
