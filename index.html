@@ -1,0 +1,823 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Tralala</title>
+  <meta name="description" content="Tralala memecoin landing page" />
+  <style>
+    :root {
+      --bg1: #73d8ff;
+      --bg2: #bdeeff;
+      --bg3: #eefbff;
+      --text: #0f2740;
+      --muted: #5f7891;
+      --line: rgba(15, 39, 64, 0.10);
+      --glassStrong: rgba(255,255,255,0.84);
+      --shadowLg: 0 28px 70px rgba(10,42,68,0.16);
+      --shadowMd: 0 16px 34px rgba(10,42,68,0.12);
+      --radiusXl: 28px;
+      --radiusPill: 999px;
+    }
+
+    * { box-sizing: border-box; }
+    html, body {
+      margin: 0;
+      min-height: 100%;
+      font-family: Inter, Arial, Helvetica, sans-serif;
+      color: var(--text);
+      background:
+        radial-gradient(circle at top left, rgba(255,255,255,0.82), transparent 26%),
+        linear-gradient(180deg, var(--bg1) 0%, var(--bg2) 58%, var(--bg3) 100%);
+    }
+
+    a { color: inherit; text-decoration: none; }
+    button { font: inherit; color: inherit; }
+
+    .shell { min-height: 100vh; padding: 12px; }
+
+    .topbar {
+      position: sticky;
+      top: 10px;
+      z-index: 50;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 12px;
+      padding: 12px 14px;
+      border-radius: 18px;
+      background: rgba(255,255,255,0.62);
+      border: 1px solid rgba(255,255,255,0.70);
+      box-shadow: var(--shadowMd);
+      backdrop-filter: blur(16px);
+      -webkit-backdrop-filter: blur(16px);
+    }
+
+    .brand {
+      display: inline-flex;
+      align-items: center;
+      gap: 10px;
+      font-weight: 900;
+      letter-spacing: 0.01em;
+    }
+
+    .brand-dot {
+      width: 14px;
+      height: 14px;
+      border-radius: 50%;
+      background: linear-gradient(180deg, #ffffff, #def6ff);
+      box-shadow: 0 0 0 1px rgba(15,39,64,0.08);
+      flex: 0 0 auto;
+    }
+
+    .top-actions {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      flex-wrap: wrap;
+    }
+
+    .mini-btn, .primary-btn, .secondary-btn, .icon-card, .dock-item {
+      border: 1px solid var(--line);
+      box-shadow: var(--shadowMd);
+    }
+
+    .mini-btn {
+      padding: 10px 14px;
+      border-radius: 14px;
+      background: rgba(255,255,255,0.78);
+      font-size: 13px;
+      font-weight: 800;
+    }
+
+    .desktop {
+      position: relative;
+      min-height: calc(100vh - 92px);
+      margin-top: 12px;
+      overflow: hidden;
+      border-radius: 34px;
+      border: 1px solid rgba(255,255,255,0.68);
+      box-shadow: var(--shadowLg);
+      background:
+        radial-gradient(circle at 18% 18%, rgba(255,255,255,0.34), transparent 26%),
+        radial-gradient(circle at 82% 16%, rgba(255,255,255,0.28), transparent 20%),
+        linear-gradient(180deg, rgba(255,255,255,0.18), rgba(255,255,255,0.04));
+    }
+
+    .wallpaper-glow {
+      position: absolute;
+      right: -110px;
+      bottom: -120px;
+      width: 620px;
+      height: 620px;
+      border-radius: 50%;
+      background: radial-gradient(circle, rgba(255,255,255,0.66), rgba(255,255,255,0.05) 70%);
+      filter: blur(18px);
+      pointer-events: none;
+    }
+
+    .wallpaper-character {
+      position: absolute;
+      right: -10px;
+      bottom: -10px;
+      width: min(42vw, 620px);
+      max-width: 50%;
+      opacity: 0.23;
+      pointer-events: none;
+      user-select: none;
+      filter: drop-shadow(0 24px 40px rgba(10,42,68,0.14));
+    }
+
+    .hero {
+      position: relative;
+      z-index: 2;
+      max-width: min(52vw, 760px);
+      padding: 84px 28px 180px 28px;
+      display: flex;
+      flex-direction: column;
+      gap: 16px;
+    }
+
+    .hero-chip {
+      width: fit-content;
+      padding: 10px 14px;
+      border-radius: var(--radiusPill);
+      background: rgba(255,255,255,0.80);
+      box-shadow: var(--shadowMd);
+      color: var(--muted);
+      font-size: 12px;
+      font-weight: 900;
+      text-transform: uppercase;
+      letter-spacing: 0.10em;
+    }
+
+    h1 {
+      margin: 0;
+      font-size: clamp(54px, 8vw, 120px);
+      line-height: 0.9;
+      letter-spacing: -0.05em;
+      text-shadow: 0 12px 28px rgba(10,42,68,0.10);
+    }
+
+    .subtitle {
+      margin: 0;
+      font-size: clamp(18px, 2.2vw, 28px);
+      line-height: 1.2;
+      font-weight: 800;
+      color: rgba(255,255,255,0.94);
+      text-shadow: 0 10px 24px rgba(10,42,68,0.14);
+      max-width: 720px;
+    }
+
+    .description {
+      margin: 0;
+      max-width: 620px;
+      color: var(--muted);
+      font-size: 18px;
+      line-height: 1.65;
+    }
+
+    .ca-card {
+      margin-top: 4px;
+      max-width: 760px;
+      padding: 18px;
+      border-radius: var(--radiusXl);
+      background: var(--glassStrong);
+      border: 1px solid rgba(255,255,255,0.72);
+      box-shadow: var(--shadowMd);
+      backdrop-filter: blur(14px);
+      -webkit-backdrop-filter: blur(14px);
+    }
+
+    .ca-head {
+      display: flex;
+      justify-content: space-between;
+      gap: 12px;
+      margin-bottom: 12px;
+      font-size: 12px;
+      font-weight: 900;
+      text-transform: uppercase;
+      letter-spacing: 0.08em;
+      color: var(--muted);
+    }
+
+    .ca-row {
+      display: flex;
+      gap: 12px;
+      align-items: center;
+    }
+
+    .ca-value {
+      flex: 1;
+      min-width: 0;
+      padding: 16px 18px;
+      border-radius: var(--radiusPill);
+      background: rgba(255,255,255,0.96);
+      border: 1px solid rgba(15,39,64,0.08);
+      overflow-wrap: anywhere;
+      font-size: 14px;
+      font-weight: 900;
+      color: var(--text);
+    }
+
+    .primary-btn, .secondary-btn {
+      padding: 16px 22px;
+      border-radius: var(--radiusPill);
+      font-weight: 900;
+      text-align: center;
+      cursor: pointer;
+    }
+
+    .primary-btn {
+      background: linear-gradient(180deg, #ffd84f 0%, #f5bf1f 100%);
+      color: #372c00;
+    }
+
+    .secondary-btn {
+      background: rgba(255,255,255,0.92);
+    }
+
+    .action-row {
+      display: flex;
+      gap: 12px;
+      flex-wrap: wrap;
+    }
+
+    .desktop-icons {
+      position: absolute;
+      right: 24px;
+      top: 32px;
+      z-index: 3;
+      display: grid;
+      grid-template-columns: repeat(2, minmax(110px, 132px));
+      gap: 16px 14px;
+    }
+
+    .icon-card {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      gap: 10px;
+      padding: 8px 6px;
+      border-radius: 18px;
+      background: transparent;
+      cursor: pointer;
+    }
+
+    .icon-shape {
+      display: grid;
+      place-items: center;
+      width: 72px;
+      height: 72px;
+      border-radius: 20px;
+      font-size: 30px;
+      font-weight: 900;
+      background: rgba(255,255,255,0.80);
+    }
+
+    .folder-shape {
+      background: linear-gradient(180deg, #ffe47a 0%, #f9c538 100%);
+    }
+
+    .file-shape, .app-shape {
+      background: linear-gradient(180deg, #ffffff 0%, #e8f8ff 100%);
+    }
+
+    .icon-label {
+      color: white;
+      font-size: 13px;
+      font-weight: 800;
+      text-shadow: 0 4px 16px rgba(10,42,68,0.34);
+    }
+
+    .panels {
+      position: relative;
+      z-index: 4;
+    }
+
+    .panel {
+      position: absolute;
+      display: none;
+      width: min(680px, calc(100% - 40px));
+      border-radius: 24px;
+      overflow: hidden;
+      background: var(--glassStrong);
+      border: 1px solid rgba(255,255,255,0.74);
+      box-shadow: var(--shadowLg);
+      backdrop-filter: blur(18px);
+      -webkit-backdrop-filter: blur(18px);
+    }
+
+    .panel.open {
+      display: block;
+    }
+
+    #aboutPanel { top: 92px; left: 30%; }
+    #buyPanel { top: 136px; left: 22%; }
+    #tokenPanel { top: 182px; left: 38%; }
+    #caPanel { top: 236px; left: 28%; max-width: 760px; }
+
+    .panel-top {
+      display: flex;
+      align-items: center;
+      gap: 16px;
+      padding: 14px 16px;
+      background: rgba(255,255,255,0.62);
+      border-bottom: 1px solid rgba(15,39,64,0.08);
+    }
+
+    .lights { display: flex; gap: 8px; }
+
+    .light {
+      width: 12px;
+      height: 12px;
+      border-radius: 50%;
+      border: 0;
+      padding: 0;
+      cursor: pointer;
+    }
+
+    .red { background: #ff5f57; }
+    .yellow { background: #ffbd2f; }
+    .green { background: #28c840; }
+
+    .panel-title {
+      font-size: 14px;
+      font-weight: 800;
+      color: var(--muted);
+    }
+
+    .panel-body { padding: 22px; }
+    .panel-body p {
+      margin: 0;
+      color: var(--muted);
+      line-height: 1.65;
+    }
+
+    .lead {
+      font-size: 18px;
+      font-weight: 700;
+      color: var(--text);
+      margin-bottom: 8px !important;
+    }
+
+    .step-grid, .token-grid {
+      display: grid;
+      grid-template-columns: repeat(2, minmax(0, 1fr));
+      gap: 14px;
+    }
+
+    .step-card, .token-card {
+      padding: 18px;
+      border-radius: 20px;
+      background: rgba(255,255,255,0.84);
+      box-shadow: 0 12px 28px rgba(10,42,68,0.10);
+    }
+
+    .step-card h3, .token-card strong {
+      margin: 8px 0 6px;
+      color: var(--text);
+    }
+
+    .step-card p, .token-card span {
+      color: var(--muted);
+      margin: 0;
+      line-height: 1.6;
+    }
+
+    .step-number, .token-label {
+      display: inline-flex;
+      padding: 8px 10px;
+      border-radius: 999px;
+      background: rgba(255,255,255,0.84);
+      font-size: 11px;
+      font-weight: 900;
+      text-transform: uppercase;
+      letter-spacing: 0.08em;
+    }
+
+    .token-card strong {
+      display: block;
+      font-size: 24px;
+    }
+
+    .dock-wrap {
+      position: absolute;
+      left: 0;
+      right: 0;
+      bottom: 18px;
+      z-index: 10;
+      display: flex;
+      justify-content: center;
+      pointer-events: none;
+    }
+
+    .dock {
+      pointer-events: auto;
+      display: flex;
+      gap: 10px;
+      padding: 12px;
+      border-radius: 24px;
+      background: rgba(255,255,255,0.50);
+      border: 1px solid rgba(255,255,255,0.64);
+      box-shadow: var(--shadowLg);
+      backdrop-filter: blur(16px);
+      -webkit-backdrop-filter: blur(16px);
+    }
+
+    .dock-item {
+      display: grid;
+      place-items: center;
+      width: 56px;
+      height: 56px;
+      border-radius: 18px;
+      background: rgba(255,255,255,0.90);
+      font-size: 24px;
+      cursor: pointer;
+      transition: transform 0.18s ease;
+    }
+
+    .dock-item:hover {
+      transform: translateY(-6px) scale(1.04);
+    }
+
+    .footer {
+      padding: 16px 4px 4px;
+      text-align: center;
+      color: rgba(15,39,64,0.70);
+      font-size: 13px;
+      font-weight: 700;
+    }
+
+    @media (max-width: 980px) {
+      .desktop {
+        min-height: auto;
+        padding-bottom: 120px;
+      }
+
+      .wallpaper-character {
+        width: 70%;
+        max-width: none;
+        right: -60px;
+        bottom: 60px;
+      }
+
+      .hero {
+        max-width: none;
+        padding: 80px 18px 24px 18px;
+      }
+
+      .desktop-icons {
+        position: relative;
+        right: auto;
+        top: auto;
+        padding: 12px 18px 0;
+        grid-template-columns: repeat(4, minmax(0, 1fr));
+      }
+
+      .panel {
+        position: relative !important;
+        top: auto !important;
+        left: auto !important;
+        width: calc(100% - 24px);
+        margin: 12px auto 0;
+      }
+
+      .step-grid, .token-grid {
+        grid-template-columns: 1fr;
+      }
+    }
+
+    @media (max-width: 720px) {
+      .shell { padding: 8px; }
+
+      .topbar {
+        flex-direction: column;
+        align-items: stretch;
+      }
+
+      .top-actions {
+        display: grid;
+        grid-template-columns: repeat(3, minmax(0, 1fr));
+      }
+
+      .mini-btn { text-align: center; }
+
+      .desktop-icons {
+        grid-template-columns: repeat(3, minmax(0, 1fr));
+        gap: 12px;
+      }
+
+      .icon-shape {
+        width: 64px;
+        height: 64px;
+        font-size: 28px;
+      }
+
+      h1 {
+        font-size: clamp(42px, 14vw, 70px);
+      }
+
+      .subtitle {
+        font-size: 17px;
+      }
+
+      .description {
+        font-size: 16px;
+      }
+
+      .ca-head {
+        flex-direction: column;
+        align-items: flex-start;
+      }
+
+      .ca-row {
+        flex-direction: column;
+        align-items: stretch;
+      }
+
+      .action-row {
+        display: grid;
+        grid-template-columns: 1fr;
+      }
+
+      .primary-btn, .secondary-btn {
+        width: 100%;
+      }
+
+      .dock {
+        width: calc(100% - 16px);
+        justify-content: space-between;
+        gap: 8px;
+        padding: 10px;
+      }
+
+      .dock-item {
+        width: 48px;
+        height: 48px;
+        font-size: 20px;
+      }
+
+      .wallpaper-character {
+        width: 92%;
+        right: -120px;
+        bottom: 140px;
+      }
+    }
+  </style>
+</head>
+<body>
+  <div class="shell">
+    <header class="topbar">
+      <div class="brand">
+        <span class="brand-dot"></span>
+        <span>Tralala Desktop</span>
+      </div>
+
+      <div class="top-actions">
+        <a class="mini-btn" href="https://x.com/yourprofile" target="_blank" rel="noopener noreferrer">X</a>
+        <a class="mini-btn" href="https://www.tiktok.com/@yourprofile" target="_blank" rel="noopener noreferrer">TikTok</a>
+        <a class="mini-btn" href="https://pump.fun/" target="_blank" rel="noopener noreferrer">Pump.fun</a>
+      </div>
+    </header>
+
+    <main class="desktop">
+      <div class="wallpaper-glow"></div>
+      <img class="wallpaper-character" src="./assets/character.png" alt="Tralala mascot wallpaper" />
+
+      <section class="hero">
+        <span class="hero-chip">Launching on pump.fun</span>
+        <h1>TRALALA</h1>
+        <p class="subtitle">A desktop-style memecoin landing page built around the original meme character.</p>
+        <p class="description">Open folders, read the basics, and copy the contract address fast. Clean on desktop, optimized for mobile.</p>
+
+        <div class="ca-card">
+          <div class="ca-head">
+            <span>Contract Address</span>
+            <span id="copyStatus">Ready</span>
+          </div>
+          <div class="ca-row">
+            <code class="ca-value" id="contractValue">PASTE_YOUR_CA_HERE</code>
+            <button class="primary-btn" id="copyButton" type="button">Copy CA</button>
+          </div>
+        </div>
+
+        <div class="action-row">
+          <button class="primary-btn" data-open="caPanel">Open CA.txt</button>
+          <a class="secondary-btn" href="https://dexscreener.com/" target="_blank" rel="noopener noreferrer">View Chart</a>
+        </div>
+      </section>
+
+      <section class="desktop-icons" aria-label="Desktop icons">
+        <button class="icon-card" data-open="aboutPanel">
+          <span class="icon-shape folder-shape"></span>
+          <span class="icon-label">About</span>
+        </button>
+        <button class="icon-card" data-open="buyPanel">
+          <span class="icon-shape folder-shape"></span>
+          <span class="icon-label">How to Buy</span>
+        </button>
+        <button class="icon-card" data-open="tokenPanel">
+          <span class="icon-shape folder-shape"></span>
+          <span class="icon-label">Tokenomics</span>
+        </button>
+        <button class="icon-card" data-open="caPanel">
+          <span class="icon-shape file-shape">📄</span>
+          <span class="icon-label">CA.txt</span>
+        </button>
+        <a class="icon-card" href="https://x.com/yourprofile" target="_blank" rel="noopener noreferrer">
+          <span class="icon-shape app-shape">𝕏</span>
+          <span class="icon-label">X</span>
+        </a>
+        <a class="icon-card" href="https://www.tiktok.com/@yourprofile" target="_blank" rel="noopener noreferrer">
+          <span class="icon-shape app-shape">♪</span>
+          <span class="icon-label">TikTok</span>
+        </a>
+      </section>
+
+      <section class="panels">
+        <article class="panel open" id="aboutPanel" data-panel>
+          <div class="panel-top">
+            <div class="lights">
+              <button class="light red" data-close="aboutPanel" aria-label="Close"></button>
+              <button class="light yellow" type="button" aria-label="Minimize"></button>
+              <button class="light green" type="button" aria-label="Expand"></button>
+            </div>
+            <div class="panel-title">About Tralala</div>
+          </div>
+          <div class="panel-body">
+            <p class="lead">Tralala is a mascot-driven memecoin identity built around a recognizable baby shark character with blue sneakers.</p>
+            <p>This layout keeps the experience simple: open folders, copy the CA, and jump straight to the community and chart.</p>
+          </div>
+        </article>
+
+        <article class="panel" id="buyPanel" data-panel>
+          <div class="panel-top">
+            <div class="lights">
+              <button class="light red" data-close="buyPanel" aria-label="Close"></button>
+              <button class="light yellow" type="button" aria-label="Minimize"></button>
+              <button class="light green" type="button" aria-label="Expand"></button>
+            </div>
+            <div class="panel-title">How to Buy</div>
+          </div>
+          <div class="panel-body">
+            <div class="step-grid">
+              <div class="step-card">
+                <span class="step-number">01</span>
+                <h3>Create a wallet</h3>
+                <p>Use Phantom or another Solana-compatible wallet.</p>
+              </div>
+              <div class="step-card">
+                <span class="step-number">02</span>
+                <h3>Get SOL</h3>
+                <p>Buy SOL and send it to your wallet address.</p>
+              </div>
+              <div class="step-card">
+                <span class="step-number">03</span>
+                <h3>Paste the CA</h3>
+                <p>Use the contract address to find the token fast.</p>
+              </div>
+              <div class="step-card">
+                <span class="step-number">04</span>
+                <h3>Swap on launch</h3>
+                <p>Open pump.fun and swap into Tralala.</p>
+              </div>
+            </div>
+          </div>
+        </article>
+
+        <article class="panel" id="tokenPanel" data-panel>
+          <div class="panel-top">
+            <div class="lights">
+              <button class="light red" data-close="tokenPanel" aria-label="Close"></button>
+              <button class="light yellow" type="button" aria-label="Minimize"></button>
+              <button class="light green" type="button" aria-label="Expand"></button>
+            </div>
+            <div class="panel-title">Tokenomics</div>
+          </div>
+          <div class="panel-body">
+            <div class="token-grid">
+              <div class="token-card">
+                <span class="token-label">Ticker</span>
+                <strong>$TRALALA</strong>
+              </div>
+              <div class="token-card">
+                <span class="token-label">Chain</span>
+                <strong>Solana</strong>
+              </div>
+              <div class="token-card">
+                <span class="token-label">Tax</span>
+                <strong>0%</strong>
+              </div>
+              <div class="token-card">
+                <span class="token-label">Launch</span>
+                <strong>pump.fun</strong>
+              </div>
+            </div>
+          </div>
+        </article>
+
+        <article class="panel" id="caPanel" data-panel>
+          <div class="panel-top">
+            <div class="lights">
+              <button class="light red" data-close="caPanel" aria-label="Close"></button>
+              <button class="light yellow" type="button" aria-label="Minimize"></button>
+              <button class="light green" type="button" aria-label="Expand"></button>
+            </div>
+            <div class="panel-title">CA.txt</div>
+          </div>
+          <div class="panel-body">
+            <p>Use the button below to copy the contract address exactly like a clean desktop utility.</p>
+            <div class="ca-card" style="margin-top:16px;">
+              <div class="ca-head">
+                <span>Contract Address</span>
+                <span id="copyStatusPanel">Ready</span>
+              </div>
+              <div class="ca-row">
+                <code class="ca-value">PASTE_YOUR_CA_HERE</code>
+                <button class="primary-btn" id="copyButtonPanel" type="button">Copy Contract Address</button>
+              </div>
+            </div>
+          </div>
+        </article>
+      </section>
+
+      <div class="dock-wrap">
+        <div class="dock">
+          <button class="dock-item" data-open="aboutPanel" aria-label="Open About">⌘</button>
+          <button class="dock-item" data-open="buyPanel" aria-label="Open How to Buy">🗂</button>
+          <button class="dock-item" data-open="caPanel" aria-label="Open CA">📄</button>
+          <a class="dock-item" href="https://x.com/yourprofile" target="_blank" rel="noopener noreferrer" aria-label="Open X">𝕏</a>
+          <a class="dock-item" href="https://www.tiktok.com/@yourprofile" target="_blank" rel="noopener noreferrer" aria-label="Open TikTok">♪</a>
+          <a class="dock-item" href="https://pump.fun/" target="_blank" rel="noopener noreferrer" aria-label="Open Pump.fun">↗</a>
+        </div>
+      </div>
+    </main>
+
+    <footer class="footer">Upload these files directly into your GitHub repo root.</footer>
+  </div>
+
+  <script>
+    const copyButton = document.getElementById("copyButton");
+    const copyButtonPanel = document.getElementById("copyButtonPanel");
+    const contractValue = document.getElementById("contractValue");
+    const copyStatus = document.getElementById("copyStatus");
+    const copyStatusPanel = document.getElementById("copyStatusPanel");
+
+    function closeAllPanels() {
+      document.querySelectorAll("[data-panel]").forEach((panel) => {
+        panel.classList.remove("open");
+      });
+    }
+
+    document.querySelectorAll("[data-open]").forEach((trigger) => {
+      trigger.addEventListener("click", () => {
+        const id = trigger.getAttribute("data-open");
+        const target = document.getElementById(id);
+        if (!target) return;
+
+        if (window.innerWidth <= 980) {
+          const alreadyOpen = target.classList.contains("open");
+          closeAllPanels();
+          if (!alreadyOpen) target.classList.add("open");
+        } else {
+          target.classList.toggle("open");
+        }
+      });
+    });
+
+    document.querySelectorAll("[data-close]").forEach((trigger) => {
+      trigger.addEventListener("click", () => {
+        const id = trigger.getAttribute("data-close");
+        const target = document.getElementById(id);
+        if (target) target.classList.remove("open");
+      });
+    });
+
+    async function copyCA() {
+      const text = contractValue.textContent.trim();
+      try {
+        await navigator.clipboard.writeText(text);
+        if (copyButton) copyButton.textContent = "Copied";
+        if (copyButtonPanel) copyButtonPanel.textContent = "Copied";
+        if (copyStatus) copyStatus.textContent = "Copied";
+        if (copyStatusPanel) copyStatusPanel.textContent = "Copied";
+        setTimeout(() => {
+          if (copyButton) copyButton.textContent = "Copy CA";
+          if (copyButtonPanel) copyButtonPanel.textContent = "Copy Contract Address";
+          if (copyStatus) copyStatus.textContent = "Ready";
+          if (copyStatusPanel) copyStatusPanel.textContent = "Ready";
+        }, 1400);
+      } catch (e) {
+        if (copyButton) copyButton.textContent = "Failed";
+        if (copyButtonPanel) copyButtonPanel.textContent = "Failed";
+        if (copyStatus) copyStatus.textContent = "Failed";
+        if (copyStatusPanel) copyStatusPanel.textContent = "Failed";
+      }
+    }
+
+    if (copyButton) copyButton.addEventListener("click", copyCA);
+    if (copyButtonPanel) copyButtonPanel.addEventListener("click", copyCA);
+  </script>
+</body>
+</html>
