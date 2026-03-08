@@ -1,0 +1,81 @@
+:root {
+    --primary: #00b2ff; /* Das Pengcoin Blau */
+    --secondary: #ffb000; /* Gelb-Akzent */
+    --bg: #050505;
+    --text: #ffffff;
+}
+
+body {
+    margin: 0;
+    font-family: 'Inter', sans-serif;
+    background-color: var(--bg);
+    color: var(--text);
+    overflow-x: hidden;
+}
+
+h1, h2, .logo {
+    font-family: 'Titan One', cursive;
+    text-transform: uppercase;
+}
+
+nav {
+    display: flex;
+    justify-content: space-between;
+    padding: 20px 5%;
+    align-items: center;
+}
+
+.logo { font-size: 1.5rem; color: var(--primary); }
+
+.links a {
+    color: white;
+    text-decoration: none;
+    margin-left: 20px;
+    font-weight: bold;
+}
+
+header {
+    height: 80vh;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    text-align: center;
+    background: radial-gradient(circle, rgba(0,178,255,0.1) 0%, rgba(0,0,0,1) 70%);
+}
+
+h1 {
+    font-size: clamp(3rem, 10vw, 6rem);
+    margin-bottom: 10px;
+    line-height: 0.9;
+}
+
+.highlight {
+    color: var(--primary);
+    -webkit-text-stroke: 2px white;
+}
+
+.btn-primary {
+    background: var(--primary);
+    color: black;
+    padding: 15px 30px;
+    border-radius: 50px;
+    text-decoration: none;
+    font-weight: 900;
+    display: inline-block;
+    transition: transform 0.2s;
+}
+
+.btn-primary:hover { transform: scale(1.1) rotate(-2deg); }
+
+.grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+    gap: 20px;
+    padding: 5%;
+}
+
+.meme-card img {
+    width: 100%;
+    border-radius: 20px;
+    border: 4px solid var(--primary);
+}
