@@ -20,9 +20,6 @@ function isRealUrl(u) {
 
 /* =========================
    HERO FX
-========================= */
-const heroImg = document.querySelector(".hero__img");
-const orb = document.querySelector(".orb");
 if (heroImg) {
   heroImg.src = resolveUrl("./hero.png");
   heroImg.addEventListener("error", () => {
