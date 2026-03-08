@@ -37,13 +37,17 @@ function isRealUrl(u) {
 const heroImg = document.querySelector(".hero__img");
 if (heroImg) {
   heroImg.src = resolveUrl("./hero.png");
-  let t0 = performance.now();
+  heroImg.addEventListener("error", () => {
+    heroImg.classList.add("is-broken");
+    console.warn("Hero image could not be loaded. Check hero.png path.");
+  });
 
+  let t0 = performance.now();
   const floatLoop = (t) => {
     const dt = (t - t0) / 1000;
     const y = Math.sin(dt * 1.05) * 10;
     const x = Math.cos(dt * 0.85) * 3;
-    const r = Math.sin(dt * 0.70) * 1.0;
+    const r = Math.sin(dt * 0.7) * 1;
     heroImg.style.transform = `translate3d(${x}px, ${-y}px, 0) rotate(${r}deg)`;
     requestAnimationFrame(floatLoop);
   };
@@ -215,33 +219,61 @@ copyBtn?.addEventListener("click", async () => {
 });
 
 /* =========================
-   AUDIO (wie bei dir)
+   AUDIO
 ========================= */
 const audio = document.getElementById("bgAudio");
 const audioToggle = document.getElementById("audioToggle");
 
 let muted = true;
+let audioUnlocked = false;
+
 function setAudioUI(isMuted) {
   if (!audioToggle) return;
   audioToggle.setAttribute("aria-pressed", String(!isMuted));
+  audioToggle.title = isMuted ? "Sound aus" : "Sound an";
 }
+
+async function ensureAudioStarts() {
+  if (!audio) return;
+  try {
+    await audio.play();
+    audioUnlocked = true;
+  } catch (e) {
+    console.warn("Audio play blocked.", e);
+  }
+}
+
 if (audio) {
+  audio.src = resolveUrl("./bg.mp3");
   audio.loop = true;
+  audio.volume = 0.65;
   audio.muted = true;
+  audio.preload = "auto";
+  audio.load();
 }
 setAudioUI(true);
 
 audioToggle?.addEventListener("click", async () => {
   if (!audio) return;
+
   muted = !muted;
   audio.muted = muted;
   setAudioUI(muted);
 
-  if (!muted) {
-    try { await audio.play(); }
-    catch (e) { console.warn("Audio play blocked.", e); }
+  if (!muted && (audio.paused || !audioUnlocked)) {
+    await ensureAudioStarts();
+  }
+
+  if (muted && !audio.paused) {
+    audio.pause();
   }
 });
+
+document.addEventListener("pointerdown", async () => {
+  if (!audio || !muted || audioUnlocked) return;
+  await ensureAudioStarts();
+  audio.pause();
+}, { once: true });
 
 /* =========================
    GALLERY (Swipe wie bei dir)
