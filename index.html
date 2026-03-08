@@ -3,15 +3,9 @@
 <head>
   <meta charset="utf-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover" />
-  <meta name="theme-color" content="#0a1022" />
-  <meta http-equiv="Content-Security-Policy" content="upgrade-insecure-requests; block-all-mixed-content" />
+  <meta name="theme-color" content="#0b1020" />
   <title>$TRALALA</title>
 
-  <script>
-    if (location.protocol === "http:" && location.hostname === "tralalaonsol.com") {
-      location.replace(`https://${location.host}${location.pathname}${location.search}${location.hash}`);
-    }
-  </script>
   <link rel="stylesheet" href="./styles.css?v=20260309a" />
 
   <!-- Jupiter Terminal -->
@@ -39,7 +33,7 @@
       <a href="#tokenomics">Tokenomics</a>
       <a href="#how">How to buy</a>
       <a href="#roadmap">Roadmap</a>
-      <a href="#community">Community</a>
+      <a href="#socials">Socials</a>
     </nav>
 
     <a class="nav__buy" id="buyNowTop" href="#" target="_blank" rel="noopener">GET TRALALA NOW</a>
@@ -60,7 +54,7 @@
       <a class="menu__link" href="#tokenomics">Tokenomics</a>
       <a class="menu__link" href="#how">How to buy</a>
       <a class="menu__link" href="#roadmap">Roadmap</a>
-      <a class="menu__link" href="#community">Community</a>
+      <a class="menu__link" href="#socials">Socials</a>
 
       <div class="menu__divider"></div>
 
@@ -96,15 +90,15 @@
         </div>
 
         <h1 class="hero__title">$TRALALA</h1>
-        <p class="hero__sub">Premium meme-coin vibes with a clean interface, smooth underwater depth, and fast actions for desktop and mobile.</p>
+        <p class="hero__sub">Eine hochwertige Meme‑Coin Landingpage mit starkem Branding, klaren CTAs und modernem 3D‑Look – optimiert für Desktop und Handy.</p>
 
         <div class="hero__badges">
-          <span>Solana Native</span><span>Community First</span><span>0% Tax</span>
+          <span>Solana</span><span>Community First</span><span>0% Tax</span>
         </div>
 
         <div class="hero__cta">
           <a class="btn btn--primary" id="pumpBtn" href="#" target="_blank" rel="noopener">Open Pump.fun</a>
-          <a class="btn btn--ghost" href="#community">Join Community</a>
+          <a class="btn btn--ghost" href="#tokenomics">View Tokenomics</a>
         </div>
       </div>
 
@@ -221,29 +215,60 @@
         <p>Clear milestones for the next wave.</p>
       </div>
 
-      <ol class="roadmapList">
-        <li><span>01</span><div><strong>Launch</strong><p>Website, socials, and first community push.</p></div></li>
-        <li><span>02</span><div><strong>Growth</strong><p>More viral content, holder growth, and tracking visibility.</p></div></li>
-        <li><span>03</span><div><strong>Lore</strong><p>Collabs, storytelling drops, and community events.</p></div></li>
-        <li><span>04</span><div><strong>Expansion</strong><p>Major upgrades, partnerships, and ecosystem utility.</p></div></li>
-      </ol>
+      <div class="steps">
+        <div class="step">
+          <div class="step__icon" aria-hidden="true">🚀</div>
+          <div class="step__body">
+            <div class="step__title">Phase 1 — Launch</div>
+            <div class="step__text">Website, socials, first content waves & community setup.</div>
+          </div>
+          <div class="step__num">01</div>
+        </div>
+
+        <div class="step">
+          <div class="step__icon" aria-hidden="true">📈</div>
+          <div class="step__body">
+            <div class="step__title">Phase 2 — Growth</div>
+            <div class="step__text">More viral videos, raids, holders growth, trackers & visibility.</div>
+          </div>
+          <div class="step__num">02</div>
+        </div>
+
+        <div class="step">
+          <div class="step__icon" aria-hidden="true">🧠</div>
+          <div class="step__body">
+            <div class="step__title">Phase 3 — Lore</div>
+            <div class="step__text">Lore drops, collabs, community events and more content formats.</div>
+          </div>
+          <div class="step__num">03</div>
+        </div>
+
+        <div class="step">
+          <div class="step__icon" aria-hidden="true">🌊</div>
+          <div class="step__body">
+            <div class="step__title">Phase 4 — Expand</div>
+            <div class="step__text">Bigger pushes, website upgrades, long-term ecosystem plans.</div>
+          </div>
+          <div class="step__num">04</div>
+        </div>
+      </div>
     </section>
 
-    <!-- COMMUNITY -->
-    <section class="section community" id="community">
+    <!-- SOCIALS (unter Gallery, Icons-only, zentriert) -->
+    <section class="section" id="socials">
       <div class="section__head">
         <h2>COMMUNITY</h2>
         <p>Be part of the journey as TRALALA is just getting started.</p>
       </div>
 
-      <a class="btn btn--primary community__cta" id="communityBuyBtn" href="#" target="_blank" rel="noopener">GET TRALALA NOW</a>
-
-      <div class="socialIcons" aria-label="Social links">
-        <a class="socialIcon socialIcon--x" id="xIconLink" href="#" target="_blank" rel="noopener" aria-label="X">
+      <div class="socialIcons">
+        <a class="socialIcon" id="xIconLink" href="#" target="_blank" rel="noopener" aria-label="X">
           <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M18.901 2h3.68l-8.04 9.19L24 22h-7.406l-5.8-7.584L4.16 22H.478l8.6-9.83L0 2h7.594l5.243 6.932L18.901 2Zm-1.292 17.78h2.04L6.486 4.106H4.298L17.61 19.78Z" fill="currentColor"/></svg>
+          <span>X</span>
         </a>
-        <a class="socialIcon socialIcon--tiktok" id="tiktokIconLink" href="#" target="_blank" rel="noopener" aria-label="TikTok">
+        <a class="socialIcon" id="tiktokIconLink" href="#" target="_blank" rel="noopener" aria-label="TikTok">
           <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M21 8.088a7.389 7.389 0 0 1-4.312-1.38v6.278a5.985 5.985 0 1 1-5.16-5.925v3.032a2.954 2.954 0 1 0 2.128 2.833V2h3.032a4.36 4.36 0 0 0 4.312 4.312v1.776Z" fill="currentColor"/></svg>
+          <span>TikTok</span>
         </a>
       </div>
     </section>
