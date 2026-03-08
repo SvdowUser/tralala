@@ -147,6 +147,18 @@ body{
   .hero__right{order:-1}
   .card__value{font-size:30px}
 }
+.hero__img.is-broken{
+  display:none;
+}
+.orb::after{
+  content: "TRALALA";
+  position:absolute;
+  inset:auto 50% 18%;
+  transform: translateX(-50%);
+  letter-spacing: .22em;
+  font-size: 12px;
+  color: rgba(255,255,255,.5);
+}
 @media (max-width:860px){
   .nav{padding:12px 14px}
   .nav__links{display:none}
