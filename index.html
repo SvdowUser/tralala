@@ -3,7 +3,7 @@
 <head>
   <meta charset="utf-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover" />
-  <meta name="theme-color" content="#071a2a" />
+  <meta name="theme-color" content="#0b1020" />
   <title>$TRALALA</title>
 
   <link rel="stylesheet" href="./styles.css" />
@@ -33,7 +33,6 @@
       <a href="#tokenomics">Tokenomics</a>
       <a href="#how">How to buy</a>
       <a href="#roadmap">Roadmap</a>
-      <a href="#gallery">Gallery</a>
       <a href="#socials">Socials</a>
     </nav>
 
@@ -53,7 +52,6 @@
       <a class="menu__link" href="#tokenomics">Tokenomics</a>
       <a class="menu__link" href="#how">How to buy</a>
       <a class="menu__link" href="#roadmap">Roadmap</a>
-      <a class="menu__link" href="#gallery">Gallery</a>
       <a class="menu__link" href="#socials">Socials</a>
 
       <div class="menu__divider"></div>
@@ -90,17 +88,22 @@
         </div>
 
         <h1 class="hero__title">$TRALALA</h1>
-        <p class="hero__sub">The cutest brainrot fish has emerged from TikTok.</p>
+        <p class="hero__sub">Eine hochwertige Meme‑Coin Landingpage mit starkem Branding, klaren CTAs und modernem 3D‑Look – optimiert für Desktop und Handy.</p>
+
+        <div class="hero__badges">
+          <span>Solana</span><span>Community First</span><span>0% Tax</span>
+        </div>
 
         <div class="hero__cta">
           <a class="btn btn--primary" id="pumpBtn" href="#" target="_blank" rel="noopener">Open Pump.fun</a>
+          <a class="btn btn--ghost" href="#tokenomics">View Tokenomics</a>
         </div>
       </div>
 
       <div class="hero__right">
         <div class="orb">
           <div class="orb__ring"></div>
-          <img class="hero__img" src="./hero.png" alt="Tralala character" />
+          <img class="hero__img" src="./hero.png" alt="Tralala character" loading="eager" decoding="async" />
         </div>
       </div>
     </section>
@@ -249,27 +252,7 @@
       </div>
     </section>
 
-    <!-- GALLERY -->
-    <section class="section" id="gallery">
-      <div class="section__head">
-        <h2>GALLERY</h2>
-        <p>Swipe through the community moments.</p>
-      </div>
-
-      <div class="gallery">
-        <button class="gallery__nav" id="galPrev" aria-label="Previous image">‹</button>
-
-        <div class="gallery__frame">
-          <img id="galImg" alt="Gallery image" />
-          <div class="gallery__cap" id="galCap"></div>
-          <div class="gallery__dots" id="galDots" aria-hidden="true"></div>
-        </div>
-
-        <button class="gallery__nav" id="galNext" aria-label="Next image">›</button>
-      </div>
-    </section>
-
-    <!-- SOCIALS (unter Gallery, Icons-only, zentriert) -->
+    <!-- SOCIALS (icon links, centered) -->
     <section class="section" id="socials">
       <div class="section__head">
         <h2>SOCIALS</h2>
@@ -277,9 +260,14 @@
       </div>
 
       <div class="socialIcons">
-        <a class="socialIcon" id="xIconLink" href="#" target="_blank" rel="noopener" aria-label="X">X</a>
-        <a class="socialIcon" id="tiktokIconLink" href="#" target="_blank" rel="noopener" aria-label="TikTok">♪</a>
-
+        <a class="socialIcon" id="xIconLink" href="#" target="_blank" rel="noopener" aria-label="X">
+          <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M18.901 2h3.68l-8.04 9.19L24 22h-7.406l-5.8-7.584L4.16 22H.478l8.6-9.83L0 2h7.594l5.243 6.932L18.901 2Zm-1.292 17.78h2.04L6.486 4.106H4.298L17.61 19.78Z" fill="currentColor"/></svg>
+          <span>X</span>
+        </a>
+        <a class="socialIcon" id="tiktokIconLink" href="#" target="_blank" rel="noopener" aria-label="TikTok">
+          <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M21 8.088a7.389 7.389 0 0 1-4.312-1.38v6.278a5.985 5.985 0 1 1-5.16-5.925v3.032a2.954 2.954 0 1 0 2.128 2.833V2h3.032a4.36 4.36 0 0 0 4.312 4.312v1.776Z" fill="currentColor"/></svg>
+          <span>TikTok</span>
+        </a>
       </div>
     </section>
 

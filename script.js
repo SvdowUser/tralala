@@ -2,23 +2,10 @@
    CONFIG
 ========================= */
 const CONTRACT_ADDRESS = "none";
-
-// Links (HIER EINTRAGEN)
-const X_PROFILE_URL = "PASTE_YOUR_X_PROFILE_URL_HERE";     // z.B. https://x.com/deinhandle
-const TIKTOK_URL    = "https://tiktok.com/@mythosmondays";
-
-// Optional Tracker (leer lassen => Icon bleibt trotzdem sichtbar, Link geht dann nirgends)
-// Wenn du willst, kann ich auch auto-hide machen – sag kurz.
-const DEXSCREENER_URL = ""; // z.B. https://dexscreener.com/solana/....
-const DEXTOOLS_URL    = ""; // z.B. https://www.dextools.io/app/en/solana/...
-
-// Pump.fun
+const X_PROFILE_URL = "PASTE_YOUR_X_PROFILE_URL_HERE";
+const TIKTOK_URL = "https://tiktok.com/@mythosmondays";
 const PUMP_COIN_URL = `https://pump.fun/coin/${CONTRACT_ADDRESS}`;
-
-// Phantom deep link: Seite in Phantom öffnen (hilft auf iPhone, wenn Connect “nichts zeigt”)
 const PHANTOM_OPEN_URL = `https://phantom.app/ul/browse/${encodeURIComponent(location.href)}`;
-
-// Jupiter
 const SOL_MINT = "So11111111111111111111111111111111111111112";
 
 /* =========================
@@ -32,23 +19,35 @@ function isRealUrl(u) {
 }
 
 /* =========================
-   HERO float (wie bei dir)
+   HERO FX
 ========================= */
 const heroImg = document.querySelector(".hero__img");
+const orb = document.querySelector(".orb");
 if (heroImg) {
   heroImg.src = resolveUrl("./hero.png");
-  let t0 = performance.now();
+  heroImg.addEventListener("error", () => {
+    heroImg.classList.add("is-broken");
+    console.warn("Hero image could not be loaded. Check hero.png path.");
+  });
 
+  let t0 = performance.now();
   const floatLoop = (t) => {
     const dt = (t - t0) / 1000;
-    const y = Math.sin(dt * 1.05) * 10;
+    const y = Math.sin(dt * 1.05) * 9;
     const x = Math.cos(dt * 0.85) * 3;
-    const r = Math.sin(dt * 0.70) * 1.0;
+    const r = Math.sin(dt * 0.7) * 1;
     heroImg.style.transform = `translate3d(${x}px, ${-y}px, 0) rotate(${r}deg)`;
     requestAnimationFrame(floatLoop);
   };
   requestAnimationFrame(floatLoop);
 }
+
+window.addEventListener("pointermove", (e) => {
+  if (!orb || window.matchMedia("(max-width: 920px)").matches) return;
+  const x = (e.clientX / window.innerWidth - 0.5) * 8;
+  const y = (e.clientY / window.innerHeight - 0.5) * -8;
+  orb.style.transform = `rotateX(${y}deg) rotateY(${x}deg)`;
+});
 
 /* =========================
    Smooth scroll
@@ -88,43 +87,26 @@ burgerBtn?.addEventListener("click", () => {
   isOpen ? closeMenu() : openMenu();
 });
 menuClose?.addEventListener("click", closeMenu);
-mobileMenu?.addEventListener("click", (e) => { if (e.target === mobileMenu) closeMenu(); });
+mobileMenu?.addEventListener("click", (e) => {
+  if (e.target === mobileMenu) closeMenu();
+});
 document.querySelectorAll(".menu__link").forEach((a) => a.addEventListener("click", closeMenu));
 
 /* =========================
-   Links setzen
+   LINKS
 ========================= */
 const pumpBtn = document.getElementById("pumpBtn");
 const pumpFooter = document.getElementById("pumpFooter");
 const brandLink = document.getElementById("brandLink");
-const pumpCtaTop = document.getElementById("pumpCtaTop");
-const pumpSwapLink = document.getElementById("pumpSwapLink");
-[pumpBtn, pumpFooter, brandLink, pumpCtaTop, pumpSwapLink].forEach((el) => {
+[pumpBtn, pumpFooter, brandLink].forEach((el) => {
   if (el) el.href = PUMP_COIN_URL;
 });
 
-// Join section
-const xJoinLink = document.getElementById("xJoinLink");
-const tiktokJoinLink = document.getElementById("tiktokJoinLink");
-if (xJoinLink && isRealUrl(X_PROFILE_URL)) xJoinLink.href = X_PROFILE_URL;
-if (tiktokJoinLink && isRealUrl(TIKTOK_URL)) tiktokJoinLink.href = TIKTOK_URL;
-
-// Social icons section
 const xIconLink = document.getElementById("xIconLink");
 const tiktokIconLink = document.getElementById("tiktokIconLink");
-const dexscreenerIconLink = document.getElementById("dexscreenerIconLink");
-const dextoolsIconLink = document.getElementById("dextoolsIconLink");
-const pumpIconLink = document.getElementById("pumpIconLink");
-
 if (xIconLink && isRealUrl(X_PROFILE_URL)) xIconLink.href = X_PROFILE_URL;
 if (tiktokIconLink && isRealUrl(TIKTOK_URL)) tiktokIconLink.href = TIKTOK_URL;
 
-if (dexscreenerIconLink && isRealUrl(DEXSCREENER_URL)) dexscreenerIconLink.href = DEXSCREENER_URL;
-if (dextoolsIconLink && isRealUrl(DEXTOOLS_URL)) dextoolsIconLink.href = DEXTOOLS_URL;
-
-if (pumpIconLink) pumpIconLink.href = PUMP_COIN_URL;
-
-// Phantom link
 const phantomOpen = document.getElementById("phantomOpen");
 if (phantomOpen) phantomOpen.href = PHANTOM_OPEN_URL;
 
@@ -164,12 +146,11 @@ function initJupiterTerminal() {
 initJupiterTerminal();
 
 /* =========================
-   Contract copy (wie bei dir)
+   Contract copy
 ========================= */
 const contractText = document.getElementById("contractText");
 const copyBtn = document.getElementById("copyBtn");
 const toast = document.getElementById("toast");
-
 if (contractText) contractText.textContent = CONTRACT_ADDRESS;
 
 async function copyToClipboard(text) {
@@ -177,30 +158,13 @@ async function copyToClipboard(text) {
     await navigator.clipboard.writeText(text);
     return true;
   } catch (_) {
-    try {
-      const ta = document.createElement("textarea");
-      ta.value = text;
-      ta.setAttribute("readonly", "");
-      ta.style.position = "fixed";
-      ta.style.left = "-9999px";
-      ta.style.top = "-9999px";
-      document.body.appendChild(ta);
-      ta.focus();
-      ta.select();
-      ta.setSelectionRange(0, ta.value.length);
-      const ok = document.execCommand("copy");
-      document.body.removeChild(ta);
-      return ok;
-    } catch (_) {
-      return false;
-    }
+    return false;
   }
 }
 
 copyBtn?.addEventListener("click", async () => {
   const value = (contractText?.textContent || "").trim();
   if (!value) return;
-
   const ok = await copyToClipboard(value);
 
   if (toast) {
@@ -208,26 +172,41 @@ copyBtn?.addEventListener("click", async () => {
     setTimeout(() => (toast.textContent = ""), 1600);
   }
 
-  if (copyBtn) {
-    copyBtn.textContent = ok ? "COPIED" : "COPY";
-    setTimeout(() => (copyBtn.textContent = "COPY"), 1200);
-  }
+  copyBtn.textContent = ok ? "COPIED" : "COPY";
+  setTimeout(() => (copyBtn.textContent = "COPY"), 1200);
 });
 
 /* =========================
-   AUDIO (wie bei dir)
+   AUDIO
 ========================= */
 const audio = document.getElementById("bgAudio");
 const audioToggle = document.getElementById("audioToggle");
-
 let muted = true;
+let audioUnlocked = false;
+
 function setAudioUI(isMuted) {
   if (!audioToggle) return;
   audioToggle.setAttribute("aria-pressed", String(!isMuted));
+  audioToggle.title = isMuted ? "Sound aus" : "Sound an";
 }
+
+async function ensureAudioStarts() {
+  if (!audio) return;
+  try {
+    await audio.play();
+    audioUnlocked = true;
+  } catch (e) {
+    console.warn("Audio play blocked.", e);
+  }
+}
+
 if (audio) {
+  audio.src = resolveUrl("./bg.mp3");
   audio.loop = true;
+  audio.volume = 0.6;
   audio.muted = true;
+  audio.preload = "auto";
+  audio.load();
 }
 setAudioUI(true);
 
@@ -237,78 +216,20 @@ audioToggle?.addEventListener("click", async () => {
   audio.muted = muted;
   setAudioUI(muted);
 
-  if (!muted) {
-    try { await audio.play(); }
-    catch (e) { console.warn("Audio play blocked.", e); }
+  if (!muted && (audio.paused || !audioUnlocked)) {
+    await ensureAudioStarts();
+  }
+  if (muted && !audio.paused) {
+    audio.pause();
   }
 });
 
-/* =========================
-   GALLERY (Swipe wie bei dir)
-========================= */
-const galleryImages = [
-  { file: "1.png" }, { file: "2.png" }, { file: "3.png" },
-  { file: "4.png" },{ file: "5.png" }, { file: "6.png" },
-];
-
-const galImg = document.getElementById("galImg");
-const galCap = document.getElementById("galCap");
-const galPrev = document.getElementById("galPrev");
-const galNext = document.getElementById("galNext");
-const galDots = document.getElementById("galDots");
-let galIndex = 0;
-
-function renderDots() {
-  if (!galDots) return;
-  galDots.innerHTML = "";
-  for (let i = 0; i < galleryImages.length; i++) {
-    const d = document.createElement("span");
-    if (i === galIndex) d.classList.add("isOn");
-    galDots.appendChild(d);
-  }
-}
-
-function setGalleryImage() {
-  if (!galImg || !galleryImages.length) return;
-  const item = galleryImages[galIndex];
-  const url = resolveUrl(`./${item.file}`);
-  galImg.src = `${url}?v=${Date.now()}`;
-  galImg.loading = "eager";
-
-  if (galCap) {
-    galCap.textContent = "";
-    galCap.style.display = "none";
-  }
-  renderDots();
-}
-
-galPrev?.addEventListener("click", () => {
-  galIndex = (galIndex - 1 + galleryImages.length) % galleryImages.length;
-  setGalleryImage();
-});
-galNext?.addEventListener("click", () => {
-  galIndex = (galIndex + 1) % galleryImages.length;
-  setGalleryImage();
-});
-
-let touchStartX = null;
-galImg?.addEventListener("touchstart", (e) => {
-  touchStartX = e.touches?.[0]?.clientX ?? null;
-}, { passive: true });
-
-galImg?.addEventListener("touchend", (e) => {
-  if (touchStartX == null) return;
-  const endX = e.changedTouches?.[0]?.clientX ?? null;
-  if (endX == null) return;
-
-  const dx = endX - touchStartX;
-  if (Math.abs(dx) > 40) {
-    galIndex = dx > 0
-      ? (galIndex - 1 + galleryImages.length) % galleryImages.length
-      : (galIndex + 1) % galleryImages.length;
-    setGalleryImage();
-  }
-  touchStartX = null;
-}, { passive: true });
-
-setGalleryImage();
+document.addEventListener(
+  "pointerdown",
+  async () => {
+    if (!audio || !muted || audioUnlocked) return;
+    await ensureAudioStarts();
+    audio.pause();
+  },
+  { once: true }
+);
