@@ -18,11 +18,16 @@
 }
 
 *{box-sizing:border-box}
-html,body{height:100%}
+html,body{
+  min-height:100%;
+  background:#08172f;
+}
 html{scroll-behavior:smooth}
 
 body{
   margin:0;
+  min-height:100dvh;
+  padding-bottom: env(safe-area-inset-bottom);
   font-family:Inter, ui-sans-serif, system-ui, -apple-system, Segoe UI, Roboto, Arial, sans-serif;
   color:var(--text);
   background:linear-gradient(180deg,var(--bg-1) 0%, var(--bg-2) 42%, var(--bg-3) 100%);
@@ -806,6 +811,7 @@ button,input,textarea{font:inherit}
 .footer{
   margin-top:36px;
   padding:18px 0 10px;
+  padding-bottom: calc(10px + env(safe-area-inset-bottom));
   display:flex;
   justify-content:space-between;
   align-items:center;
@@ -1184,4 +1190,7 @@ button,input,textarea{font:inherit}
 
 .brand__coin--pump{
   background:rgba(255,255,255,.08);
+}
+.wrap{
+  padding-bottom: max(24px, env(safe-area-inset-bottom));
 }
