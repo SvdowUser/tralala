@@ -7,7 +7,6 @@ const TIKTOK_URL = "https://tiktok.com/@mythosmondays";
 const PUMP_COIN_URL = `https://pump.fun/coin/${CONTRACT_ADDRESS}`;
 const PHANTOM_OPEN_URL = `https://phantom.app/ul/browse/${encodeURIComponent(location.href)}`;
 const SOL_MINT = "So11111111111111111111111111111111111111112";
-const ENABLE_JUPITER = false;
 
 /* =========================
    HELPERS
@@ -15,92 +14,62 @@ const ENABLE_JUPITER = false;
 function resolveUrl(path) {
   return new URL(path, document.baseURI).toString();
 }
-
 function isRealUrl(u) {
   return typeof u === "string" && /^https?:\/\//i.test(u);
 }
 
-function upgradeInsecureUrl(value) {
+const RESOURCE_ATTRS = ["src", "href", "poster"];
+
+function upgradeHttpUrl(value) {
   if (typeof value !== "string") return value;
   if (value.startsWith("http://")) return `https://${value.slice(7)}`;
   if (value.startsWith("ws://")) return `wss://${value.slice(5)}`;
   return value;
 }
 
-function collectInsecureCssUrls(cssText, sourceLabel) {
-  if (typeof cssText !== "string") return;
-  const re = /url\((['"]?)(http:\/\/[^'"\)]+)\1\)/gi;
-  let m;
-  while ((m = re.exec(cssText)) !== null) {
-    console.warn(`[MixedContentGuard] Insecure CSS url() found in ${sourceLabel}:`, m[2]);
-  }
-}
+function upgradeNodeResourceUrls(node) {
+  if (!(node instanceof Element)) return;
 
-function installMixedContentWarningHelper() {
-  const ATTRS = ["src", "href", "poster"];
-
-  const scanElement = (el, label = "DOM") => {
-    if (!(el instanceof Element)) return;
-
-    ATTRS.forEach((attr) => {
-      const value = el.getAttribute(attr);
-      if (!value) return;
-
-      if (value.startsWith("http://") || value.startsWith("ws://")) {
-        console.warn(`[MixedContentGuard] Insecure ${attr} on element (${label}):`, value, el);
-      }
-
-      const upgraded = upgradeInsecureUrl(value.trim());
-      if (upgraded !== value) el.setAttribute(attr, upgraded);
-    });
-
-    const inlineStyle = el.getAttribute("style");
-    if (inlineStyle) collectInsecureCssUrls(inlineStyle, `${label} inline style`);
-  };
-
-  scanElement(document.documentElement, "documentElement");
-  document.querySelectorAll("[src], [href], [poster], [style]").forEach((el) => scanElement(el, "initial scan"));
-
-  document.querySelectorAll("style").forEach((styleTag, i) => {
-    collectInsecureCssUrls(styleTag.textContent || "", `style tag #${i + 1}`);
+  RESOURCE_ATTRS.forEach((attr) => {
+    const raw = node.getAttribute(attr);
+    if (!raw) return;
+    const upgraded = upgradeHttpUrl(raw.trim());
+    if (upgraded !== raw) node.setAttribute(attr, upgraded);
   });
 
-  for (const sheet of Array.from(document.styleSheets || [])) {
-    try {
-      for (const rule of Array.from(sheet.cssRules || [])) {
-        collectInsecureCssUrls(rule.cssText, `stylesheet ${sheet.href || "inline"}`);
-      }
-    } catch (_) {
-      // ignore cross-origin stylesheet access restrictions
-    }
-  }
+  node.querySelectorAll?.("[src], [href], [poster]").forEach((el) => {
+    RESOURCE_ATTRS.forEach((attr) => {
+      const raw = el.getAttribute(attr);
+      if (!raw) return;
+      const upgraded = upgradeHttpUrl(raw.trim());
+      if (upgraded !== raw) el.setAttribute(attr, upgraded);
+    });
+  });
+}
+
+function startInsecureResourceGuard() {
+  upgradeNodeResourceUrls(document.documentElement);
 
   const observer = new MutationObserver((mutations) => {
     mutations.forEach((mutation) => {
-      mutation.addedNodes.forEach((node) => {
-        if (!(node instanceof Element)) return;
-        scanElement(node, "mutation");
-        node.querySelectorAll?.("[src], [href], [poster], [style]").forEach((el) => scanElement(el, "mutation subtree"));
-      });
+      mutation.addedNodes.forEach((node) => upgradeNodeResourceUrls(node));
     });
   });
 
   observer.observe(document.documentElement, { childList: true, subtree: true });
 }
-
-installMixedContentWarningHelper();
+startInsecureResourceGuard();
 
 /* =========================
    HERO FX
 ========================= */
 const heroImg = document.querySelector(".hero__img");
 const orb = document.querySelector(".orb");
-
 if (heroImg) {
   heroImg.src = resolveUrl("./hero.png");
   heroImg.addEventListener("error", () => {
     heroImg.classList.add("is-broken");
-    console.warn("Hero image could not be loaded. Check ./hero.png path.");
+    console.warn("Hero image could not be loaded. Check hero.png path.");
   });
 
   let t0 = performance.now();
@@ -117,16 +86,9 @@ if (heroImg) {
 
 window.addEventListener("pointermove", (e) => {
   if (!orb || window.matchMedia("(max-width: 920px)").matches) return;
-  const x = (e.clientX / window.innerWidth - 0.5) * 10;
-  const y = (e.clientY / window.innerHeight - 0.5) * -10;
-  orb.style.setProperty("--tiltX", `${x.toFixed(2)}deg`);
-  orb.style.setProperty("--tiltY", `${y.toFixed(2)}deg`);
-});
-
-document.addEventListener("pointerleave", () => {
-  if (!orb) return;
-  orb.style.setProperty("--tiltX", "0deg");
-  orb.style.setProperty("--tiltY", "0deg");
+  const x = (e.clientX / window.innerWidth - 0.5) * 8;
+  const y = (e.clientY / window.innerHeight - 0.5) * -8;
+  orb.style.transform = `rotateX(${y}deg) rotateY(${x}deg)`;
 });
 
 /* =========================
@@ -156,19 +118,16 @@ function openMenu() {
   mobileMenu.setAttribute("aria-hidden", "false");
   burgerBtn.setAttribute("aria-expanded", "true");
 }
-
 function closeMenu() {
   if (!mobileMenu || !burgerBtn) return;
   mobileMenu.classList.remove("isOpen");
   mobileMenu.setAttribute("aria-hidden", "true");
   burgerBtn.setAttribute("aria-expanded", "false");
 }
-
 burgerBtn?.addEventListener("click", () => {
   const isOpen = mobileMenu?.classList.contains("isOpen");
   isOpen ? closeMenu() : openMenu();
 });
-
 menuClose?.addEventListener("click", closeMenu);
 mobileMenu?.addEventListener("click", (e) => {
   if (e.target === mobileMenu) closeMenu();
@@ -181,10 +140,7 @@ document.querySelectorAll(".menu__link").forEach((a) => a.addEventListener("clic
 const pumpBtn = document.getElementById("pumpBtn");
 const pumpFooter = document.getElementById("pumpFooter");
 const brandLink = document.getElementById("brandLink");
-const buyNowTop = document.getElementById("buyNowTop");
-const communityBuyBtn = document.getElementById("communityBuyBtn");
-
-[pumpBtn, pumpFooter, brandLink, buyNowTop, communityBuyBtn].forEach((el) => {
+[pumpBtn, pumpFooter, brandLink].forEach((el) => {
   if (el) el.href = PUMP_COIN_URL;
 });
 
@@ -197,8 +153,6 @@ const phantomOpen = document.getElementById("phantomOpen");
 if (phantomOpen) phantomOpen.href = PHANTOM_OPEN_URL;
 
 /* =========================
-   Jupiter Terminal (flagged)
-========================= */
 function loadJupiterScript() {
   return new Promise((resolve, reject) => {
     if (window.Jupiter && typeof window.Jupiter.init === "function") {
@@ -215,30 +169,38 @@ function loadJupiterScript() {
   });
 }
 
+   Jupiter Terminal init
 function initJupiterTerminal() {
   const hostId = "jupiter-terminal";
   const host = document.getElementById(hostId);
   if (!host) return;
 
-  if (!window.Jupiter || typeof window.Jupiter.init !== "function") return;
+  const tryInit = () => {
+    if (!window.Jupiter || typeof window.Jupiter.init !== "function") return false;
 
-  window.Jupiter.init({
-    displayMode: "integrated",
-    integratedTargetId: hostId,
-    endpoint: "https://api.mainnet-beta.solana.com",
-    strictTokenList: false,
-    formProps: {
-      initialInputMint: SOL_MINT,
-      initialOutputMint: CONTRACT_ADDRESS,
-    },
-  });
-}
+    window.Jupiter.init({
+      displayMode: "integrated",
+      integratedTargetId: hostId,
+      endpoint: "https://api.mainnet-beta.solana.com",
+      strictTokenList: false,
+      formProps: {
+        initialInputMint: SOL_MINT,
+        initialOutputMint: CONTRACT_ADDRESS,
+      },
+    });
 
-if (ENABLE_JUPITER) {
-  loadJupiterScript()
-    .then(initJupiterTerminal)
-    .catch((e) => console.warn("Jupiter disabled due to load/init error:", e));
+    return true;
+  };
+
+  if (tryInit()) return;
+
+  let tries = 0;
+  const timer = setInterval(() => {
+    tries++;
+    if (tryInit() || tries > 30) clearInterval(timer);
+  }, 200);
 }
+initJupiterTerminal();
 
 /* =========================
    Contract copy
@@ -246,7 +208,6 @@ if (ENABLE_JUPITER) {
 const contractText = document.getElementById("contractText");
 const copyBtn = document.getElementById("copyBtn");
 const toast = document.getElementById("toast");
-
 if (contractText) contractText.textContent = CONTRACT_ADDRESS;
 
 async function copyToClipboard(text) {
@@ -261,7 +222,6 @@ async function copyToClipboard(text) {
 copyBtn?.addEventListener("click", async () => {
   const value = (contractText?.textContent || "").trim();
   if (!value) return;
-
   const ok = await copyToClipboard(value);
 
   if (toast) {
@@ -284,7 +244,7 @@ let audioUnlocked = false;
 function setAudioUI(isMuted) {
   if (!audioToggle) return;
   audioToggle.setAttribute("aria-pressed", String(!isMuted));
-  audioToggle.title = isMuted ? "Sound off" : "Sound on";
+  audioToggle.title = isMuted ? "Sound aus" : "Sound an";
 }
 
 async function ensureAudioStarts() {
@@ -305,12 +265,10 @@ if (audio) {
   audio.preload = "auto";
   audio.load();
 }
-
 setAudioUI(true);
 
 audioToggle?.addEventListener("click", async () => {
   if (!audio) return;
-
   muted = !muted;
   audio.muted = muted;
   setAudioUI(muted);
@@ -318,7 +276,6 @@ audioToggle?.addEventListener("click", async () => {
   if (!muted && (audio.paused || !audioUnlocked)) {
     await ensureAudioStarts();
   }
-
   if (muted && !audio.paused) {
     audio.pause();
   }
