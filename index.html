@@ -1,122 +1,229 @@
-const CONFIG = {
-  contractAddress: "PASTE_CONTRACT_HERE",
-  xProfileUrl: "https://x.com/yourprofile",
-  tiktokUrl: "https://www.tiktok.com/@yourprofile"
-};
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover" />
+  <meta name="theme-color" content="#08172f" />
+  <title>$TRALALA</title>
+  <link rel="stylesheet" href="./styles.css?v=20260309e" />
+</head>
+<body>
+  <div class="bg" aria-hidden="true">
+    <div class="bg__gradient"></div>
+    <div class="bg__glow bg__glow--1"></div>
+    <div class="bg__glow bg__glow--2"></div>
+    <div class="bg__glow bg__glow--3"></div>
 
-const PUMP_COIN_URL =
-  CONFIG.contractAddress && CONFIG.contractAddress !== "PASTE_CONTRACT_HERE"
-    ? `https://pump.fun/coin/${CONFIG.contractAddress}`
-    : "https://pump.fun/";
+    <div class="bg__bubbles">
+      <span style="--left:6%; --size:18px; --duration:18s; --delay:0s;"></span>
+      <span style="--left:14%; --size:34px; --duration:24s; --delay:3s;"></span>
+      <span style="--left:23%; --size:14px; --duration:17s; --delay:7s;"></span>
+      <span style="--left:32%; --size:28px; --duration:22s; --delay:1s;"></span>
+      <span style="--left:41%; --size:20px; --duration:20s; --delay:6s;"></span>
+      <span style="--left:52%; --size:42px; --duration:28s; --delay:4s;"></span>
+      <span style="--left:63%; --size:16px; --duration:16s; --delay:2s;"></span>
+      <span style="--left:72%; --size:30px; --duration:26s; --delay:8s;"></span>
+      <span style="--left:84%; --size:22px; --duration:19s; --delay:5s;"></span>
+      <span style="--left:92%; --size:12px; --duration:15s; --delay:9s;"></span>
+    </div>
+  </div>
 
-const contractText = document.getElementById("contractText");
-const copyBtn = document.getElementById("copyBtn");
-const toast = document.getElementById("toast");
+  <header class="nav">
+    <a class="brand" id="brandLink" href="#" target="_blank" rel="noopener">
+      <span class="brand__coin">
+        <img src="./hero.png" alt="Tralala icon" />
+      </span>
+      <span class="brand__text">TRALALA</span>
+    </a>
 
-const burgerBtn = document.getElementById("burgerBtn");
-const mobileMenu = document.getElementById("mobileMenu");
-const menuClose = document.getElementById("menuClose");
+    <nav class="nav__links" aria-label="Primary">
+      <a href="#how">How to buy</a>
+      <a href="#roadmap">Roadmap</a>
+      <a href="#socials">Community</a>
+    </nav>
 
-function setHref(id, value) {
-  const el = document.getElementById(id);
-  if (el) el.href = value;
-}
+    <a class="nav__buy" id="buyNowTop" href="#" target="_blank" rel="noopener">
+      GET TRALALA NOW
+    </a>
 
-function openMenu() {
-  if (!mobileMenu || !burgerBtn) return;
-  mobileMenu.classList.add("isOpen");
-  mobileMenu.setAttribute("aria-hidden", "false");
-  burgerBtn.setAttribute("aria-expanded", "true");
-}
+    <button class="nav__burger" id="burgerBtn" type="button" aria-label="Open menu" aria-expanded="false" aria-controls="mobileMenu">
+      <span></span><span></span><span></span>
+    </button>
+  </header>
 
-function closeMenu() {
-  if (!mobileMenu || !burgerBtn) return;
-  mobileMenu.classList.remove("isOpen");
-  mobileMenu.setAttribute("aria-hidden", "true");
-  burgerBtn.setAttribute("aria-expanded", "false");
-}
+  <div class="menu" id="mobileMenu" aria-hidden="true">
+    <div class="menu__panel">
+      <div class="menu__top">
+        <div class="menu__title">TRALALA</div>
+        <button class="menu__close" id="menuClose" type="button" aria-label="Close menu">✕</button>
+      </div>
 
-function showToast(message) {
-  if (!toast) return;
-  toast.textContent = message;
-  window.clearTimeout(showToast._timer);
-  showToast._timer = window.setTimeout(() => {
-    toast.textContent = "";
-  }, 1600);
-}
+      <a class="menu__link" href="#how">How to buy</a>
+      <a class="menu__link" href="#roadmap">Roadmap</a>
+      <a class="menu__link" href="#socials">Community</a>
 
-async function copyToClipboard(text) {
-  try {
-    await navigator.clipboard.writeText(text);
-    return true;
-  } catch {
-    const temp = document.createElement("textarea");
-    temp.value = text;
-    temp.style.position = "fixed";
-    temp.style.opacity = "0";
-    document.body.appendChild(temp);
-    temp.select();
-    const ok = document.execCommand("copy");
-    document.body.removeChild(temp);
-    return ok;
-  }
-}
+      <div class="menu__divider"></div>
 
-document.addEventListener("DOMContentLoaded", () => {
-  if (contractText) {
-    contractText.textContent = CONFIG.contractAddress;
-  }
+      <a class="menu__buy" id="menuBuyBtn" href="#" target="_blank" rel="noopener">
+        GET TRALALA NOW
+      </a>
+    </div>
+  </div>
 
-  setHref("brandLink", PUMP_COIN_URL);
-  setHref("buyNowTop", PUMP_COIN_URL);
-  setHref("menuBuyBtn", PUMP_COIN_URL);
-  setHref("heroPumpBtn", PUMP_COIN_URL);
-  setHref("communityPumpBtn", PUMP_COIN_URL);
-  setHref("pumpFooter", PUMP_COIN_URL);
+  <main class="wrap">
+    <section class="hero" id="top">
+      <div class="hero__left">
+        <div class="pill">
+          <span class="pill__dot"></span>
+          <span>LIVE ON SOLANA</span>
+        </div>
 
-  setHref("xIconLink", CONFIG.xProfileUrl);
-  setHref("tiktokIconLink", CONFIG.tiktokUrl);
+        <h1 class="hero__title">$TRALALA</h1>
+        <p class="hero__sub">
+          Tralala is a fun Solana meme coin for the community.
+          Buy, hold, and enjoy the ride.
+        </p>
 
-  burgerBtn?.addEventListener("click", () => {
-    const isOpen = mobileMenu?.classList.contains("isOpen");
-    if (isOpen) closeMenu();
-    else openMenu();
-  });
+        <div class="hero__badges">
+          <span>Solana Native</span>
+          <span>Community First</span>
+          <span>0% Tax</span>
+        </div>
 
-  menuClose?.addEventListener("click", closeMenu);
+        <div class="hero__cta">
+          <a class="btn btn--primary" id="heroPumpBtn" href="#" target="_blank" rel="noopener">Open Pump.fun</a>
+          <a class="btn btn--ghost" href="#socials">Join Community</a>
+        </div>
+      </div>
 
-  mobileMenu?.addEventListener("click", (event) => {
-    if (event.target === mobileMenu) closeMenu();
-  });
+      <div class="hero__right">
+        <div class="heroBubble">
+          <div class="heroBubble__ring"></div>
+          <div class="heroBubble__glow"></div>
+          <img class="hero__img" src="./hero.png" alt="Tralala character" loading="eager" decoding="async" />
+        </div>
+      </div>
+    </section>
 
-  document.querySelectorAll('a[href^="#"]').forEach((link) => {
-    link.addEventListener("click", (event) => {
-      const targetId = link.getAttribute("href");
-      if (!targetId || targetId === "#") return;
+    <section class="contractSection">
+      <div class="contractCard">
+        <div class="contract__label">CONTRACT ADDRESS</div>
+        <div class="contract__row">
+          <code class="contract__code" id="contractText">PASTE_CONTRACT_HERE</code>
+          <button class="contract__copy" id="copyBtn" type="button">COPY</button>
+        </div>
+        <div class="toast" id="toast" aria-live="polite" aria-atomic="true"></div>
+      </div>
+    </section>
 
-      const target = document.querySelector(targetId);
-      if (!target) return;
+    <section class="section how" id="how">
+      <div class="section__head section__head--center">
+        <h2>HOW TO BUY</h2>
+        <p>Four simple steps.</p>
+      </div>
 
-      event.preventDefault();
-      closeMenu();
-      target.scrollIntoView({ behavior: "smooth", block: "start" });
-    });
-  });
+      <div class="howCards">
+        <article class="howCard">
+          <div class="howCard__title">Get a Wallet</div>
+          <div class="howCard__text">Download Phantom or Solflare and set it up securely.</div>
+          <div class="howCard__num">01</div>
+        </article>
 
-  document.addEventListener("keydown", (event) => {
-    if (event.key === "Escape") closeMenu();
-  });
+        <article class="howCard">
+          <div class="howCard__title">Get SOL</div>
+          <div class="howCard__text">Buy SOL on an exchange and send it to your wallet.</div>
+          <div class="howCard__num">02</div>
+        </article>
 
-  copyBtn?.addEventListener("click", async () => {
-    const value = (CONFIG.contractAddress || "").trim();
-    if (!value) return;
+        <article class="howCard">
+          <div class="howCard__title">Swap for $TRALALA</div>
+          <div class="howCard__text">Use Pump.fun and swap your SOL to TRALALA.</div>
+          <div class="howCard__num">03</div>
+        </article>
 
-    const ok = await copyToClipboard(value);
-    copyBtn.textContent = ok ? "COPIED" : "FAILED";
-    showToast(ok ? "COPIED ✓" : "Copy failed");
+        <article class="howCard">
+          <div class="howCard__title">HODL & Enjoy</div>
+          <div class="howCard__text">Hold strong and enjoy the meme ride.</div>
+          <div class="howCard__num">04</div>
+        </article>
+      </div>
+    </section>
 
-    window.setTimeout(() => {
-      copyBtn.textContent = "COPY";
-    }, 1200);
-  });
-});
+    <section class="section roadmap" id="roadmap">
+      <div class="section__head section__head--center">
+        <h2>ROADMAP</h2>
+        <p>Clear milestones for the next wave.</p>
+      </div>
+
+      <div class="roadmap__timeline">
+        <div class="roadmap__line"></div>
+
+        <article class="roadmap__item">
+          <div class="roadmap__node">01</div>
+          <div class="roadmap__content">
+            <h3>Launch</h3>
+            <p>Launch site, socials, and kick off the community.</p>
+          </div>
+        </article>
+
+        <article class="roadmap__item">
+          <div class="roadmap__node">02</div>
+          <div class="roadmap__content">
+            <h3>Growth</h3>
+            <p>Grow holders, push content, and expand visibility.</p>
+          </div>
+        </article>
+
+        <article class="roadmap__item">
+          <div class="roadmap__node">03</div>
+          <div class="roadmap__content">
+            <h3>Lore</h3>
+            <p>Release lore, collabs, and community events.</p>
+          </div>
+        </article>
+
+        <article class="roadmap__item">
+          <div class="roadmap__node">04</div>
+          <div class="roadmap__content">
+            <h3>Expansion</h3>
+            <p>Ship major upgrades and long-term utility.</p>
+          </div>
+        </article>
+      </div>
+    </section>
+
+    <section class="section community" id="socials">
+      <div class="section__head section__head--center">
+        <h2>COMMUNITY</h2>
+      </div>
+
+      <div class="community__actions">
+        <a class="community__cta" id="communityPumpBtn" href="#" target="_blank" rel="noopener">
+          GET TRALALA NOW
+        </a>
+
+        <div class="community__socials">
+          <a class="community__socialBtn" id="xIconLink" href="#" target="_blank" rel="noopener" aria-label="X">
+            <svg viewBox="0 0 24 24" aria-hidden="true">
+              <path d="M18.901 2h3.68l-8.04 9.19L24 22h-7.406l-5.8-7.584L4.16 22H.478l8.6-9.83L0 2h7.594l5.243 6.932L18.901 2Zm-1.292 17.78h2.04L6.486 4.106H4.298L17.61 19.78Z" fill="currentColor"/>
+            </svg>
+          </a>
+
+          <a class="community__socialBtn" id="tiktokIconLink" href="#" target="_blank" rel="noopener" aria-label="TikTok">
+            <svg viewBox="0 0 24 24" aria-hidden="true">
+              <path d="M21 8.088a7.389 7.389 0 0 1-4.312-1.38v6.278a5.985 5.985 0 1 1-5.16-5.925v3.032a2.954 2.954 0 1 0 2.128 2.833V2h3.032a4.36 4.36 0 0 0 4.312 4.312v1.776Z" fill="currentColor"/>
+            </svg>
+          </a>
+        </div>
+      </div>
+    </section>
+
+    <footer class="footer">
+      <span>© $TRALALA</span>
+      <a id="pumpFooter" href="#" target="_blank" rel="noopener">Pump.fun</a>
+    </footer>
+  </main>
+
+  <script src="./script.js?v=20260309e" defer></script>
+</body>
+</html>
