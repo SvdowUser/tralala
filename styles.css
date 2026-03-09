@@ -129,7 +129,7 @@ button,input,textarea{font:inherit}
 }
 
 .section__head h2{
-  margin:0 0 10px;
+  margin:0 0 4px;
   font-size:clamp(36px, 4vw, 54px);
   letter-spacing:.06em;
 }
@@ -605,7 +605,7 @@ button,input,textarea{font:inherit}
   display:grid;
   grid-template-columns:repeat(2, minmax(0, 1fr));
   gap:18px;
-  margin-top:24px;
+  margin-top:14px;
 }
 
 .howCard{
@@ -681,7 +681,7 @@ button,input,textarea{font:inherit}
 .roadmap__timeline{
   position:relative;
   width:min(980px, 100%);
-  margin:28px auto 0;
+  margin:16px auto 0;
   padding-left:84px;
 }
 
@@ -750,7 +750,7 @@ button,input,textarea{font:inherit}
 }
 
 .community__actions{
-  margin-top:20px;
+  margin-top:10px;
   display:flex;
   flex-direction:column;
   align-items:center;
@@ -962,6 +962,7 @@ button,input,textarea{font:inherit}
 
   .howCards{
     gap:14px;
+    margin-top:12px;
   }
 
   .howCard{
@@ -997,7 +998,7 @@ button,input,textarea{font:inherit}
 
   .roadmap__timeline{
     padding-left:52px;
-    margin-top:24px;
+    margin-top:14px;
   }
 
   .roadmap__line{
@@ -1035,7 +1036,9 @@ button,input,textarea{font:inherit}
     padding-top:24px;
     padding-bottom:24px;
   }
-
+.community__actions{
+  margin-top:8px;
+}
   .community__cta{
     width:100%;
     max-width:320px;
