@@ -49,33 +49,122 @@ body{
 .section__head p{margin:0; color:var(--muted)}
 
 .nav{
-  position:fixed; inset:0 0 auto 0; z-index:50;
-  display:flex; justify-content:space-between; align-items:center;
-  padding:14px 22px;
-  background:linear-gradient(to bottom, rgba(8,13,30,.84), rgba(8,13,30,.32));
+  position:fixed;
+  inset:0 0 auto 0;
+  z-index:50;
+  display:flex;
+  justify-content:space-between;
+  align-items:center;
+  padding:14px 28px;
+  background:linear-gradient(to bottom, rgba(8,13,30,.88), rgba(8,13,30,.36));
   border-bottom:1px solid rgba(255,255,255,.12);
   backdrop-filter: blur(16px) saturate(140%);
 }
-.brand{display:flex; align-items:center; gap:10px; text-decoration:none; color:var(--text)}
-.brand__icon{
-  width:38px;height:38px;border-radius:12px;display:grid;place-items:center;font-weight:800;
-  border:1px solid rgba(255,255,255,.2);
-  background:linear-gradient(160deg,rgba(110,168,255,.24),rgba(99,255,214,.14));
-  box-shadow:inset 0 1px 0 rgba(255,255,255,.32);
+
+.brand{
+  display:flex;
+  align-items:center;
+  gap:12px;
+  text-decoration:none;
+  color:var(--text);
+  min-width:max-content;
 }
-.brand__text{font-weight:800; letter-spacing:.08em}
-.nav__links{display:flex;gap:10px;flex-wrap:wrap}
+
+.brand__coin{
+  width:46px;
+  height:46px;
+  border-radius:16px;
+  display:grid;
+  place-items:center;
+  border:1px solid rgba(255,255,255,.18);
+  background:linear-gradient(160deg,rgba(110,168,255,.18),rgba(99,255,214,.10));
+  box-shadow:
+    inset 0 1px 0 rgba(255,255,255,.24),
+    0 10px 24px rgba(0,0,0,.18);
+  overflow:hidden;
+}
+
+.brand__coin img{
+  width:74%;
+  height:74%;
+  object-fit:contain;
+  display:block;
+  filter:drop-shadow(0 4px 10px rgba(0,0,0,.18));
+}
+
+.brand__text{
+  font-weight:900;
+  letter-spacing:.06em;
+  font-size:20px;
+}
+
+.nav__links{
+  display:flex;
+  align-items:center;
+  gap:8px;
+  padding:4px;
+  border-radius:16px;
+  background:rgba(255,255,255,.08);
+  border:1px solid rgba(255,255,255,.12);
+}
+
 .nav__links a{
-  color:var(--muted); text-decoration:none; font-weight:700; font-size:13px;
-  border:1px solid transparent; padding:8px 12px; border-radius:999px;
+  color:rgba(245,248,255,.92);
+  text-decoration:none;
+  font-weight:800;
+  font-size:13px;
+  padding:10px 14px;
+  border-radius:12px;
+  transition:background .2s ease, color .2s ease;
 }
-.nav__links a:hover{color:var(--text); border-color:rgba(255,255,255,.2); background:rgba(255,255,255,.06)}
-.nav__burger{display:none; width:44px;height:44px;border-radius:14px;border:1px solid rgba(255,255,255,.2);background:rgba(255,255,255,.08)}
-.nav__burger span{display:block;width:18px;height:2px;margin:4px auto;background:#fff;border-radius:2px}
+
+.nav__links a:hover{
+  background:rgba(255,255,255,.10);
+  color:#fff;
+}
+
+.nav__buy{
+  display:inline-flex;
+  align-items:center;
+  justify-content:center;
+  min-width:152px;
+  height:42px;
+  padding:0 16px;
+  border-radius:12px;
+  text-decoration:none;
+  font-weight:900;
+  font-size:12px;
+  letter-spacing:.02em;
+  color:#10131f;
+  background:linear-gradient(180deg,#ffd64d 0%, #f6be17 100%);
+  border:1px solid rgba(255,214,77,.72);
+  box-shadow:
+    0 8px 22px rgba(0,0,0,.18),
+    inset 0 1px 0 rgba(255,255,255,.36);
+}
+
+.nav__burger{
+  display:none;
+  width:54px;
+  height:54px;
+  border-radius:18px;
+  border:1px solid rgba(255,255,255,.18);
+  background:rgba(255,255,255,.08);
+  box-shadow:inset 0 1px 0 rgba(255,255,255,.12);
+}
+
+.nav__burger span{
+  display:block;
+  width:22px;
+  height:2px;
+  margin:5px auto;
+  background:#fff;
+  border-radius:2px;
+}
 
 .menu{position:fixed; inset:0; display:none; background:rgba(0,0,0,.4); z-index:60}
 .menu.isOpen{display:block}
-.menu__panel{position:absolute; right:14px; top:14px; width:min(360px,92vw); border-radius:20px; background:rgba(12,18,40,.9); border:1px solid var(--stroke); padding:14px; box-shadow:var(--shadow)}
+.menu__panel{position:absolute; right:14px; top:14px; width:min(360px,92vw); border-radius:20px; background:rgba(12,18,40,.94); border:1px solid var(--stroke); padding:14px; box-shadow:var(--shadow)}
 .menu__top{display:flex; justify-content:space-between; align-items:center; padding-bottom:8px}
 .menu__title{font-weight:800; letter-spacing:.08em}
 .menu__close{width:40px;height:40px;border-radius:14px;border:1px solid var(--stroke);background:rgba(255,255,255,.08);color:var(--text)}
