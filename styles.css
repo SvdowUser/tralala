@@ -205,6 +205,16 @@ button,input,textarea{font:inherit}
   letter-spacing:.04em;
 }
 
+.hero__title,
+.section__head h2,
+.howCard__title,
+.roadmap__content h3,
+.community__cta,
+.nav__buy,
+.menu__buy{
+  font-family:"Sora", Inter, ui-sans-serif, system-ui, sans-serif;
+}
+
 .nav__links{
   display:flex;
   align-items:center;
@@ -406,12 +416,14 @@ button,input,textarea{font:inherit}
 
 .hero__title{
   margin:18px 0 14px;
-  font-size:clamp(48px, 7vw, 84px);
-  line-height:.96;
-  letter-spacing:-.04em;
+  font-family:"Sora", Inter, ui-sans-serif, system-ui, sans-serif;
+  font-size:clamp(46px, 6vw, 72px);
+  font-weight:900;
+  line-height:.94;
+  letter-spacing:-.05em;
   text-shadow:
-    0 0 22px rgba(255,255,255,.10),
-    0 8px 22px rgba(0,0,0,.14);
+    0 0 24px rgba(255,255,255,.10),
+    0 10px 24px rgba(0,0,0,.16);
 }
 
 .hero__sub{
