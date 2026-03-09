@@ -1,7 +1,7 @@
 :root{
-  --bg-1:#0a2450;
-  --bg-2:#1d4f8d;
-  --bg-3:#48a8ee;
+  --bg-1:#071327;
+  --bg-2:#0a1d3c;
+  --bg-3:#12376c;
   --surface:rgba(255,255,255,.06);
   --surface-2:rgba(255,255,255,.08);
   --stroke:rgba(255,255,255,.14);
@@ -20,7 +20,7 @@
 *{box-sizing:border-box}
 html,body{
   min-height:100%;
-  background:#48a8ee;
+  background:#071327;
 }
 html{scroll-behavior:smooth}
 
@@ -30,7 +30,7 @@ body{
   padding-bottom: env(safe-area-inset-bottom);
   font-family:Inter, ui-sans-serif, system-ui, -apple-system, Segoe UI, Roboto, Arial, sans-serif;
   color:var(--text);
-  background:linear-gradient(180deg,var(--bg-1) 0%, var(--bg-2) 46%, var(--bg-3) 100%);
+  background:linear-gradient(180deg,var(--bg-1) 0%, var(--bg-2) 42%, var(--bg-3) 100%);
   overflow-x:hidden;
 }
 
@@ -49,10 +49,9 @@ button,input,textarea{font:inherit}
   position:absolute;
   inset:0;
   background:
-    radial-gradient(1000px 760px at 78% 14%, rgba(160,220,255,.24), transparent 64%),
-    radial-gradient(760px 560px at 16% 22%, rgba(121,241,221,.10), transparent 60%),
-    radial-gradient(900px 600px at 50% 100%, rgba(255,255,255,.08), transparent 68%),
-    linear-gradient(180deg, #0a2450 0%, #1d4f8d 46%, #48a8ee 100%);
+    radial-gradient(900px 680px at 78% 14%, rgba(114,193,255,.20), transparent 64%),
+    radial-gradient(720px 540px at 16% 22%, rgba(121,241,221,.08), transparent 60%),
+    linear-gradient(180deg, #071327 0%, #0a1d3c 42%, #12376c 100%);
 }
 
 .bg__glow{
