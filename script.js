@@ -153,8 +153,23 @@ const phantomOpen = document.getElementById("phantomOpen");
 if (phantomOpen) phantomOpen.href = PHANTOM_OPEN_URL;
 
 /* =========================
+function loadJupiterScript() {
+  return new Promise((resolve, reject) => {
+    if (window.Jupiter && typeof window.Jupiter.init === "function") {
+      resolve();
+      return;
+    }
+
+    const script = document.createElement("script");
+    script.src = "https://terminal.jup.ag/main-v3.js";
+    script.async = true;
+    script.onload = () => resolve();
+    script.onerror = () => reject(new Error("Failed to load Jupiter script"));
+    document.head.appendChild(script);
+  });
+}
+
    Jupiter Terminal init
-========================= */
 function initJupiterTerminal() {
   const hostId = "jupiter-terminal";
   const host = document.getElementById(hostId);
