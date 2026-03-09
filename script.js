@@ -62,8 +62,7 @@ startInsecureResourceGuard();
 
 /* =========================
    HERO FX
-/* =========================
-   HERO FX
+========================= */
 const heroImg = document.querySelector(".hero__img");
 const orb = document.querySelector(".orb");
 if (heroImg) {
