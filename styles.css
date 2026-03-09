@@ -168,7 +168,7 @@ body{
   .wrap{width:min(1140px,94vw); margin-top:92px}
   .section{padding:38px 0}
   .section__head h2{font-size:28px}
-  .cards,.socialIcons{grid-template-columns:1fr}
+  .cards{grid-template-columns:1fr}
   .step{grid-template-columns:46px 1fr;}
   .step__num{grid-column:2; justify-self:end}
   .hero__sub{font-size:16px}
