@@ -141,7 +141,87 @@ body{
 #audioToggle[aria-pressed="false"] .ppPlay{display:block}
 #audioToggle[aria-pressed="true"] .ppPause{display:block}
 #audioToggle[aria-pressed="true"]{box-shadow:0 8px 28px rgba(110,168,255,.4); border-color:rgba(110,168,255,.75)}
+.section__head--center{
+  text-align:center;
+}
 
+.community{
+  padding-top:56px;
+  padding-bottom:48px;
+}
+
+.community__actions{
+  margin-top:18px;
+  display:flex;
+  flex-direction:column;
+  align-items:center;
+  gap:14px;
+}
+
+.community__cta{
+  display:inline-flex;
+  align-items:center;
+  justify-content:center;
+  min-width:210px;
+  height:48px;
+  padding:0 22px;
+  border-radius:14px;
+  text-decoration:none;
+  font-weight:900;
+  letter-spacing:.02em;
+  color:#10131f;
+  background:linear-gradient(180deg,#ffd64d 0%, #f6be17 100%);
+  border:1px solid rgba(255,214,77,.72);
+  box-shadow:
+    0 10px 26px rgba(0,0,0,.22),
+    inset 0 1px 0 rgba(255,255,255,.36);
+  transition:transform .2s ease, box-shadow .2s ease, filter .2s ease;
+}
+
+.community__cta:hover{
+  transform:translateY(-2px);
+  box-shadow:
+    0 14px 30px rgba(0,0,0,.28),
+    inset 0 1px 0 rgba(255,255,255,.4);
+  filter:brightness(1.02);
+}
+
+.community__socials{
+  display:flex;
+  align-items:center;
+  justify-content:center;
+  gap:12px;
+}
+
+.community__socialBtn{
+  width:52px;
+  height:52px;
+  flex:0 0 52px;
+  border-radius:14px;
+  display:grid;
+  place-items:center;
+  text-decoration:none;
+  color:#f6f8ff;
+  background:rgba(255,255,255,.08);
+  border:1px solid rgba(255,255,255,.22);
+  box-shadow:
+    0 10px 24px rgba(0,0,0,.22),
+    inset 0 1px 0 rgba(255,255,255,.14);
+  backdrop-filter: blur(14px) saturate(130%);
+  transition:transform .2s ease, background .2s ease, border-color .2s ease;
+}
+
+.community__socialBtn svg{
+  width:22px;
+  height:22px;
+  display:block;
+}
+
+.community__socialBtn:hover{
+  transform:translateY(-2px);
+  background:rgba(255,255,255,.12);
+  border-color:rgba(255,255,255,.34);
+}
 @media (max-width:920px){
   .hero{grid-template-columns:1fr}
   .hero__right{order:-1}
