@@ -1078,3 +1078,75 @@ document.addEventListener("DOMContentLoaded", () => {
 
   document.addEventListener("pointerdown", startOcean, { once: true });
 });
+  document.addEventListener("DOMContentLoaded", () => {
+  const oceanAudio = document.getElementById("oceanAudio");
+  if (!oceanAudio) return;
+
+  oceanAudio.volume = 0.12;
+
+  const startOcean = async () => {
+    try {
+      await oceanAudio.play();
+    } catch (e) {
+      console.log("Ocean audio blocked until user interaction.");
+    }
+  };
+
+  document.addEventListener("pointerdown", startOcean, { once: true });
+});
+    document.addEventListener("DOMContentLoaded", () => {
+  const oceanAudio = document.getElementById("oceanAudio");
+  if (!oceanAudio) return;
+
+  oceanAudio.volume = 0.12;
+
+  const startOcean = async () => {
+    try {
+      await oceanAudio.play();
+    } catch (e) {
+      console.log("Ocean audio blocked until user interaction.");
+    }
+  };
+
+  document.addEventListener("pointerdown", startOcean, { once: true });
+});
+      /* ===== UNDERWATER DEPTH / CAUSTICS ===== */
+.bg::before,
+.bg::after{
+  content:"";
+  position:absolute;
+  inset:-6%;
+  pointer-events:none;
+}
+
+.bg::before{
+  background:
+    radial-gradient(circle at 50% 12%, rgba(255,255,255,.08), transparent 28%),
+    radial-gradient(circle at 20% 28%, rgba(121,241,221,.05), transparent 24%),
+    radial-gradient(circle at 82% 24%, rgba(114,193,255,.06), transparent 22%);
+  filter:blur(28px);
+  opacity:.75;
+}
+
+.bg::after{
+  background:
+    repeating-linear-gradient(
+      115deg,
+      rgba(255,255,255,.028) 0 10px,
+      rgba(255,255,255,0) 10px 26px
+    ),
+    repeating-linear-gradient(
+      65deg,
+      rgba(255,255,255,.018) 0 12px,
+      rgba(255,255,255,0) 12px 30px
+    );
+  mix-blend-mode:screen;
+  opacity:.14;
+  animation:waterDrift 18s linear infinite;
+}
+
+@keyframes waterDrift{
+  0%{ transform:translate3d(0,0,0) scale(1.02); }
+  50%{ transform:translate3d(-2%,1.5%,0) scale(1.04); }
+  100%{ transform:translate3d(0,0,0) scale(1.02); }
+}
