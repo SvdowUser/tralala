@@ -199,9 +199,10 @@ button,input,textarea{font:inherit}
 }
 
 .brand__text{
-  font-weight:900;
+  font-family:"Sora", Inter, ui-sans-serif, system-ui, sans-serif;
+  font-weight:800;
   font-size:20px;
-  letter-spacing:.06em;
+  letter-spacing:.04em;
 }
 
 .nav__links{
