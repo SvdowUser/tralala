@@ -8,6 +8,72 @@ const PUMP_COIN_URL = `https://pump.fun/coin/${CONTRACT_ADDRESS}`;
 const PHANTOM_OPEN_URL = `https://phantom.app/ul/browse/${encodeURIComponent(location.href)}`;
 const SOL_MINT = "So11111111111111111111111111111111111111112";
 
+// DEBUG: log insecure requests and URLs
+(function () {
+  const origFetch = window.fetch;
+  if (origFetch) {
+    window.fetch = async (...args) => {
+      const url = String(args[0]);
+      if (url.startsWith("http://") || url.startsWith("ws://")) {
+        console.warn("[INSECURE fetch]", url);
+      }
+      return origFetch(...args);
+    };
+  }
+
+  const origOpen = XMLHttpRequest.prototype.open;
+  XMLHttpRequest.prototype.open = function (method, url, ...rest) {
+    const u = String(url);
+    if (u.startsWith("http://") || u.startsWith("ws://")) {
+      console.warn("[INSECURE xhr]", u);
+    }
+    return origOpen.call(this, method, url, ...rest);
+  };
+
+  const OrigWebSocket = window.WebSocket;
+  if (OrigWebSocket) {
+    window.WebSocket = function (url, protocols) {
+      const u = String(url);
+      if (u.startsWith("ws://")) {
+        console.warn("[INSECURE websocket]", u);
+      }
+      return new OrigWebSocket(url, protocols);
+    };
+    window.WebSocket.prototype = OrigWebSocket.prototype;
+  }
+
+  const scanNode = (node) => {
+    if (!(node instanceof Element)) return;
+    ["src", "href", "poster"].forEach((attr) => {
+      const v = node.getAttribute?.(attr);
+      if (v && (v.startsWith("http://") || v.startsWith("ws://"))) {
+        console.warn(`[INSECURE ${attr}]`, v, node);
+      }
+    });
+    node.querySelectorAll?.("[src], [href], [poster]").forEach((el) => {
+      ["src", "href", "poster"].forEach((attr) => {
+        const v = el.getAttribute(attr);
+        if (v && (v.startsWith("http://") || v.startsWith("ws://"))) {
+          console.warn(`[INSECURE ${attr}]`, v, el);
+        }
+      });
+    });
+  };
+
+  scanNode(document.documentElement);
+
+  const observer = new MutationObserver((mutations) => {
+    mutations.forEach((mutation) => {
+      mutation.addedNodes.forEach(scanNode);
+    });
+  });
+
+  observer.observe(document.documentElement, {
+    childList: true,
+    subtree: true
+  });
+})();
+
 /* =========================
    HELPERS
 ========================= */
