@@ -1,6 +1,5 @@
 /* =========================
    CONFIG
-========================= */
 const CONTRACT_ADDRESS = "none";
 const X_PROFILE_URL = "PASTE_YOUR_X_PROFILE_URL_HERE";
 const TIKTOK_URL = "https://tiktok.com/@mythosmondays";
@@ -76,7 +75,6 @@ const SOL_MINT = "So11111111111111111111111111111111111111112";
 
 /* =========================
    HELPERS
-========================= */
 function resolveUrl(path) {
   return new URL(path, document.baseURI).toString();
 }
@@ -128,7 +126,6 @@ startInsecureResourceGuard();
 
 /* =========================
    HERO FX
-========================= */
 const heroImg = document.querySelector(".hero__img");
 const orb = document.querySelector(".orb");
 if (heroImg) {
@@ -159,7 +156,6 @@ window.addEventListener("pointermove", (e) => {
 
 /* =========================
    Smooth scroll
-========================= */
 document.querySelectorAll('a[href^="#"]').forEach((a) => {
   a.addEventListener("click", (e) => {
     const id = a.getAttribute("href");
@@ -173,7 +169,6 @@ document.querySelectorAll('a[href^="#"]').forEach((a) => {
 
 /* =========================
    Mobile menu
-========================= */
 const burgerBtn = document.getElementById("burgerBtn");
 const mobileMenu = document.getElementById("mobileMenu");
 const menuClose = document.getElementById("menuClose");
@@ -202,7 +197,6 @@ document.querySelectorAll(".menu__link").forEach((a) => a.addEventListener("clic
 
 /* =========================
    LINKS
-========================= */
 const pumpBtn = document.getElementById("pumpBtn");
 const pumpFooter = document.getElementById("pumpFooter");
 const brandLink = document.getElementById("brandLink");
@@ -270,7 +264,6 @@ initJupiterTerminal();
 
 /* =========================
    Contract copy
-========================= */
 const contractText = document.getElementById("contractText");
 const copyBtn = document.getElementById("copyBtn");
 const toast = document.getElementById("toast");
@@ -301,7 +294,6 @@ copyBtn?.addEventListener("click", async () => {
 
 /* =========================
    AUDIO
-========================= */
 const audio = document.getElementById("bgAudio");
 const audioToggle = document.getElementById("audioToggle");
 let muted = true;
