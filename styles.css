@@ -1202,19 +1202,18 @@ button,input,textarea{font:inherit}
   inset:0;
   pointer-events:none;
   background:
-    linear-gradient(105deg,
-      rgba(255,255,255,.00) 0%,
-      rgba(255,255,255,.05) 16%,
-      rgba(255,255,255,.00) 30%),
-    linear-gradient(75deg,
-      rgba(121,241,221,.00) 0%,
-      rgba(121,241,221,.04) 18%,
-      rgba(121,241,221,.00) 34%);
-  opacity:.22;
+    linear-gradient(102deg,
+      rgba(255,255,255,0) 0%,
+      rgba(255,255,255,.045) 18%,
+      rgba(255,255,255,0) 34%),
+    linear-gradient(78deg,
+      rgba(121,241,221,0) 0%,
+      rgba(121,241,221,.035) 16%,
+      rgba(121,241,221,0) 30%);
+  opacity:.18;
   mix-blend-mode:screen;
   filter:blur(10px);
-  transform:translateY(-2%);
-  animation:underwaterRays 14s ease-in-out infinite alternate;
+  animation:underwaterRays 16s ease-in-out infinite alternate;
 }
 
 .bg__dust{
@@ -1222,25 +1221,31 @@ button,input,textarea{font:inherit}
   inset:0;
   pointer-events:none;
   background-image:
-    radial-gradient(circle at 12% 18%, rgba(255,255,255,.10) 0 1px, transparent 2px),
-    radial-gradient(circle at 28% 44%, rgba(255,255,255,.08) 0 1px, transparent 2px),
-    radial-gradient(circle at 52% 24%, rgba(121,241,221,.10) 0 1px, transparent 2px),
-    radial-gradient(circle at 66% 62%, rgba(255,255,255,.08) 0 1px, transparent 2px),
+    radial-gradient(circle at 10% 20%, rgba(255,255,255,.10) 0 1px, transparent 2px),
+    radial-gradient(circle at 28% 52%, rgba(255,255,255,.08) 0 1px, transparent 2px),
+    radial-gradient(circle at 44% 24%, rgba(121,241,221,.08) 0 1px, transparent 2px),
+    radial-gradient(circle at 63% 68%, rgba(255,255,255,.08) 0 1px, transparent 2px),
     radial-gradient(circle at 82% 30%, rgba(255,255,255,.08) 0 1px, transparent 2px),
-    radial-gradient(circle at 90% 72%, rgba(121,241,221,.08) 0 1px, transparent 2px);
-  background-size: 260px 260px, 340px 340px, 300px 300px, 420px 420px, 360px 360px, 520px 520px;
-  opacity:.22;
-  animation:underwaterDust 24s linear infinite;
+    radial-gradient(circle at 90% 78%, rgba(121,241,221,.07) 0 1px, transparent 2px);
+  background-size:
+    260px 260px,
+    320px 320px,
+    300px 300px,
+    420px 420px,
+    360px 360px,
+    520px 520px;
+  opacity:.20;
+  animation:underwaterDust 22s linear infinite;
 }
 
 @keyframes underwaterRays{
   0%{
-    transform:translateY(-2%) translateX(0);
-    opacity:.16;
+    transform:translate3d(0,-1%,0);
+    opacity:.14;
   }
   100%{
-    transform:translateY(2%) translateX(-1.5%);
-    opacity:.26;
+    transform:translate3d(-1.5%,2%,0);
+    opacity:.22;
   }
 }
 
@@ -1249,6 +1254,6 @@ button,input,textarea{font:inherit}
     transform:translate3d(0,0,0);
   }
   100%{
-    transform:translate3d(0,-18px,0);
+    transform:translate3d(0,-16px,0);
   }
 }
