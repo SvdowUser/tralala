@@ -136,3 +136,20 @@ document.addEventListener("DOMContentLoaded", () => {
 
   document.addEventListener("pointerdown", startOcean, { once: true });
 });
+/* ===== OPTIONAL OCEAN AUDIO ===== */
+document.addEventListener("DOMContentLoaded", () => {
+  const oceanAudio = document.getElementById("oceanAudio");
+  if (!oceanAudio) return;
+
+  oceanAudio.volume = 0.10;
+
+  const startOcean = async () => {
+    try {
+      await oceanAudio.play();
+    } catch (e) {
+      console.log("Ocean audio will start after user interaction.");
+    }
+  };
+
+  document.addEventListener("pointerdown", startOcean, { once: true });
+});
