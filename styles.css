@@ -1062,62 +1062,7 @@ button,input,textarea{font:inherit}
     height:54px !important;
   }
 }
-document.addEventListener("DOMContentLoaded", () => {
-  const oceanAudio = document.getElementById("oceanAudio");
-  if (!oceanAudio) return;
 
-  oceanAudio.volume = 0.12;
-
-  const startOcean = async () => {
-    try {
-      await oceanAudio.play();
-    } catch (e) {
-      console.log("Ocean audio blocked until user interaction.");
-    }
-  };
-
-  document.addEventListener("pointerdown", startOcean, { once: true });
-});
-  document.addEventListener("DOMContentLoaded", () => {
-  const oceanAudio = document.getElementById("oceanAudio");
-  if (!oceanAudio) return;
-
-  oceanAudio.volume = 0.12;
-
-  const startOcean = async () => {
-    try {
-      await oceanAudio.play();
-    } catch (e) {
-      console.log("Ocean audio blocked until user interaction.");
-    }
-  };
-
-  document.addEventListener("pointerdown", startOcean, { once: true });
-});
-    document.addEventListener("DOMContentLoaded", () => {
-  const oceanAudio = document.getElementById("oceanAudio");
-  if (!oceanAudio) return;
-
-  oceanAudio.volume = 0.12;
-
-  const startOcean = async () => {
-    try {
-      await oceanAudio.play();
-    } catch (e) {
-      console.log("Ocean audio blocked until user interaction.");
-    }
-  };
-
-  document.addEventListener("pointerdown", startOcean, { once: true });
-});
-      /* ===== UNDERWATER DEPTH / CAUSTICS ===== */
-.bg::before,
-.bg::after{
-  content:"";
-  position:absolute;
-  inset:-6%;
-  pointer-events:none;
-}
 
 .bg::before{
   background:
@@ -1150,3 +1095,4 @@ document.addEventListener("DOMContentLoaded", () => {
   50%{ transform:translate3d(-2%,1.5%,0) scale(1.04); }
   100%{ transform:translate3d(0,0,0) scale(1.02); }
 }
+document.addEventListener
