@@ -18,6 +18,50 @@ function isRealUrl(u) {
   return typeof u === "string" && /^https?:\/\//i.test(u);
 }
 
+const RESOURCE_ATTRS = ["src", "href", "poster"];
+
+function upgradeHttpUrl(value) {
+  if (typeof value !== "string") return value;
+  if (value.startsWith("http://")) return `https://${value.slice(7)}`;
+  if (value.startsWith("ws://")) return `wss://${value.slice(5)}`;
+  return value;
+}
+
+function upgradeNodeResourceUrls(node) {
+  if (!(node instanceof Element)) return;
+
+  RESOURCE_ATTRS.forEach((attr) => {
+    const raw = node.getAttribute(attr);
+    if (!raw) return;
+    const upgraded = upgradeHttpUrl(raw.trim());
+    if (upgraded !== raw) node.setAttribute(attr, upgraded);
+  });
+
+  node.querySelectorAll?.("[src], [href], [poster]").forEach((el) => {
+    RESOURCE_ATTRS.forEach((attr) => {
+      const raw = el.getAttribute(attr);
+      if (!raw) return;
+      const upgraded = upgradeHttpUrl(raw.trim());
+      if (upgraded !== raw) el.setAttribute(attr, upgraded);
+    });
+  });
+}
+
+function startInsecureResourceGuard() {
+  upgradeNodeResourceUrls(document.documentElement);
+
+  const observer = new MutationObserver((mutations) => {
+    mutations.forEach((mutation) => {
+      mutation.addedNodes.forEach((node) => upgradeNodeResourceUrls(node));
+    });
+  });
+
+  observer.observe(document.documentElement, { childList: true, subtree: true });
+}
+startInsecureResourceGuard();
+
+/* =========================
+   HERO FX
 /* =========================
    HERO FX
 const heroImg = document.querySelector(".hero__img");
