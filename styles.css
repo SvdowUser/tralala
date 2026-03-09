@@ -790,7 +790,19 @@ button,input,textarea{font:inherit}
   height:24px;
   display:block;
 }
+.community__socialBtn{
+  display:grid;
+  place-items:center;
+}
 
+.community__socialBtn--tiktok svg{
+  width:26px;
+  height:26px;
+}
+
+.community__socialBtn svg{
+  transform:translateY(.5px);
+}
 .footer{
   margin-top:36px;
   padding:18px 0 10px;
