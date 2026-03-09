@@ -200,7 +200,10 @@ document.querySelectorAll(".menu__link").forEach((a) => a.addEventListener("clic
 const pumpBtn = document.getElementById("pumpBtn");
 const pumpFooter = document.getElementById("pumpFooter");
 const brandLink = document.getElementById("brandLink");
-[pumpBtn, pumpFooter, brandLink].forEach((el) => {
+const buyNowTop = document.getElementById("buyNowTop");
+const communityPumpBtn = document.getElementById("communityPumpBtn");
+
+[pumpBtn, pumpFooter, brandLink, buyNowTop, communityPumpBtn].forEach((el) => {
   if (el) el.href = PUMP_COIN_URL;
 });
 
