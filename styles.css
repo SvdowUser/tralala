@@ -1164,10 +1164,8 @@ button,input,textarea{font:inherit}
   50%{ transform:translate3d(-2%,1.5%,0) scale(1.04); }
   100%{ transform:translate3d(0,0,0) scale(1.02); }
 }
-.brand__pumpSvg{
-  width:64%;
-  height:64%;
-  display:block;
+.brand__coin--pump{
+  background:rgba(255,255,255,.08);
 }
 
 .brand__coin--pump{
