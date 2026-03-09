@@ -20,7 +20,7 @@
 *{box-sizing:border-box}
 html,body{
   min-height:100%;
-  background:#071327;
+  background:#08172f;
 }
 html{scroll-behavior:smooth}
 
@@ -1093,6 +1093,15 @@ button,input,textarea{font:inherit}
   fill:currentColor !important;
 }
 
+/* ===== MORE UNDERWATER FEEL ===== */
+.bg__gradient{
+  background:
+    radial-gradient(900px 680px at 78% 14%, rgba(114,193,255,.18), transparent 64%),
+    radial-gradient(720px 540px at 16% 22%, rgba(121,241,221,.07), transparent 60%),
+    radial-gradient(500px 300px at 50% 10%, rgba(255,255,255,.05), transparent 70%),
+    linear-gradient(180deg, #071327 0%, #0a1d3c 42%, #12376c 100%) !important;
+}
+
 .bg__bubbles span{
   opacity:.22 !important;
   border:1px solid rgba(255,255,255,.18) !important;
@@ -1166,7 +1175,7 @@ button,input,textarea{font:inherit}
       rgba(255,255,255,0) 12px 30px
     );
   mix-blend-mode:screen;
-  opacity:.08;
+  opacity:.14;
   animation:waterDrift 18s linear infinite;
 }
 
