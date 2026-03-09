@@ -1167,7 +1167,7 @@ button,input,textarea{font:inherit}
       rgba(255,255,255,0) 12px 30px
     );
   mix-blend-mode:screen;
-  opacity:.14;
+  opacity:.08;
   animation:waterDrift 18s linear infinite;
 }
 
