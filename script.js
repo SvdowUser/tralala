@@ -18,10 +18,6 @@ function isRealUrl(u) {
   return typeof u === "string" && /^https?:\/\//i.test(u);
 }
 
-
-/* =========================
-   SECURITY: upgrade insecure resource URLs
-========================= */
 const RESOURCE_ATTRS = ["src", "href", "poster"];
 
 function upgradeHttpUrl(value) {
@@ -66,7 +62,8 @@ startInsecureResourceGuard();
 
 /* =========================
    HERO FX
-========================= */
+/* =========================
+   HERO FX
 const heroImg = document.querySelector(".hero__img");
 const orb = document.querySelector(".orb");
 if (heroImg) {
@@ -90,16 +87,9 @@ if (heroImg) {
 
 window.addEventListener("pointermove", (e) => {
   if (!orb || window.matchMedia("(max-width: 920px)").matches) return;
-  const x = (e.clientX / window.innerWidth - 0.5) * 10;
-  const y = (e.clientY / window.innerHeight - 0.5) * -10;
-  orb.style.setProperty("--tiltX", `${x.toFixed(2)}deg`);
-  orb.style.setProperty("--tiltY", `${y.toFixed(2)}deg`);
-});
-
-document.addEventListener("pointerleave", () => {
-  if (!orb) return;
-  orb.style.setProperty("--tiltX", "0deg");
-  orb.style.setProperty("--tiltY", "0deg");
+  const x = (e.clientX / window.innerWidth - 0.5) * 8;
+  const y = (e.clientY / window.innerHeight - 0.5) * -8;
+  orb.style.transform = `rotateX(${y}deg) rotateY(${x}deg)`;
 });
 
 /* =========================
@@ -151,9 +141,7 @@ document.querySelectorAll(".menu__link").forEach((a) => a.addEventListener("clic
 const pumpBtn = document.getElementById("pumpBtn");
 const pumpFooter = document.getElementById("pumpFooter");
 const brandLink = document.getElementById("brandLink");
-const buyNowTop = document.getElementById("buyNowTop");
-const communityBuyBtn = document.getElementById("communityBuyBtn");
-[pumpBtn, pumpFooter, brandLink, buyNowTop, communityBuyBtn].forEach((el) => {
+[pumpBtn, pumpFooter, brandLink].forEach((el) => {
   if (el) el.href = PUMP_COIN_URL;
 });
 
@@ -242,7 +230,7 @@ let audioUnlocked = false;
 function setAudioUI(isMuted) {
   if (!audioToggle) return;
   audioToggle.setAttribute("aria-pressed", String(!isMuted));
-  audioToggle.title = isMuted ? "Sound off" : "Sound on";
+  audioToggle.title = isMuted ? "Sound aus" : "Sound an";
 }
 
 async function ensureAudioStarts() {
