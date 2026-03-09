@@ -1,7 +1,7 @@
 const CONFIG = {
-  contractAddress: "PASTE_CONTRACT_HERE",
+  contractAddress: "COMING SOON",
   xProfileUrl: "https://x.com/yourprofile",
-  tiktokUrl: "https://www.tiktok.com/@yourprofile"
+  tiktokUrl: "https://www.tiktok.com/@mythosmondays"
 };
 
 const PUMP_COIN_URL =
