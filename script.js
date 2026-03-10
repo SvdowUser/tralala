@@ -1,6 +1,6 @@
 const CONFIG = {
-  contractAddress: "COMING SOON",
-  xProfileUrl: "https://x.com/yourprofile",
+  contractAddress: "CGrSSYrzDdxhJGhNyTxedW8dX9zVbJv6Z83d1o9ppump",
+  xProfileUrl: "https://x.com/i/communities/2031501927800803363",
   tiktokUrl: "https://www.tiktok.com/@mythosmondays"
 };
 
