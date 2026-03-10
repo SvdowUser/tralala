@@ -6,8 +6,8 @@ const CONFIG = {
 
 const PUMP_COIN_URL =
   CONFIG.contractAddress && CONFIG.contractAddress !== "CGrSSYrzDdxhJGhNyTxedW8dX9zVbJv6Z83d1o9ppump"
-    ? `https://pump.fun/coin/${CONFIG.contractAddress}`
-    : "https://pump.fun/";
+    ? `https://pump.fun/coin/CGrSSYrzDdxhJGhNyTxedW8dX9zVbJv6Z83d1o9ppump${CONFIG.contractAddress}`
+    : "https://pump.fun/coin/CGrSSYrzDdxhJGhNyTxedW8dX9zVbJv6Z83d1o9ppump";
 
 const contractText = document.getElementById("contractText");
 const copyBtn = document.getElementById("copyBtn");
