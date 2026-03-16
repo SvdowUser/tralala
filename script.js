@@ -1,13 +1,13 @@
 const CONFIG = {
-  contractAddress: "CGrSSYrzDdxhJGhNyTxedW8dX9zVbJv6Z83d1o9ppump",
+  contractAddress: "89muFzE1VpotYQfKm7xsuEbhgxRLyinmsELGTCSLpump",
   xProfileUrl: "https://x.com/i/communities/2031501927800803363",
   tiktokUrl: "https://www.tiktok.com/@mythosmondays"
 };
 
 const PUMP_COIN_URL =
-  CONFIG.contractAddress && CONFIG.contractAddress !== "CGrSSYrzDdxhJGhNyTxedW8dX9zVbJv6Z83d1o9ppump"
-    ? `https://pump.fun/coin/CGrSSYrzDdxhJGhNyTxedW8dX9zVbJv6Z83d1o9ppump${CONFIG.contractAddress}`
-    : "https://pump.fun/coin/CGrSSYrzDdxhJGhNyTxedW8dX9zVbJv6Z83d1o9ppump";
+  CONFIG.contractAddress && CONFIG.contractAddress !== "89muFzE1VpotYQfKm7xsuEbhgxRLyinmsELGTCSLpump"
+    ? `https://pump.fun/coin/89muFzE1VpotYQfKm7xsuEbhgxRLyinmsELGTCSLpump${CONFIG.contractAddress}`
+    : "https://pump.fun/coin/89muFzE1VpotYQfKm7xsuEbhgxRLyinmsELGTCSLpump";
 
 const contractText = document.getElementById("contractText");
 const copyBtn = document.getElementById("copyBtn");
